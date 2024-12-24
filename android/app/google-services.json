@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "234707663858",
+    "project_id": "hopehome-51540",
+    "storage_bucket": "hopehome-51540.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:234707663858:android:4a47849ac96d5c09b8096b",
+        "android_client_info": {
+          "package_name": "com.example.q4"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuPQ1BMyuJg1omiQhvS4O6aTh_Ni8DW98"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
