@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'login.dart';
 class DonorSignUpScreen extends StatefulWidget {
   @override
   _DonorSignUpScreenState createState() => _DonorSignUpScreenState();
@@ -164,6 +164,38 @@ class _DonorSignUpScreenState extends State<DonorSignUpScreen> {
                     },
                     child: const Center(child: Text('Submit')),
                   ),
+
+                  const SizedBox(height: 20),
+
+                  // Navigation to Login
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => Login(), // Ensure Login is imported
+                        ),
+                      );
+                    },
+                    child: const Center(
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Already have an account? ",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            TextSpan(
+                              text: "Login",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -173,3 +205,4 @@ class _DonorSignUpScreenState extends State<DonorSignUpScreen> {
     );
   }
 }
+
