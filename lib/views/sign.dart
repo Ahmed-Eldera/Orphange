@@ -109,7 +109,7 @@ class SignUpScreen extends StatelessWidget {
                   ),
                 );
               },
-              child: const Text('Go to Dashboard'),
+              child: const Text('Dashboard'),
             ),
           ],
         ),
