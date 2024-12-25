@@ -6,7 +6,7 @@ class DashboardScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Volunteer Dashboard'),
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: Colors.blue,
         actions: [
           IconButton(
             icon: Icon(Icons.person),
@@ -19,85 +19,119 @@ class DashboardScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: GridView.count(
-          crossAxisCount: 2,
-          crossAxisSpacing: 16.0,
-          mainAxisSpacing: 16.0,
-          children: [
-            _buildDashboardButton(
-              context,
-              'View Events',
-              Icons.event,
-                  () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ViewEventsPage()),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // View Events Button
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ViewEventsPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    padding: EdgeInsets.symmetric(vertical: 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text('View Events', style: TextStyle(fontSize: 24)),
+                ),
               ),
-            ),
-            _buildDashboardButton(
-              context,
-              'View Tasks',
-              Icons.task,
-                  () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ViewLogsPage()),
-              ),
-            ),
-            _buildDashboardButton(
-              context,
-              'Log Start Hours',
-              Icons.timer,
-                  () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LogHoursPage()),
-              ),
-            ),
-            _buildDashboardButton(
-              context,
-              'Generate Certificate',
-              Icons.school,
-                  () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => GenerateCertificatePage()),
-              ),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ViewHistoryPage()),
-          );
-        },
-        backgroundColor: Colors.blue.shade700,
-        child: Icon(Icons.history),
-      ),
-    );
-  }
 
-  Widget _buildDashboardButton(BuildContext context, String title, IconData icon, VoidCallback onPressed) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blue.shade700,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 40, color: Colors.white),
-          SizedBox(height: 10),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18, color: Colors.white),
+              // View Tasks Button
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ViewTasksPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    padding: EdgeInsets.symmetric(vertical: 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text('View Tasks', style: TextStyle(fontSize: 24)),
+                ),
+              ),
+
+              // Log Start Hours Button
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LogHoursPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    padding: EdgeInsets.symmetric(vertical: 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text('Log Start Hours', style: TextStyle(fontSize: 24)),
+                ),
+              ),
+
+              // Generate Certificate Button
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => GenerateCertificatePage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    padding: EdgeInsets.symmetric(vertical: 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text('Generate Certificate', style: TextStyle(fontSize: 24)),
+                ),
+              ),
+
+              // View History Button
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ViewHistoryPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    padding: EdgeInsets.symmetric(vertical: 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text('View History', style: TextStyle(fontSize: 24)),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -108,9 +142,8 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: Text('Profile'),
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: Colors.blue,
       ),
       body: Center(child: Text('Profile information will be displayed here.')),
     );
@@ -122,23 +155,21 @@ class ViewEventsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: Text('View Events'),
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: Colors.blue,
       ),
       body: Center(child: Text('Events will be displayed here.')),
     );
   }
 }
 
-class ViewLogsPage extends StatelessWidget {
+class ViewTasksPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: Text('View Tasks'),
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: Colors.blue,
       ),
       body: Center(child: Text('Tasks will be displayed here.')),
     );
@@ -150,9 +181,8 @@ class LogHoursPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: Text('Log Start Hours'),
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: Colors.blue,
       ),
       body: Center(child: Text('Log hours functionality will be here.')),
     );
@@ -164,9 +194,8 @@ class GenerateCertificatePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: Text('Generate Certificate'),
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: Colors.blue,
       ),
       body: Center(child: Text('Certificate generation will be here.')),
     );
@@ -178,9 +207,8 @@ class ViewHistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: Text('View History'),
-        backgroundColor: Colors.blue.shade700,
+        backgroundColor: Colors.blue,
       ),
       body: Center(child: Text('History will be displayed here.')),
     );
