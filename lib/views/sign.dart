@@ -102,7 +102,7 @@ class SignUpScreen extends StatelessWidget {
                 textStyle: const TextStyle(fontSize: 18),
               ),
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (context) => DashboardScreen(),

@@ -108,6 +108,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Profile'),
         backgroundColor: Colors.blue.shade700,
       ),
@@ -121,6 +122,7 @@ class ViewEventsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('View Events'),
         backgroundColor: Colors.blue.shade700,
       ),
@@ -134,6 +136,7 @@ class ViewLogsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('View Tasks'),
         backgroundColor: Colors.blue.shade700,
       ),
@@ -147,6 +150,7 @@ class LogHoursPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Log Start Hours'),
         backgroundColor: Colors.blue.shade700,
       ),
@@ -160,6 +164,7 @@ class GenerateCertificatePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Generate Certificate'),
         backgroundColor: Colors.blue.shade700,
       ),
@@ -173,6 +178,7 @@ class ViewHistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('View History'),
         backgroundColor: Colors.blue.shade700,
       ),
