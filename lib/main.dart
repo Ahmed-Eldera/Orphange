@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hope_home/models/event.dart';
+import 'package:hope_home/views/donor_dashboard.dart';
 // import 'views/welcome_screen.dart';
 import 'models/users/admin.dart';
 import 'models/users/donor.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => SignUpScreen(),
         '/donorSignup': (context) => DonorSignUpScreen(),
         '/volunteerSignup': (context) => VolunteerSignUpScreen(),
+        '/donorDashboard': (context) => DonorDashboard(),
       },
     );
   }
