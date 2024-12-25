@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hope_home/views/volunteerDashboard.dart';
 import 'signdonner.dart';
 import 'signvol.dart';
-
+import 'admin_dashboard.dart'; // Import Admin Dashboard screen
 
 void main() {
   runApp(MaterialApp(
@@ -110,6 +110,29 @@ class SignUpScreen extends StatelessWidget {
                 );
               },
               child: const Text('Dashboard'),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Navigate to Admin Dashboard Button
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.redAccent,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                textStyle: const TextStyle(fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AdminDashboard(),
+                  ),
+                );
+              },
+              child: const Text('Admin Dashboard'),
             ),
           ],
         ),
