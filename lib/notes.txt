@@ -1,0 +1,14 @@
+startegy
+decorator
+command 
+adapter *
+facade
+iterator ->view events
+state -> event upcoming/started/ended
+proxy
+
+
+observer * - done (provider)
+singleton - done (provider , automatic firebase)
+factory - done (user object creation)
+template - done (login+signup)
