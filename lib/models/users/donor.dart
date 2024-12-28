@@ -6,11 +6,11 @@ class Donor extends myUser {
   List<String> history; // An array to store donation history
 
   Donor({
-    required String id,
-    required String name,
-    required String email,
+    required super.id,
+    required super.name,
+    required super.email,
     this.history = const [], // Initialize with an empty list
-  }) : super(id: id, name: name, email: email, type: 'Donor');
+  }) : super(type: 'Donor');
 
 
 }

@@ -2,14 +2,13 @@ import 'package:hope_home/models/users/userHelper.dart';
 import 'package:hope_home/models/users/userTemplate.dart';
 import 'package:hope_home/userProvider.dart';
 
-class UserSignupController extends UserLoginTemplate {
+class UserSignupMailController extends UserLoginTemplate {
   final UserProvider userProvider;
-
-  UserSignupController(this.userProvider);
+  UserSignupMailController({required  this.userProvider, required super.facade});
 
   @override
   Future<String?> authenticate(String email,String password,[String? name,String? type]) async{
-    return UserServiceHelper.signupWithEmailPassword(email, password,name!,type!);
+    return facade.signupWithEmailPassword(email, password,name!,type!);
   }
 
   @override

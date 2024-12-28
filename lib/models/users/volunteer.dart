@@ -8,12 +8,12 @@ class Volunteer extends myUser {
   List<String> history; // An array to store task history
 
   Volunteer({
-    required String id,
-    required String name,
-    required String email,
+    required super.id,
+    required super.name,
+    required super.email,
     required this.skills,
     required this.availability,
     this.history = const [], // Initialize with an empty list
-  }) : super(id: id, name: name, email: email, type: 'Volunteer');
+  }) : super(type: 'Volunteer');
 
 }
