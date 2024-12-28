@@ -1,6 +1,3 @@
-import 'package:hope_home/models/users/admin.dart';
-import 'package:hope_home/models/users/volunteer.dart';
-
 class myUser {
   final String id;
   final String name;
@@ -9,14 +6,13 @@ class myUser {
 
   myUser({required this.id, required this.name, required this.email, required this.type});
 
-  // Static login method to create the appropriate subclass instance
-
-
-  // Simulated logout method
-
+  // Factory constructor to create a user from Firestore data
+  factory myUser.fromFirestore(Map<String, dynamic> data) {
+    return myUser(
+      id: data['id'],
+      name: data['name'],
+      email: data['email'],
+      type: data['type'],
+    );
+  }
 }
-
-
-
-
-

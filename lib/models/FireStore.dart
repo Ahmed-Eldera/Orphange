@@ -1,19 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hope_home/models/DBService.dart';
+import 'package:hope_home/models/DBService.dart'; // Import the abstract class
 
 class FirestoreDatabaseService implements DatabaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  // Insert a new user
   @override
   Future<void> insertUser(String id, String name, String email, String type) async {
     try {
       var userCollection = _firestore.collection('users');
       Map<String, dynamic> userData = {
-        'id':id,
+        'id': id,
         'name': name,
         'email': email,
         'type': type,
-        'history': [],  // Common field for both donor and volunteer
+        'history': [], // Common field for both donor and volunteer
       };
 
       if (type == 'Volunteer') {
@@ -29,9 +30,28 @@ class FirestoreDatabaseService implements DatabaseService {
     }
   }
 
+  // Fetch user data by user ID
   @override
   Future<Map<String, dynamic>?> fetchUserData(String id) async {
-    var snapshot = await _firestore.collection('users').doc(id).get();
-    return snapshot.data();
+    try {
+      var snapshot = await _firestore.collection('users').doc(id).get();
+      return snapshot.data();
+    } catch (e) {
+      print('Error fetching user data: $e');
+      return null;
+    }
+  }
+
+  // Optional: Fetch user data by user ID (without interface)
+  Future<Map<String, dynamic>?> getUserById(String userId) async {
+    try {
+      DocumentSnapshot userDoc = await _firestore.collection('users').doc(userId).get();
+      if (userDoc.exists) {
+        return userDoc.data() as Map<String, dynamic>;
+      }
+    } catch (e) {
+      print("Error getting user by ID: $e");
+    }
+    return null;
   }
 }

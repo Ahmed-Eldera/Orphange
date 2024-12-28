@@ -1,9 +1,10 @@
 import 'package:hope_home/models/AuthService.dart';
 import 'package:hope_home/models/DBService.dart';
+import 'package:hope_home/models/FireStore.dart';
 
 class UserServiceHelper {
   final AuthService authService;
-  final DatabaseService databaseService;
+  final DatabaseService databaseService;  // This will now refer to the interface
 
   UserServiceHelper({
     required this.authService,

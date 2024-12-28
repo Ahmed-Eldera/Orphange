@@ -23,8 +23,9 @@ class UserProvider extends ChangeNotifier {
     _currentUser = user;
     notifyListeners();
   }
-  void display(){
-    print(_currentUser!.name + "\n"+_currentUser!.type);
+
+  void display() {
+    print(_currentUser!.name + "\n" + _currentUser!.type);
   }
 
   // Optionally, clear the user data on logout

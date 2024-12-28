@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class DonorSignUpScreen extends StatefulWidget {
   @override
@@ -11,6 +13,39 @@ class _DonorSignUpScreenState extends State<DonorSignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> _registerDonor() async {
+    try {
+      // Create user with Firebase Auth
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      // Save user information in Firestore
+      await _firestore.collection('users').doc(userCredential.user?.uid).set({
+        'name': _nameController.text.trim(),
+        'email': _emailController.text.trim(),
+        'phone': _phoneController.text.trim(),
+        'type': 'donor', // Set user type to 'donor'
+      });
+
+      // Success feedback
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Donor registration successful!')),
+      );
+
+      // Navigate to another screen if needed
+      Navigator.pop(context);
+    } catch (e) {
+      // Handle errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +151,9 @@ class _DonorSignUpScreenState extends State<DonorSignUpScreen> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
                       }
+                      if (value.length < 6) {
+                        return 'Password must be at least 6 characters long';
+                      }
                       return null;
                     },
                   ),
@@ -156,10 +194,7 @@ class _DonorSignUpScreenState extends State<DonorSignUpScreen> {
                     ),
                     onPressed: () {
                       if (_formKey.currentState?.validate() ?? false) {
-                        // Handle donor registration
-                        print('Donor Registered: ${_nameController.text}');
-                        print('Email: ${_emailController.text}');
-                        print('Phone: ${_phoneController.text}');
+                        _registerDonor(); // Call donor registration function
                       }
                     },
                     child: const Center(child: Text('Submit')),

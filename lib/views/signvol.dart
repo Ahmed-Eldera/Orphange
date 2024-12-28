@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore package
+import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Authentication
 
 class VolunteerSignUpScreen extends StatefulWidget {
   @override
@@ -13,6 +15,53 @@ class _VolunteerSignUpScreenState extends State<VolunteerSignUpScreen> {
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _skillsController = TextEditingController();
 
+  // Firebase Authentication instance
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  // Firestore instance
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> _registerVolunteer() async {
+    String name = _nameController.text.trim();
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+    String age = _ageController.text.trim();
+    String skills = _skillsController.text.trim();
+
+    try {
+      // Step 1: Create a new user with Firebase Authentication
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      User? user = userCredential.user;
+
+      if (user != null) {
+        // Step 2: Add the user details (including type) to Firestore
+        await _firestore.collection('users').doc(user.uid).set({
+          'name': name,
+          'email': email,
+          'age': age,
+          'skills': skills,
+          'type': 'volunteer', // User type set to 'volunteer'
+          'uid': user.uid, // Store the user UID
+        });
+
+        // Show a success message and navigate to the next screen
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Registration successful!')),
+        );
+
+        // After successful registration, navigate to the login screen or another screen
+        Navigator.pop(context); // You can change this to navigate to a dashboard, for example.
+      }
+    } on FirebaseAuthException catch (e) {
+      // Handle Firebase Authentication exceptions
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Registration failed: ${e.message}')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +70,6 @@ class _VolunteerSignUpScreenState extends State<VolunteerSignUpScreen> {
         child: ListView(
           children: [
             const SizedBox(height: 50),
-
             // Title
             const Center(
               child: Text(
@@ -33,7 +81,6 @@ class _VolunteerSignUpScreenState extends State<VolunteerSignUpScreen> {
               ),
             ),
             const SizedBox(height: 10),
-
             // Subtitle
             const Center(
               child: Text(
@@ -45,7 +92,6 @@ class _VolunteerSignUpScreenState extends State<VolunteerSignUpScreen> {
               ),
             ),
             const SizedBox(height: 30),
-
             // Sign Up Form
             Form(
               key: _formKey,
@@ -74,7 +120,6 @@ class _VolunteerSignUpScreenState extends State<VolunteerSignUpScreen> {
                     },
                   ),
                   const SizedBox(height: 20),
-
                   // Email
                   const Text(
                     "Email",
@@ -97,7 +142,6 @@ class _VolunteerSignUpScreenState extends State<VolunteerSignUpScreen> {
                     },
                   ),
                   const SizedBox(height: 20),
-
                   // Password
                   const Text(
                     "Password",
@@ -121,7 +165,6 @@ class _VolunteerSignUpScreenState extends State<VolunteerSignUpScreen> {
                     },
                   ),
                   const SizedBox(height: 20),
-
                   // Age
                   const Text(
                     "Age",
@@ -144,7 +187,6 @@ class _VolunteerSignUpScreenState extends State<VolunteerSignUpScreen> {
                     },
                   ),
                   const SizedBox(height: 20),
-
                   // Skills
                   const Text(
                     "Skills",
@@ -167,7 +209,6 @@ class _VolunteerSignUpScreenState extends State<VolunteerSignUpScreen> {
                     },
                   ),
                   const SizedBox(height: 30),
-
                   // Submit Button
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -180,11 +221,7 @@ class _VolunteerSignUpScreenState extends State<VolunteerSignUpScreen> {
                     ),
                     onPressed: () {
                       if (_formKey.currentState?.validate() ?? false) {
-                        // Handle volunteer registration
-                        print('Volunteer Registered: ${_nameController.text}');
-                        print('Email: ${_emailController.text}');
-                        print('Age: ${_ageController.text}');
-                        print('Skills: ${_skillsController.text}');
+                        _registerVolunteer(); // Register the volunteer
                       }
                     },
                     child: const Center(child: Text('Submit')),
