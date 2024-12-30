@@ -54,10 +54,10 @@ class _LoginState extends State<Login> {
             MaterialPageRoute(builder: (context) => DashboardScreen()),
           );
         } else if (userType == 'donor') {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => DonorDashboard()),
-          );
+          //Navigator.pushReplacement(
+            //context,
+            //MaterialPageRoute(builder: (context) => DonorDashboard()),
+          //);
         } else {
           // Handle case where userType is not recognized
           ScaffoldMessenger.of(context).showSnackBar(

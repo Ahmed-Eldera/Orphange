@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'inbox_page.dart';
 
 class DonorDashboard extends StatelessWidget {
-  const DonorDashboard({super.key});
+  final Map<String, dynamic> donor;
+
+  const DonorDashboard({Key? key, required this.donor}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text(
-          'Donor Dashboard',
-          style: TextStyle(
+        title: Text(
+          'Donor Dashboard - ${donor['name']}',
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontFamily: 'Roboto',
@@ -27,7 +30,9 @@ class DonorDashboard extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ProfilePlaceholderPage()),
+                MaterialPageRoute(
+                  builder: (context) => ProfilePlaceholderPage(donor: donor),
+                ),
               );
             },
           ),
@@ -62,29 +67,20 @@ class DonorDashboard extends StatelessWidget {
                         () {},
                   ),
                   _buildDashboardButton(
-                    'Generate Receipts',
-                    Icons.receipt,
-                        () {},
+                    'Inbox',
+                    Icons.inbox,
+                        () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => InboxPage(donorName: donor['name']),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
             ],
-          ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-        },
-        backgroundColor: Colors.blue.shade700,
-        icon: const Icon(
-          Icons.list_alt,
-          color: Colors.white,
-        ),
-        label: const Text(
-          'Logs',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
           ),
         ),
       ),
@@ -126,7 +122,9 @@ class DonorDashboard extends StatelessWidget {
 }
 
 class ProfilePlaceholderPage extends StatelessWidget {
-  const ProfilePlaceholderPage({super.key});
+  final Map<String, dynamic> donor;
+
+  const ProfilePlaceholderPage({Key? key, required this.donor}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -135,18 +133,13 @@ class ProfilePlaceholderPage extends StatelessWidget {
         title: const Text('Profile Page'),
         backgroundColor: Colors.blue.shade700,
       ),
-      body: const Center(
+      body: Center(
         child: Text(
-          'A placeholder for profile page.',
-          style: TextStyle(fontSize: 18, fontFamily: 'Roboto', fontWeight: FontWeight.bold),
+          'Donor Name: ${donor['name']}\nEmail: ${donor['email']}',
+          style: const TextStyle(fontSize: 18, fontFamily: 'Roboto', fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
         ),
       ),
     );
   }
-}
-
-void main() {
-  runApp(const MaterialApp(
-    home: DonorDashboard(),
-  ));
 }

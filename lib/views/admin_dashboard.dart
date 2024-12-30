@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'communication_page.dart';
 import 'donor_list_page.dart'; // Import the donor list page
 
 class AdminDashboard extends StatelessWidget {
@@ -80,6 +81,20 @@ class AdminDashboard extends StatelessWidget {
                     );
                   },
                 ),
+                _buildDashboardButton(
+                  'Send Message',
+                  Icons.message,
+                      () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CommunicationPage(),
+                      ),
+                    );
+                  },
+                ),
+
+
               ],
             ),
           ],

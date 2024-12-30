@@ -28,13 +28,20 @@ class _DonorLoginScreenState extends State<DonorLoginScreen> {
 
     try {
       String? userType = await widget.controller.authenticate(email, password);
-      print('User Type After Authentication: $userType');
 
       if (userType == 'donor') {
         widget.controller.postLoginProcess();
+        var donor = widget.controller.userProvider.currentUser;
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => DonorDashboard()),
+          MaterialPageRoute(
+            builder: (context) => DonorDashboard(
+              donor: {
+                'name': donor!.name,
+                'email': donor.email,
+              },
+            ),
+          ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

@@ -81,6 +81,24 @@ class FirestoreDatabaseService implements DatabaseService {
     }
   }
 
+  Future<List<Map<String, dynamic>>> fetchMessagesForRecipient(String recipientName) async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection('messages')
+          .where('recipient', isEqualTo: recipientName)
+          .orderBy('timestamp', descending: true)
+          .get();
+
+      return snapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        data['id'] = doc.id; // Include document ID
+        return data;
+      }).toList();
+    } catch (e) {
+      print('Error fetching messages: $e');
+      return [];
+    }
+  }
 
 
 
