@@ -17,26 +17,43 @@ class UserLoginMailController extends UserLoginTemplate {
   }) : super(facade: facade); // Call the parent class constructor and pass required parameters
 
   @override
+  @override
   Future<String?> authenticate(String email, String password, [String? name, String? type]) async {
-    // Authenticate with Firebase Authentication
-    String? userId = await facade.loginWithEmailPassword(email, password);
+    try {
+      String? userId = await facade.loginWithEmailPassword(email, password);
+      print('User ID: $userId');
 
-    if (userId != null) {
-      // Fetch user data from Firestore
-      var userData = await firestoreService.getUserById(userId);
+      if (userId != null) {
+        var userData = await firestoreService.getUserById(userId);
+        print('Fetched User Data: $userData');
 
-      if (userData != null) {
-        // Assume your Firestore document has a field 'type' to store user type (donor, admin, etc.)
-        String userType = userData['type'];
+        if (userData != null) {
+          String? userType = userData['type']?.toString(); // Force conversion to String
+          print('User Type Retrieved: $userType');
 
-        // Set the user in the UserProvider (using the user data from Firestore)
-        userProvider.setUser(myUser.fromFirestore(userData));
+          if (userType == null || userType.isEmpty) {
+            print('Error: User type is missing or invalid.');
+            throw Exception('User type is missing or invalid.');
+          }
 
-        return userType;  // Return the user type (donor, admin, etc.)
+          // Store user data in provider
+          userProvider.setUser(myUser.fromFirestore(userData));
+          print('Authentication Successful for User Type: $userType');
+          return userType;
+        } else {
+          throw Exception('User data not found.');
+        }
+      } else {
+        throw Exception('User ID is null.');
       }
+    } catch (e) {
+      print('Error during authentication: $e');
+      return null;
     }
-    return null; // Return null if login failed or no user data found
   }
+
+
+
 
   @override
   void postLoginProcess() {

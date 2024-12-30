@@ -1,28 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:hope_home/controllers/signupController.dart';
+import 'package:hope_home/controllers/loginController.dart';
+import 'package:hope_home/views/donner dashboard.dart';
 
-class DonorSignUpScreen extends StatefulWidget {
-  final UserSignupMailController controller;
+class DonorLoginScreen extends StatefulWidget {
+  final UserLoginMailController controller;
 
-  const DonorSignUpScreen({Key? key, required this.controller}) : super(key: key);
+  const DonorLoginScreen({Key? key, required this.controller}) : super(key: key);
 
   @override
-  _DonorSignUpScreenState createState() => _DonorSignUpScreenState();
+  _DonorLoginScreenState createState() => _DonorLoginScreenState();
 }
 
-class _DonorSignUpScreenState extends State<DonorSignUpScreen> {
-  final _nameController = TextEditingController();
+class _DonorLoginScreenState extends State<DonorLoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _phoneController = TextEditingController();
 
-  Future<void> _registerDonor() async {
-    String name = _nameController.text.trim();
+  Future<void> _handleLogin() async {
     String email = _emailController.text.trim();
     String password = _passwordController.text.trim();
-    String phone = _phoneController.text.trim();
 
-    if (name.isEmpty || email.isEmpty || password.isEmpty || phone.isEmpty) {
+    if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill in all fields')),
       );
@@ -30,27 +27,23 @@ class _DonorSignUpScreenState extends State<DonorSignUpScreen> {
     }
 
     try {
-      String? userId = await widget.controller.authenticate(
-        email,
-        password,
-        name,
-        'donor',
-      );
+      String? userType = await widget.controller.authenticate(email, password);
+      print('User Type After Authentication: $userType');
 
-      if (userId != null) {
+      if (userType == 'donor') {
         widget.controller.postLoginProcess();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Donor registration successful!')),
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => DonorDashboard()),
         );
-        Navigator.pop(context); // Navigate to login or dashboard
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Sign-Up failed')),
+          const SnackBar(content: Text('Invalid donor credentials')),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(content: Text('Login failed: $e')),
       );
     }
   }
@@ -59,29 +52,21 @@ class _DonorSignUpScreenState extends State<DonorSignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Donor Sign-Up'),
-        backgroundColor: Colors.blue,
+        title: const Text('Donor Login'),
+        backgroundColor: Colors.purple,
       ),
-      body: Padding(
+      body: Container(
         padding: const EdgeInsets.all(20),
         child: ListView(
           children: [
             const SizedBox(height: 50),
             const Center(
               child: Text(
-                'Donor Sign-Up',
+                'Donor Login',
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                 ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                labelText: 'Name',
-                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 20),
@@ -101,26 +86,18 @@ class _DonorSignUpScreenState extends State<DonorSignUpScreen> {
                 border: OutlineInputBorder(),
               ),
             ),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _phoneController,
-              decoration: InputDecoration(
-                labelText: 'Phone',
-                border: OutlineInputBorder(),
-              ),
-            ),
             const SizedBox(height: 30),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
+                backgroundColor: Colors.purple,
                 padding: const EdgeInsets.symmetric(vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
                 textStyle: const TextStyle(fontSize: 18),
               ),
-              onPressed: _registerDonor,
-              child: const Text('Register'),
+              onPressed: _handleLogin,
+              child: const Text('Login'),
             ),
           ],
         ),

@@ -47,6 +47,7 @@ class FirestoreDatabaseService implements DatabaseService {
     try {
       DocumentSnapshot userDoc = await _firestore.collection('users').doc(userId).get();
       if (userDoc.exists) {
+        print('User Data Fetched: ${userDoc.data()}');
         return userDoc.data() as Map<String, dynamic>;
       }
     } catch (e) {
