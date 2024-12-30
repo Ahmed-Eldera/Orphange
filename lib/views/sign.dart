@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:hope_home/views/volunteerDashboard.dart';
+import '../controllers/loginController.dart';
+import '../controllers/signupController.dart';
+import '../models/FireAuth.dart';
+import '../models/FireStore.dart';
+import '../models/users/userHelper.dart';
+import '../userProvider.dart';
 import 'signdonner.dart';
 import 'signvol.dart';
-import 'admin_dashboard.dart'; // Import Admin Dashboard screen
+import 'admin_dashboard.dart';
+import 'admin_sign_up_screen.dart'; // Import Admin Sign-Up
+import 'admin_login_screen.dart'; // Import Admin Login
 
 void main() {
   runApp(MaterialApp(
@@ -91,6 +99,69 @@ class SignUpScreen extends StatelessWidget {
 
             const SizedBox(height: 20),
 
+            // Sign Up as Admin Button
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                textStyle: const TextStyle(fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AdminSignUpScreen(
+                      controller: UserSignupMailController(
+                        facade: UserServiceHelper(
+                          authService: FirebaseAuthService(),
+                          databaseService: FirestoreDatabaseService(),
+                        ),
+                        userProvider: UserProvider(),
+                      ),
+                    ),
+                  ),
+                );
+              },
+              child: const Text('Sign Up as Admin'),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Login as Admin Button
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.teal,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                textStyle: const TextStyle(fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AdminLoginScreen(
+                      controller: UserLoginMailController(
+                        userProvider: UserProvider(),
+                        facade: UserServiceHelper(
+                          authService: FirebaseAuthService(),
+                          databaseService: FirestoreDatabaseService(),
+                        ),
+                        firestoreService: FirestoreDatabaseService(),
+                      ),
+                    ),
+                  ),
+                );
+              },
+              child: const Text('Login as Admin'),
+            ),
+
+            const SizedBox(height: 20),
+
             // Navigate to Dashboard Button
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -110,29 +181,6 @@ class SignUpScreen extends StatelessWidget {
                 );
               },
               child: const Text('Dashboard'),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Navigate to Admin Dashboard Button
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent,
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                textStyle: const TextStyle(fontSize: 18),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AdminDashboard(),
-                  ),
-                );
-              },
-              child: const Text('Admin Dashboard'),
             ),
           ],
         ),
