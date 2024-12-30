@@ -56,32 +56,69 @@ class _AdminSignUpScreenState extends State<AdminSignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Admin Sign-Up')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Name'),
+      appBar: AppBar(
+        title: const Text('Admin Sign-Up'),
+        backgroundColor: Colors.red,
+      ),
+      body: Container(
+        padding: const EdgeInsets.all(20),
+        child: ListView(
+          children: [
+            const SizedBox(height: 50),
+
+            // Title
+            const Center(
+              child: Text(
+                'Admin Sign-Up',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
+            ),
+            const SizedBox(height: 20),
+
+            // Input Fields
+            TextFormField(
+              controller: _nameController,
+              decoration: InputDecoration(
+                labelText: 'Name',
+                border: OutlineInputBorder(),
               ),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(labelText: 'Password'),
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _emailController,
+              decoration: InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(),
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _handleSignUp,
-                child: const Text('Sign Up'),
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'Password',
+                border: OutlineInputBorder(),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 30),
+
+            // Sign Up Button
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                textStyle: const TextStyle(fontSize: 18),
+              ),
+              onPressed: _handleSignUp,
+              child: const Text('Sign Up'),
+            ),
+          ],
         ),
       ),
     );
