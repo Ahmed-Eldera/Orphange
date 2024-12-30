@@ -31,9 +31,17 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
       if (userType == 'Admin') {
         widget.controller.postLoginProcess();
+        var admin = widget.controller.userProvider.currentUser;
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const AdminDashboard()),
+          MaterialPageRoute(
+            builder: (context) => AdminDashboard(
+              admin: {
+                'name': admin!.name,
+                'email': admin.email,
+              },
+            ),
+          ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

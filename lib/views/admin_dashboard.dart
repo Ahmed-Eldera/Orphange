@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
 class AdminDashboard extends StatelessWidget {
-  const AdminDashboard({super.key});
+  final Map<String, dynamic> admin;
+
+  const AdminDashboard({Key? key, required this.admin}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Admin Dashboard',
-          style: TextStyle(
+        title: Text(
+          'Admin Dashboard - ${admin['name']}',
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontFamily: 'Roboto',
@@ -119,7 +121,7 @@ class AdminDashboard extends StatelessWidget {
 class EmptyPage extends StatelessWidget {
   final String title;
 
-  const EmptyPage({super.key, required this.title});
+  const EmptyPage({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

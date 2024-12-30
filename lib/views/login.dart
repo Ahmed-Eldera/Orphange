@@ -46,7 +46,7 @@ class _LoginState extends State<Login> {
         if (userType == 'admin') {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => AdminDashboard()),
+            MaterialPageRoute(builder: (context) => DashboardScreen()),
           );
         } else if (userType == 'volunteer') {
           Navigator.pushReplacement(
