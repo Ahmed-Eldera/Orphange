@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'donor_list_page.dart'; // Import the donor list page
 
 class AdminDashboard extends StatelessWidget {
   final Map<String, dynamic> admin;
@@ -65,6 +66,18 @@ class AdminDashboard extends StatelessWidget {
                   Icons.attach_money,
                       () {
                     _navigateToEmptyPage(context, 'Manage Donations Page');
+                  },
+                ),
+                _buildDashboardButton(
+                  'View Donors',
+                  Icons.people_alt, // Use a different icon to differentiate
+                      () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DonorListPage(), // Navigate to DonorListPage
+                      ),
+                    );
                   },
                 ),
               ],

@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hope_home/models/DBService.dart'; // Import the abstract class
+import 'package:hope_home/models/DBService.dart';
+
+import 'users/donor.dart'; // Import the abstract class
 
 class FirestoreDatabaseService implements DatabaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -55,4 +57,31 @@ class FirestoreDatabaseService implements DatabaseService {
     }
     return null;
   }
+
+  Future<List<Donor>> fetchAllDonors() async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('type', isEqualTo: 'donor')
+          .get();
+
+      return snapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        data['id'] = doc.id; // Ensure 'id' field is included
+        return Donor(
+          id: data['id'],
+          name: data['name'],
+          email: data['email'],
+          history: List<String>.from(data['history'] ?? []),
+        );
+      }).toList();
+    } catch (e) {
+      print('Error fetching donors: $e');
+      return [];
+    }
+  }
+
+
+
+
 }
