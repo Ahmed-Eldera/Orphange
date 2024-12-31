@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import '../controllers/communication_context.dart';
-import '../controllers/push_notification_strategy.dart';
-import '../controllers/donor_controller.dart';
-import '../models/users/donor.dart';
+import '../../../models/communication_strats/communication_context.dart';
+import '../../../models/communication_strats/sms_strategy.dart';
+import '../../../controllers/donor_controller.dart';
+import '../../../models/users/donor.dart';
 
-class PushNotificationMessageCreationPage extends StatefulWidget {
-  const PushNotificationMessageCreationPage({Key? key}) : super(key: key);
+class SmsMessageCreationPage extends StatefulWidget {
+  const SmsMessageCreationPage({Key? key}) : super(key: key);
 
   @override
-  _PushNotificationMessageCreationPageState createState() =>
-      _PushNotificationMessageCreationPageState();
+  _SmsMessageCreationPageState createState() => _SmsMessageCreationPageState();
 }
 
-class _PushNotificationMessageCreationPageState
-    extends State<PushNotificationMessageCreationPage> {
+class _SmsMessageCreationPageState extends State<SmsMessageCreationPage> {
   final CommunicationContext _context = CommunicationContext();
   final DonorController _donorController = DonorController();
   final TextEditingController _messageController = TextEditingController();
@@ -42,8 +40,8 @@ class _PushNotificationMessageCreationPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Push Notification'),
-        backgroundColor: Colors.orange,
+        title: const Text('SMS Message'),
+        backgroundColor: Colors.green,
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -69,18 +67,18 @@ class _PushNotificationMessageCreationPageState
             TextFormField(
               controller: _messageController,
               decoration: const InputDecoration(
-                labelText: 'Notification Message',
+                labelText: 'SMS Message',
                 border: OutlineInputBorder(),
               ),
-              maxLines: 4,
+              maxLines: 3,
             ),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: _sendMessage,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
+                backgroundColor: Colors.green,
               ),
-              child: const Text('Send Notification'),
+              child: const Text('Send SMS'),
             ),
           ],
         ),
@@ -98,11 +96,10 @@ class _PushNotificationMessageCreationPageState
 
     final selectedDonor = _donors.firstWhere((donor) => donor.id == _selectedDonorId);
 
-    _context.setStrategy(PushNotificationStrategy());
-    _context.executeStrategy(
-        selectedDonor.name, _messageController.text, 'Push Notification');
+    _context.setStrategy(SmsStrategy());
+    _context.executeStrategy(selectedDonor.name, _messageController.text, 'SMS');
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Notification sent to ${selectedDonor.name}')),
+      SnackBar(content: Text('SMS sent to ${selectedDonor.name}')),
     );
   }
 }

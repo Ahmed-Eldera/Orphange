@@ -1,4 +1,4 @@
-import '../models/users/donor.dart';
+import '../users/donor.dart';
 
 class DonorIterator implements Iterator {
   final List<Donor> _donors;

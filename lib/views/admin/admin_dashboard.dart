@@ -1,18 +1,63 @@
 import 'package:flutter/material.dart';
-import 'communication_page.dart';
-import 'donor_list_page.dart'; // Import the donor list page
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'create event.dart'; // Import the CreateEventPage
+import 'communication_module/communication_page.dart';
+import 'donor_list_page.dart';
+import 'edit events.dart'; // Import the donor list page
+import '../../models/event.dart';
 
-class AdminDashboard extends StatelessWidget {
+class AdminDashboard extends StatefulWidget {
   final Map<String, dynamic> admin;
 
   const AdminDashboard({Key? key, required this.admin}) : super(key: key);
+
+  @override
+  _AdminDashboardState createState() => _AdminDashboardState();
+}
+
+class _AdminDashboardState extends State<AdminDashboard> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  List<Event> _events = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchEvents(); // Fetch the events when the page loads
+  }
+
+  // Fetch events from Firestore
+  void _fetchEvents() async {
+    try {
+      final snapshot = await _firestore.collection('events').get();
+      final eventList = snapshot.docs
+          .map((doc) => Event.fromMap(doc.data(), doc.id))
+          .toList();
+      setState(() {
+        _events = eventList;
+      });
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load events: $error')),
+      );
+    }
+  }
+
+  // Navigate to EditEventDetailPage with the selected event
+  void _editEvent(Event event) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditEventDetailPage(event: event), // Pass the selected event
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Admin Dashboard - ${admin['name']}',
+          'Admin Dashboard - ${widget.admin['name']}',
           style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -45,14 +90,30 @@ class AdminDashboard extends StatelessWidget {
                   'Create Events',
                   Icons.add_circle,
                       () {
-                    _navigateToEmptyPage(context, 'Create Events Page');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CreateEventPage()),
+                    );
                   },
                 ),
                 _buildDashboardButton(
                   'Edit Events',
                   Icons.edit,
                       () {
-                    _navigateToEmptyPage(context, 'Edit Events Page');
+                    // Check if events are available before navigating
+                    if (_events.isNotEmpty) {
+                      // Navigate to EditEventPage which lists all events
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditEventPage(events: _events),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('No events available to edit')),
+                      );
+                    }
                   },
                 ),
                 _buildDashboardButton(
@@ -76,7 +137,7 @@ class AdminDashboard extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const DonorListPage(), // Navigate to DonorListPage
+                        builder: (context) => const DonorListPage(),
                       ),
                     );
                   },
@@ -93,8 +154,6 @@ class AdminDashboard extends StatelessWidget {
                     );
                   },
                 ),
-
-
               ],
             ),
           ],
@@ -141,6 +200,48 @@ class AdminDashboard extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => EmptyPage(title: pageTitle),
+      ),
+    );
+  }
+}
+
+class EditEventPage extends StatelessWidget {
+  final List<Event> events;
+
+  const EditEventPage({Key? key, required this.events}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Edit Events'),
+        backgroundColor: Colors.blue.shade700,
+      ),
+      body: ListView.builder(
+        itemCount: events.length,
+        itemBuilder: (context, index) {
+          final event = events[index];
+          return Card(
+            margin: const EdgeInsets.symmetric(vertical: 8.0),
+            elevation: 5,
+            child: ListTile(
+              title: Text(event.name),
+              subtitle: Text(event.date),
+              trailing: IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () {
+                  // Navigate to EditEventDetailPage for the selected event
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditEventDetailPage(event: event),
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        },
       ),
     );
   }

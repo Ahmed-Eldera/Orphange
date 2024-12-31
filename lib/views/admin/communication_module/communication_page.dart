@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hope_home/views/push_notification_message_creation.dart';
-import 'package:hope_home/views/sms_message_creation.dart';
+import 'package:hope_home/views/admin/communication_module/push_notification_message_creation.dart';
+import 'package:hope_home/views/admin/communication_module/sms_message_creation.dart';
 import 'email_message_creation.dart';
 
 

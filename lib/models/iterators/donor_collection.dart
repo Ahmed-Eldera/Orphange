@@ -1,4 +1,4 @@
-import '../models/users/donor.dart';
+import '../users/donor.dart';
 import 'donor_iterator.dart';
 
 class DonorCollection {

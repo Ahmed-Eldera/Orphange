@@ -1,9 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hope_home/models/DBService.dart';
 
-import 'users/donor.dart'; // Import the abstract class
+import 'users/donor.dart';
 
 class FirestoreDatabaseService implements DatabaseService {
+  // Private static instance
+  static final FirestoreDatabaseService _instance = FirestoreDatabaseService._internal();
+
+  // Factory constructor to return the single instance
+  factory FirestoreDatabaseService() {
+    return _instance;
+  }
+
+  // Private constructor
+  FirestoreDatabaseService._internal();
+
+  // Firestore instance
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Insert a new user
@@ -99,7 +111,4 @@ class FirestoreDatabaseService implements DatabaseService {
       return [];
     }
   }
-
-
-
 }

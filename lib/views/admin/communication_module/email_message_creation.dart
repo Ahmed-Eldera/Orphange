@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import '../controllers/communication_context.dart';
-import '../controllers/sms_strategy.dart';
-import '../controllers/donor_controller.dart';
-import '../models/users/donor.dart';
+import '../../../models/communication_strats/communication_context.dart';
+import '../../../models/communication_strats/email_strategy.dart';
+import '../../../controllers/donor_controller.dart';
+import '../../../models/users/donor.dart';
 
-class SmsMessageCreationPage extends StatefulWidget {
-  const SmsMessageCreationPage({Key? key}) : super(key: key);
+class EmailMessageCreationPage extends StatefulWidget {
+  const EmailMessageCreationPage({Key? key}) : super(key: key);
 
   @override
-  _SmsMessageCreationPageState createState() => _SmsMessageCreationPageState();
+  _EmailMessageCreationPageState createState() => _EmailMessageCreationPageState();
 }
 
-class _SmsMessageCreationPageState extends State<SmsMessageCreationPage> {
+class _EmailMessageCreationPageState extends State<EmailMessageCreationPage> {
   final CommunicationContext _context = CommunicationContext();
   final DonorController _donorController = DonorController();
   final TextEditingController _messageController = TextEditingController();
@@ -40,8 +40,8 @@ class _SmsMessageCreationPageState extends State<SmsMessageCreationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SMS Message'),
-        backgroundColor: Colors.green,
+        title: const Text('Email Message'),
+        backgroundColor: Colors.blue.shade700,
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -67,18 +67,18 @@ class _SmsMessageCreationPageState extends State<SmsMessageCreationPage> {
             TextFormField(
               controller: _messageController,
               decoration: const InputDecoration(
-                labelText: 'SMS Message',
+                labelText: 'Email Body',
                 border: OutlineInputBorder(),
               ),
-              maxLines: 3,
+              maxLines: 6,
             ),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: _sendMessage,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
+                backgroundColor: Colors.blue.shade700,
               ),
-              child: const Text('Send SMS'),
+              child: const Text('Send Email'),
             ),
           ],
         ),
@@ -96,10 +96,10 @@ class _SmsMessageCreationPageState extends State<SmsMessageCreationPage> {
 
     final selectedDonor = _donors.firstWhere((donor) => donor.id == _selectedDonorId);
 
-    _context.setStrategy(SmsStrategy());
-    _context.executeStrategy(selectedDonor.name, _messageController.text, 'SMS');
+    _context.setStrategy(EmailStrategy());
+    _context.executeStrategy(selectedDonor.name, _messageController.text, 'Email');
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('SMS sent to ${selectedDonor.name}')),
+      SnackBar(content: Text('Email sent to ${selectedDonor.name}')),
     );
   }
 }

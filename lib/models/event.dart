@@ -1,25 +1,36 @@
-import 'package:hope_home/models/ticket.dart';
 class Event {
-  String id;
-  String name;
-  int attendance;
-  String description;
-  String date;
-  List<Ticket>? tickets ;
+  final String id;
+  final String name;
+  final String description;
+  final String date;
+  final int attendance;
 
   Event({
     required this.id,
     required this.name,
-    required this.attendance,
     required this.description,
     required this.date,
-     // Optional parameter
-  }): tickets = []; // Initialize tickets with an empty list if null
+    required this.attendance,
+  });
 
-  Ticket generateTicket(){
-    Ticket ticket=Ticket(id: "1", date:"march", userName: "mo", eventName: "jngfdjgk");
-    tickets!.add(ticket);
-    return ticket;
+  // Constructor to create an Event from Firestore document data
+  factory Event.fromMap(Map<String, dynamic> data, String id) {
+    return Event(
+      id: id,
+      name: data['name'] ?? '',
+      description: data['description'] ?? '',
+      date: data['date'] ?? '',
+      attendance: data['attendance'] ?? 0,
+    );
+  }
+
+  // Convert Event to a JSON map to save to Firestore
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'description': description,
+      'date': date,
+      'attendance': attendance,
+    };
   }
 }
-

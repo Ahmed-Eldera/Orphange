@@ -1,13 +1,18 @@
-startegy
-decorator
+observer -> the users can choose to get notified for upcoming events
+decorator -> decorate the ticket for the events (different ticket prices)
 command 
-adapter *
-facade
-iterator ->view events
+adapter 
 state -> event upcoming/started/ended
-proxy
+proxy -> viewing upcoming and old events for admin only , other users will only see current events
 
 
+??facade -> facade all db usecases ??
+// iterator ->view events , view donations
+
+
+facade - done in user services (interfacing the auth and db service)
+iterator - done in viewing donors 
+startegy - Done in communication
 observer * - done (provider)
 singleton - done (provider , automatic firebase)
 factory - done (user object creation)

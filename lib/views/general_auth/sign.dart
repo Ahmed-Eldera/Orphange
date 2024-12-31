@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import '../controllers/signupController.dart';
-import '../models/users/userHelper.dart';
-import 'donor_login_screen.dart';
-import 'signdonner.dart';
-import 'signvol.dart';
-import 'admin_dashboard.dart';
-import 'admin_sign_up_screen.dart';
-import 'admin_login_screen.dart';
-import 'donner dashboard.dart'; // Import DonorDashboard
-import '../controllers/loginController.dart';
-import '../models/FireAuth.dart';
-import '../models/FireStore.dart';
-import '../userProvider.dart';
+import '../../controllers/signupController.dart';
+import '../../models/users/userHelper.dart';
+import '../donor/donor_login_screen.dart';
+import '../donor/signdonner.dart';
+import '../volunteer/signvol.dart';
+import '../admin/admin_sign_up_screen.dart';
+import '../admin/admin_login_screen.dart';
+import '../../controllers/loginController.dart';
+import '../../models/FireAuth.dart';
+import '../../models/FireStore.dart';
+import '../../userProvider.dart';
 
 void main() {
   runApp(MaterialApp(
