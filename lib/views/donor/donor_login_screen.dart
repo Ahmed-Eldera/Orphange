@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:hope_home/controllers/loginController.dart';
-import 'package:hope_home/views/admin_dashboard.dart';
+import 'package:hope_home/views/donor/donner%20dashboard.dart';
 
-class AdminLoginScreen extends StatefulWidget {
+class DonorLoginScreen extends StatefulWidget {
   final UserLoginMailController controller;
 
-  const AdminLoginScreen({Key? key, required this.controller}) : super(key: key);
+  const DonorLoginScreen({Key? key, required this.controller}) : super(key: key);
 
   @override
-  _AdminLoginScreenState createState() => _AdminLoginScreenState();
+  _DonorLoginScreenState createState() => _DonorLoginScreenState();
 }
 
-class _AdminLoginScreenState extends State<AdminLoginScreen> {
+class _DonorLoginScreenState extends State<DonorLoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -29,23 +29,23 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     try {
       String? userType = await widget.controller.authenticate(email, password);
 
-      if (userType == 'Admin') {
+      if (userType == 'donor') {
         widget.controller.postLoginProcess();
-        var admin = widget.controller.userProvider.currentUser;
+        var donor = widget.controller.userProvider.currentUser;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => AdminDashboard(
-              admin: {
-                'name': admin!.name,
-                'email': admin.email,
+            builder: (context) => DonorDashboard(
+              donor: {
+                'name': donor!.name,
+                'email': donor.email,
               },
             ),
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Invalid admin credentials')),
+          const SnackBar(content: Text('Invalid donor credentials')),
         );
       }
     } catch (e) {
@@ -59,19 +59,17 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin Login'),
-        backgroundColor: Colors.teal,
+        title: const Text('Donor Login'),
+        backgroundColor: Colors.purple,
       ),
       body: Container(
         padding: const EdgeInsets.all(20),
         child: ListView(
           children: [
             const SizedBox(height: 50),
-
-            // Title
             const Center(
               child: Text(
-                'Admin Login',
+                'Donor Login',
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
@@ -79,8 +77,6 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // Input Fields
             TextFormField(
               controller: _emailController,
               decoration: InputDecoration(
@@ -98,11 +94,9 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
               ),
             ),
             const SizedBox(height: 30),
-
-            // Login Button
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
+                backgroundColor: Colors.purple,
                 padding: const EdgeInsets.symmetric(vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),

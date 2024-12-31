@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/FireStore.dart';
+import '../../models/FireStore.dart';
 
 class InboxPage extends StatefulWidget {
   final String donorName;

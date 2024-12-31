@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import '../controllers/communication_context.dart';
-import '../controllers/email_strategy.dart';
-import '../controllers/donor_controller.dart';
-import '../models/users/donor.dart';
+import '../../../models/communication_strats/communication_context.dart';
+import '../../../models/communication_strats/push_notification_strategy.dart';
+import '../../../controllers/donor_controller.dart';
+import '../../../models/users/donor.dart';
 
-class EmailMessageCreationPage extends StatefulWidget {
-  const EmailMessageCreationPage({Key? key}) : super(key: key);
+class PushNotificationMessageCreationPage extends StatefulWidget {
+  const PushNotificationMessageCreationPage({Key? key}) : super(key: key);
 
   @override
-  _EmailMessageCreationPageState createState() => _EmailMessageCreationPageState();
+  _PushNotificationMessageCreationPageState createState() =>
+      _PushNotificationMessageCreationPageState();
 }
 
-class _EmailMessageCreationPageState extends State<EmailMessageCreationPage> {
+class _PushNotificationMessageCreationPageState
+    extends State<PushNotificationMessageCreationPage> {
   final CommunicationContext _context = CommunicationContext();
   final DonorController _donorController = DonorController();
   final TextEditingController _messageController = TextEditingController();
@@ -40,8 +42,8 @@ class _EmailMessageCreationPageState extends State<EmailMessageCreationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Email Message'),
-        backgroundColor: Colors.blue.shade700,
+        title: const Text('Push Notification'),
+        backgroundColor: Colors.orange,
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -67,18 +69,18 @@ class _EmailMessageCreationPageState extends State<EmailMessageCreationPage> {
             TextFormField(
               controller: _messageController,
               decoration: const InputDecoration(
-                labelText: 'Email Body',
+                labelText: 'Notification Message',
                 border: OutlineInputBorder(),
               ),
-              maxLines: 6,
+              maxLines: 4,
             ),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: _sendMessage,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue.shade700,
+                backgroundColor: Colors.orange,
               ),
-              child: const Text('Send Email'),
+              child: const Text('Send Notification'),
             ),
           ],
         ),
@@ -96,10 +98,11 @@ class _EmailMessageCreationPageState extends State<EmailMessageCreationPage> {
 
     final selectedDonor = _donors.firstWhere((donor) => donor.id == _selectedDonorId);
 
-    _context.setStrategy(EmailStrategy());
-    _context.executeStrategy(selectedDonor.name, _messageController.text, 'Email');
+    _context.setStrategy(PushNotificationStrategy());
+    _context.executeStrategy(
+        selectedDonor.name, _messageController.text, 'Push Notification');
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Email sent to ${selectedDonor.name}')),
+      SnackBar(content: Text('Notification sent to ${selectedDonor.name}')),
     );
   }
 }

@@ -4,7 +4,7 @@ import 'package:hope_home/models/FireAuth.dart';
 import 'package:hope_home/models/FireStore.dart';
 import 'package:hope_home/models/users/userHelper.dart';
 import 'package:hope_home/userProvider.dart';
-import 'package:hope_home/views/login.dart';
+import 'package:hope_home/views/general_auth/login.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 

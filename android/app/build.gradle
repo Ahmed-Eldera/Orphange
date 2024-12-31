@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         targetSdkVersion 33
-        minSdkVersion 21 // Or as per your app's requirements
+        minSdkVersion 30 // Or as per your app's requirements
     }
     namespace = "com.example.q4"
     compileSdk = flutter.compileSdkVersion

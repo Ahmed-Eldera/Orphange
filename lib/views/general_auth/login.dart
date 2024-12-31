@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hope_home/controllers/loginController.dart';
-import 'package:hope_home/views/admin_dashboard.dart';
-import 'package:hope_home/views/volunteerDashboard.dart';
-import 'package:hope_home/views/sign.dart';
-import 'package:hope_home/views/donner dashboard.dart';
+import 'package:hope_home/views/admin/admin_dashboard.dart';
+import 'package:hope_home/views/volunteer/volunteerDashboard.dart';
+import 'package:hope_home/views/general_auth/sign.dart';
+import 'package:hope_home/views/donor/donner%20dashboard.dart';
 import 'package:hope_home/userProvider.dart';
 import 'custbutom.dart';
 import 'textform.dart';

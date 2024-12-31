@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'communication_page.dart';
+import 'communication_module/communication_page.dart';
 import 'donor_list_page.dart'; // Import the donor list page
 
 class AdminDashboard extends StatelessWidget {
