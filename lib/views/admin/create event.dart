@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../controllers/event controller.dart';
 import '../../models/event.dart';
-import '../../models/event builder.dart';
+import '../../models/iterators/event collection.dart';
 
 class CreateEventPage extends StatefulWidget {
   const CreateEventPage({Key? key}) : super(key: key);
@@ -34,22 +34,20 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
   void _createEvent() {
     if (_formKey.currentState!.validate()) {
-      final EventBuilder builder = EventBuilder();
-      Event event = builder
-          .setId(DateTime.now().millisecondsSinceEpoch.toString())
-          .setName(_nameController.text)
-          .setDescription(_descriptionController.text)
-          .setDate(_dateController.text)
-          .setAttendance(int.parse(_attendanceController.text))
-          .build();
-
+      Event event = Event(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        name: _nameController.text,
+        description: _descriptionController.text,
+        date: _dateController.text,
+        attendance: int.parse(_attendanceController.text),
+      );
       _saveEventToFirebase(event);
     }
   }
 
   Widget _buildEventList() {
     return FutureBuilder<List<Event>>(
-      future: _eventController.fetchEvents(), // Assuming your controller has a method to fetch events
+      future: _eventController.fetchEvents(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -58,21 +56,30 @@ class _CreateEventPageState extends State<CreateEventPage> {
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Center(child: Text('No events found.'));
         } else {
-          final eventList = snapshot.data!;
-          return ListView.builder(
-            shrinkWrap: true,
-            itemCount: eventList.length,
-            itemBuilder: (context, index) {
-              final event = eventList[index];
-              return Card(
+          final eventList = EventList();
+          snapshot.data!.forEach(eventList.addEvent);
+
+          final iterator = eventList.createIterator();
+          final List<Widget> eventWidgets = [];
+          while (iterator.hasNext()) {
+            final event = iterator.next();
+            eventWidgets.add(
+              Card(
                 margin: const EdgeInsets.symmetric(vertical: 8.0),
                 elevation: 5,
                 child: ListTile(
                   title: Text(event.name),
-                  subtitle: Text("Date: ${event.date}\nDescription: ${event.description}"),
+                  subtitle: Text(
+                    "Date: ${event.date}\nDescription: ${event.description}",
+                  ),
                 ),
-              );
-            },
+              ),
+            );
+          }
+
+          return ListView(
+            shrinkWrap: true,
+            children: eventWidgets,
           );
         }
       },
@@ -101,8 +108,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         labelText: 'Event Name',
                         icon: Icon(Icons.event),
                       ),
-                      validator: (value) =>
-                      value == null || value.isEmpty ? 'Please enter a name' : null,
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Please enter a name'
+                          : null,
                     ),
                     TextFormField(
                       controller: _descriptionController,
@@ -110,8 +118,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         labelText: 'Description',
                         icon: Icon(Icons.description),
                       ),
-                      validator: (value) =>
-                      value == null || value.isEmpty ? 'Please enter a description' : null,
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Please enter a description'
+                          : null,
                     ),
                     TextFormField(
                       controller: _dateController,
@@ -119,8 +128,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         labelText: 'Date',
                         icon: Icon(Icons.calendar_today),
                       ),
-                      validator: (value) =>
-                      value == null || value.isEmpty ? 'Please enter a date' : null,
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Please enter a date'
+                          : null,
                     ),
                     TextFormField(
                       controller: _attendanceController,
@@ -143,7 +153,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 icon: const Icon(Icons.save),
                 label: const Text("Create Event"),
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   backgroundColor: Colors.blue.shade700,
                 ),
               ),
