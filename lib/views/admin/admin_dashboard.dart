@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../donor/all_donations_page.dart';
 import 'create event.dart'; // Import the CreateEventPage
 import 'communication_module/communication_page.dart';
 import 'donor_list_page.dart';
@@ -154,6 +155,17 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     );
                   },
                 ),
+                _buildDashboardButton(
+                  'View All Donations',
+                  Icons.monetization_on,
+                      () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AllDonationsPage()),
+                    );
+                  },
+                ),
+
               ],
             ),
           ],

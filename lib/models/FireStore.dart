@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hope_home/models/DBService.dart';
 
+import 'donation.dart';
 import 'users/donor.dart';
 
 class FirestoreDatabaseService implements DatabaseService {
@@ -111,4 +112,43 @@ class FirestoreDatabaseService implements DatabaseService {
       return [];
     }
   }
+// Add a new donation to Firestore
+  Future<void> addDonation(Donation donation) async {
+    try {
+      await _firestore.collection('donations').add(donation.toJson());
+    } catch (e) {
+      print('Error adding donation: $e');
+    }
+  }
+
+// Fetch donations by donor email
+  Future<List<Donation>> fetchDonationsByEmail(String email) async {
+    try {
+      final snapshot = await _firestore
+          .collection('donations')
+          .where('donorEmail', isEqualTo: email)
+          .get();
+
+      return snapshot.docs.map((doc) {
+        return Donation.fromJson(doc.data() as Map<String, dynamic>, doc.id);
+      }).toList();
+    } catch (e) {
+      print('Error fetching donations: $e');
+      return [];
+    }
+  }
+  Future<List<Donation>> fetchAllDonations() async {
+    try {
+      final snapshot = await _firestore.collection('donations').get();
+
+      return snapshot.docs.map((doc) {
+        return Donation.fromJson(doc.data() as Map<String, dynamic>, doc.id);
+      }).toList();
+    } catch (e) {
+      print('Error fetching all donations: $e');
+      return [];
+    }
+  }
+
+
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'donation_history_page.dart';
 import 'inbox_page.dart';
+import 'make_donation_page.dart';
 
 class DonorDashboard extends StatelessWidget {
   final Map<String, dynamic> donor;
@@ -78,6 +80,28 @@ class DonorDashboard extends StatelessWidget {
                       );
                     },
                   ),
+                  _buildDashboardButton(
+                    'Make a Donation',
+                    Icons.volunteer_activism,
+                        () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MakeDonationPage(donor: donor)),
+                      );
+                    },
+                  ),
+                  _buildDashboardButton(
+                    'Donation History',
+                    Icons.history,
+                        () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => DonationHistoryPage(donorEmail: donor['email'])),
+                      );
+                    },
+                  ),
+
+
                 ],
               ),
             ],
