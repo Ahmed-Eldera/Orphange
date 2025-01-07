@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hope_home/models/DBService.dart';
+import 'package:hope_home/models/db_handlers/DBService.dart';
+import 'package:hope_home/models/event.dart';
+import 'package:hope_home/controllers/eventsProxy.dart';
 
-import 'donation.dart';
-import 'users/donor.dart';
+import '../Donation/donation.dart';
+import '../users/donor.dart';
 
 class FirestoreDatabaseService implements DatabaseService {
   // Private static instance
@@ -150,5 +152,22 @@ class FirestoreDatabaseService implements DatabaseService {
     }
   }
 
+
+  Future<List<Event>?> fetchEvents(String userType) async {
+    return EventsProxy().fetchEvents(userType);
+  }
+
+  Future<List<Event>?> fetchAllEvents() async {
+    try {
+      final snapshot = await _firestore.collection('events').get();
+      return snapshot.docs.map((doc) {
+        return Event.fromMap(doc.data(), doc.id);
+      }).toList();
+    } catch (e) {
+      throw Exception('Failed to fetch events: $e');
+    }
+  }
+
+  // Filter events to only include those happening this week
 
 }

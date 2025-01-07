@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hope_home/controllers/loginController.dart';
-import 'package:hope_home/models/FireAuth.dart';
-import 'package:hope_home/models/FireStore.dart';
+import 'package:hope_home/models/auth/FireAuth.dart';
+import 'package:hope_home/models/db_handlers/FireStore.dart';
 import 'package:hope_home/models/users/userHelper.dart';
 import 'package:hope_home/userProvider.dart';
 import 'package:hope_home/views/general_auth/login.dart';

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hope_home/userProvider.dart';
 import '../../controllers/event controller.dart';
 import '../../models/event.dart';
-import '../../models/iterators/event collection.dart';
+import '../event_page.dart';
 
 class CreateEventPage extends StatefulWidget {
   const CreateEventPage({Key? key}) : super(key: key);
@@ -45,46 +46,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
     }
   }
 
-  Widget _buildEventList() {
-    return FutureBuilder<List<Event>>(
-      future: _eventController.fetchEvents(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('No events found.'));
-        } else {
-          final eventList = EventList();
-          snapshot.data!.forEach(eventList.addEvent);
 
-          final iterator = eventList.createIterator();
-          final List<Widget> eventWidgets = [];
-          while (iterator.hasNext()) {
-            final event = iterator.next();
-            eventWidgets.add(
-              Card(
-                margin: const EdgeInsets.symmetric(vertical: 8.0),
-                elevation: 5,
-                child: ListTile(
-                  title: Text(event.name),
-                  subtitle: Text(
-                    "Date: ${event.date}\nDescription: ${event.description}",
-                  ),
-                ),
-              ),
-            );
-          }
-
-          return ListView(
-            shrinkWrap: true,
-            children: eventWidgets,
-          );
-        }
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +126,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8.0),
-              _buildEventList(),
+              buildEventList(_eventController,UserProvider().currentUser!.type),
             ],
           ),
         ),

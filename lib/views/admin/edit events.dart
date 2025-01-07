@@ -11,7 +11,7 @@ class EditEventPage extends StatefulWidget {
 
 class _EditEventPageState extends State<EditEventPage> {
   final _eventController = EventController(); // Controller to manage events
-  List<Event> _events = []; // List to store events from Firestore
+  List<Event>? _events = []; // List to store events from Firestore
 
   @override
   void initState() {
@@ -22,7 +22,7 @@ class _EditEventPageState extends State<EditEventPage> {
   // Fetch events from Firestore
   void _fetchEvents() async {
     try {
-      final eventList = await _eventController.fetchEvents();
+      final eventList = await _eventController.fetchEvents("Admin");
       setState(() {
         _events = eventList; // Update the list of events
       });
@@ -46,9 +46,9 @@ class _EditEventPageState extends State<EditEventPage> {
   // Build the list of events as clickable boxes (cards)
   Widget _buildEventList() {
     return ListView.builder(
-      itemCount: _events.length,
+      itemCount: _events!.length,
       itemBuilder: (context, index) {
-        final event = _events[index];
+        final event = _events![index];
         return GestureDetector(
           onTap: () => _editEvent(event), // Navigate to edit when tapped
           child: Container(
@@ -85,7 +85,7 @@ class _EditEventPageState extends State<EditEventPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: _events.isEmpty
+        child: _events!.isEmpty
             ? Center(child: CircularProgressIndicator()) // Show loading indicator if events are empty
             : _buildEventList(), // Display the list of events as clickable boxes
       ),

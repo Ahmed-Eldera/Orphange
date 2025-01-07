@@ -7,8 +7,8 @@ import '../volunteer/signvol.dart';
 import '../admin/admin_sign_up_screen.dart';
 import '../admin/admin_login_screen.dart';
 import '../../controllers/loginController.dart';
-import '../../models/FireAuth.dart';
-import '../../models/FireStore.dart';
+import '../../models/auth/FireAuth.dart';
+import '../../models/db_handlers/FireStore.dart';
 import '../../userProvider.dart';
 
 void main() {
@@ -196,7 +196,7 @@ class SignUpScreen extends StatelessWidget {
                   ),
                 );
               },
-              child: const Text('Login as Donor'),
+              child: Text('Login as Donor',style: TextStyle(color: Colors.white),),
             ),
           ],
         ),

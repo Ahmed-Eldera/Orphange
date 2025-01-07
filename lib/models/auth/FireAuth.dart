@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:hope_home/models/AuthService.dart';
+import 'package:hope_home/models/auth/AuthService.dart';
 
 class FirebaseAuthService implements AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;

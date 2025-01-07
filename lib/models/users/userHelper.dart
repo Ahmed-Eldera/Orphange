@@ -1,6 +1,6 @@
-import 'package:hope_home/models/AuthService.dart';
-import 'package:hope_home/models/DBService.dart';
-import 'package:hope_home/models/FireStore.dart';
+import 'package:hope_home/models/auth/AuthService.dart';
+import 'package:hope_home/models/db_handlers/DBService.dart';
+import 'package:hope_home/models/db_handlers/FireStore.dart';
 
 class UserServiceHelper {
   final AuthService authService;

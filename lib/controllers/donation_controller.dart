@@ -1,13 +1,13 @@
 // donation_controller.dart
 
-import 'package:hope_home/models/FireStore.dart';
-import 'package:hope_home/models/basic_donation.dart'; // Import the BasicDonation
-import 'package:hope_home/models/healthcare_share.dart'; // Import HealthcareShare decorator
-import 'package:hope_home/models/school_supplies_share.dart'; // Import SchoolSuppliesShare decorator
-import 'package:hope_home/models/entertainment_share.dart'; // Import EntertainmentShare decorator
-import 'package:hope_home/models/donation.dart';
+import 'package:hope_home/models/db_handlers/FireStore.dart';
+import 'package:hope_home/models/Donation/basic_donation.dart'; // Import the BasicDonation
+import 'package:hope_home/models/Donation/healthcare_share.dart'; // Import HealthcareShare decorator
+import 'package:hope_home/models/Donation/school_supplies_share.dart'; // Import SchoolSuppliesShare decorator
+import 'package:hope_home/models/Donation/entertainment_share.dart'; // Import EntertainmentShare decorator
+import 'package:hope_home/models/Donation/donation.dart';
 
-import '../models/donation_calculator.dart'; // Import the Donation model
+import '../models/Donation/donation_calculator.dart'; // Import the Donation model
 
 
 class DonationController {

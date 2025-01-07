@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../models/donation.dart';
-import '../../models/FireStore.dart';
+import '../../models/Donation/donation.dart';
+import '../../models/db_handlers/FireStore.dart';
 
 class DonationHistoryPage extends StatelessWidget {
   final String donorEmail;

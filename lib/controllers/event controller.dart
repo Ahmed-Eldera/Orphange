@@ -1,19 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hope_home/models/db_handlers/FireStore.dart';
 import '../models/event.dart';
 
 class EventController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+  final FirestoreDatabaseService _dbservice = FirestoreDatabaseService();
   // Fetch events from Firestore
-  Future<List<Event>> fetchEvents() async {
-    try {
-      final snapshot = await _firestore.collection('events').get();
-      return snapshot.docs.map((doc) {
-        return Event.fromMap(doc.data(), doc.id); // Pass doc.id along with doc.data()
-      }).toList();
-    } catch (e) {
-      throw Exception('Failed to fetch events: $e');
-    }
+  Future<List<Event>?> fetchEvents(String type) async {
+    List<Event>? events = await _dbservice.fetchEvents(type);
+    return events;
   }
 
   // Update event in Firestore

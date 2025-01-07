@@ -1,5 +1,4 @@
-observer -> the users can choose to get notified for upcoming events
-decorator -> decorate the ticket for the events (different ticket prices)
+observer -> admin observe volunteers
 command 
 adapter 
 state -> event upcoming/started/ended
@@ -17,3 +16,31 @@ observer * - done (provider)
 singleton - done (provider , automatic firebase)
 factory - done (user object creation)
 template - done (login+signup)
+
+
+
+
+
+--->going to implement the proxy and iterator now on viewing the events
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DONOR:
+email: jkl@jkl.com
+pass: jkljkljkl
+
+admin:
+email:k@k.com   
+pass: jkljkljkl

@@ -1,4 +1,4 @@
-import 'package:hope_home/models/FireStore.dart';
+import 'package:hope_home/models/db_handlers/FireStore.dart';
 import '../models/users/donor.dart';
 
 class DonorController {

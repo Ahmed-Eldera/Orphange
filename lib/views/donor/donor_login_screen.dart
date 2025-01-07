@@ -104,7 +104,7 @@ class _DonorLoginScreenState extends State<DonorLoginScreen> {
                 textStyle: const TextStyle(fontSize: 18),
               ),
               onPressed: _handleLogin,
-              child: const Text('Login'),
+              child:  Text('Login',style:TextStyle(color:Colors.white)),
             ),
           ],
         ),
