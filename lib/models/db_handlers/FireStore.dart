@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hope_home/models/db_handlers/DBService.dart';
 import 'package:hope_home/models/event.dart';
 import 'package:hope_home/controllers/eventsProxy.dart';
+import 'package:hope_home/models/users/volunteer.dart';
 
 import '../Donation/donation.dart';
 import '../users/donor.dart';
@@ -95,12 +96,33 @@ class FirestoreDatabaseService implements DatabaseService {
       return [];
     }
   }
+  Future<List<Volunteer>> fetchAllVolunteers() async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('type', isEqualTo: 'volunteer')
+          .get();
 
-  Future<List<Map<String, dynamic>>> fetchMessagesForRecipient(String recipientName) async {
+      return snapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        data['id'] = doc.id; // Ensure 'id' field is included
+        return Volunteer(
+          id: data['id'],
+          name: data['name'],
+          email: data['email'], skills: [], availability: [],
+          // history: List<String>.from(data['history'] ?? []),
+        );
+      }).toList();
+    } catch (e) {
+      print('Error fetching donors: $e');
+      return [];
+    }
+  }
+  Future<List<Map<String, dynamic>>> fetchMessagesForRecipient(String recipientID) async {
     try {
       QuerySnapshot snapshot = await _firestore
           .collection('messages')
-          .where('recipient', isEqualTo: recipientName)
+          .where('recipient', isEqualTo: recipientID)
           .orderBy('timestamp', descending: true)
           .get();
 

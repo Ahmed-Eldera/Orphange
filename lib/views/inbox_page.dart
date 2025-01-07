@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hope_home/userProvider.dart';
-import '../../models/db_handlers/FireStore.dart';
+import '../models/db_handlers/FireStore.dart';
 
 class InboxPage extends StatefulWidget {
-  final String donorName;
 
 
-  const InboxPage({Key? key, required this.donorName}) : super(key: key);
+
+  const InboxPage({Key? key}) : super(key: key);
 
   @override
   _InboxPageState createState() => _InboxPageState();

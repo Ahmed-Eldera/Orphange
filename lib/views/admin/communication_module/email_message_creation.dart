@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../models/communication_strats/communication_context.dart';
+import '../../../controllers/communication_context.dart';
 import '../../../models/communication_strats/email_strategy.dart';
 import '../../../controllers/donor_controller.dart';
 import '../../../models/users/donor.dart';
@@ -95,9 +95,9 @@ class _EmailMessageCreationPageState extends State<EmailMessageCreationPage> {
     }
 
     final selectedDonor = _donors.firstWhere((donor) => donor.id == _selectedDonorId);
-
-    _context.setStrategy(EmailStrategy());
-    _context.executeStrategy(selectedDonor.name, _messageController.text, 'Email');
+    _context.send(EmailStrategy(),selectedDonor.id, _messageController.text, 'Email');
+    //_context.setStrategy(EmailStrategy());
+   //_context.executeStrategy(selectedDonor.name, _messageController.text, 'Email');
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Email sent to ${selectedDonor.name}')),
     );

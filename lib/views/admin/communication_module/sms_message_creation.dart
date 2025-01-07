@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../models/communication_strats/communication_context.dart';
+import '../../../controllers/communication_context.dart';
 import '../../../models/communication_strats/sms_strategy.dart';
 import '../../../controllers/donor_controller.dart';
 import '../../../models/users/donor.dart';
@@ -95,9 +95,9 @@ class _SmsMessageCreationPageState extends State<SmsMessageCreationPage> {
     }
 
     final selectedDonor = _donors.firstWhere((donor) => donor.id == _selectedDonorId);
-
-    _context.setStrategy(SmsStrategy());
-    _context.executeStrategy(selectedDonor.name, _messageController.text, 'SMS');
+    _context.send(SmsStrategy(),selectedDonor.id, _messageController.text, 'SMS');
+    // _context.setStrategy(SmsStrategy());
+    // _context.executeStrategy(selectedDonor.name, _messageController.text, 'SMS');
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('SMS sent to ${selectedDonor.name}')),
     );

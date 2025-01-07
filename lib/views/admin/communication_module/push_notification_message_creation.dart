@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../models/communication_strats/communication_context.dart';
+import '../../../controllers/communication_context.dart';
 import '../../../models/communication_strats/push_notification_strategy.dart';
 import '../../../controllers/donor_controller.dart';
 import '../../../models/users/donor.dart';
@@ -97,10 +97,10 @@ class _PushNotificationMessageCreationPageState
     }
 
     final selectedDonor = _donors.firstWhere((donor) => donor.id == _selectedDonorId);
-
-    _context.setStrategy(PushNotificationStrategy());
-    _context.executeStrategy(
-        selectedDonor.name, _messageController.text, 'Push Notification');
+    _context.send(PushNotificationStrategy(),selectedDonor.id, _messageController.text, 'Push notification');
+    // _context.setStrategy(PushNotificationStrategy());
+    // _context.executeStrategy(
+    //     selectedDonor.name, _messageController.text, 'Push Notification');
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Notification sent to ${selectedDonor.name}')),
     );

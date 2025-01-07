@@ -15,6 +15,28 @@ class EventsProxy {
     }
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // Method for non-admin users, applying the week filter
   Future<List<Event>?> _fetchEventsForUser() async {
     try {
