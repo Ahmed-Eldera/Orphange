@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hope_home/views/show_events.dart';
 
 class DashboardScreen extends StatelessWidget {
   @override
@@ -32,7 +33,7 @@ class DashboardScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ViewEventsPage()),
+                      MaterialPageRoute(builder: (context) => ShowEvents()),
                     );
                   },
                   style: ElevatedButton.styleFrom(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hope_home/views/volunteer/Vol_login.dart';
 import '../../controllers/signupController.dart';
 import '../../models/users/userHelper.dart';
 import '../donor/donor_login_screen.dart';
@@ -97,7 +98,14 @@ class SignUpScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => VolunteerSignUpScreen(),
+                    builder: (context) => VolunteerSignUpScreen(controller: UserSignupMailController(
+                        facade: UserServiceHelper(
+                          authService: FirebaseAuthService(),
+                          databaseService: FirestoreDatabaseService(),
+                        ),
+                        userProvider: UserProvider(),
+                      ),
+                    ),
                   ),
                 );
               },
@@ -197,6 +205,36 @@ class SignUpScreen extends StatelessWidget {
                 );
               },
               child: Text('Login as Donor',style: TextStyle(color: Colors.white),),
+            ),            const SizedBox(height: 20),
+
+            // Login as Donor Button
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.purple,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                textStyle: const TextStyle(fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => VolunteerLoginScreen(
+                      controller: UserLoginMailController(
+                        userProvider: UserProvider(),
+                        facade: UserServiceHelper(
+                          authService: FirebaseAuthService(),
+                          databaseService: FirestoreDatabaseService(),
+                        ),
+                        firestoreService: FirestoreDatabaseService(),
+                      ),
+                    ),
+                  ),
+                );
+              },
+              child: Text('Login as vol',style: TextStyle(color: Colors.white),),
             ),
           ],
         ),

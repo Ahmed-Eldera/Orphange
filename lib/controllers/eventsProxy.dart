@@ -29,13 +29,15 @@ class EventsProxy {
 
   // Filter events to only include those happening this week
   List<Event> _filterEventsForThisWeek(List<Event> events) {
+    print(events);
     final now = DateTime.now();
-    final startOfWeek = now.subtract(Duration(days: now.weekday - 1)); // Start of this week (Monday)
-    final endOfWeek = startOfWeek.add(Duration(days: 6)); // End of this week (Sunday)
-
-    return events.where((event) {
-      final eventDate = DateTime.parse(event.date); // Assuming event.date is in a parsable format
+    final startOfWeek = now.subtract(Duration(days: 1)); // Start of this week (Monday)
+    final endOfWeek = startOfWeek.add(Duration(days: 7)); // End of this week (Sunday)
+    List<Event> filtered = events.where((event) {
+      DateTime eventDate = DateTime.parse(event.date); // Assuming event.date is in a parsable format
       return eventDate.isAfter(startOfWeek) && eventDate.isBefore(endOfWeek);
     }).toList();
+    print(filtered);
+    return filtered;
   }
 }

@@ -2,7 +2,6 @@ observer -> admin observe volunteers
 command 
 adapter 
 state -> event upcoming/started/ended
-proxy -> viewing upcoming and old events for admin only , other users will only see current events
 
 
 ??facade -> facade all db usecases ??
@@ -16,12 +15,9 @@ observer * - done (provider)
 singleton - done (provider , automatic firebase)
 factory - done (user object creation)
 template - done (login+signup)
+proxy - done (showing specific info to each user based on the type)
 
 
-
-
-
---->going to implement the proxy and iterator now on viewing the events
 
 
 

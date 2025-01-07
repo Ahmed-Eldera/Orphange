@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore package
-import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Authentication
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hope_home/controllers/signupController.dart'; // Import Firebase Authentication
 
 class VolunteerSignUpScreen extends StatefulWidget {
+  final UserSignupMailController controller;
+
+  const VolunteerSignUpScreen({Key? key, required this.controller}) : super(key: key);
+
   @override
   _VolunteerSignUpScreenState createState() => _VolunteerSignUpScreenState();
 }
-
 class _VolunteerSignUpScreenState extends State<VolunteerSignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _skillsController = TextEditingController();
 
   // Firebase Authentication instance
@@ -24,40 +28,38 @@ class _VolunteerSignUpScreenState extends State<VolunteerSignUpScreen> {
     String name = _nameController.text.trim();
     String email = _emailController.text.trim();
     String password = _passwordController.text.trim();
-    String age = _ageController.text.trim();
-    String skills = _skillsController.text.trim();
+    String phone = _phoneController.text.trim();
+    // String skills = _skillsController.text.trim();
+
+    if (name.isEmpty || email.isEmpty || password.isEmpty || phone.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
 
     try {
-      // Step 1: Create a new user with Firebase Authentication
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
+      String? userId = await widget.controller.authenticate(
+        email,
+        password,
+        name,
+        'volunteer',
       );
-      User? user = userCredential.user;
 
-      if (user != null) {
-        // Step 2: Add the user details (including type) to Firestore
-        await _firestore.collection('users').doc(user.uid).set({
-          'name': name,
-          'email': email,
-          'age': age,
-          'skills': skills,
-          'type': 'volunteer', // User type set to 'volunteer'
-          'uid': user.uid, // Store the user UID
-        });
-
-        // Show a success message and navigate to the next screen
+      if (userId != null) {
+        widget.controller.postLoginProcess();
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Registration successful!')),
+          const SnackBar(content: Text('Donor registration successful!')),
         );
-
-        // After successful registration, navigate to the login screen or another screen
-        Navigator.pop(context); // You can change this to navigate to a dashboard, for example.
+        Navigator.pop(context); // Navigate to login or dashboard
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Sign-Up failed')),
+        );
       }
-    } on FirebaseAuthException catch (e) {
-      // Handle Firebase Authentication exceptions
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Registration failed: ${e.message}')),
+        SnackBar(content: Text('Error: $e')),
       );
     }
   }
@@ -172,43 +174,23 @@ class _VolunteerSignUpScreenState extends State<VolunteerSignUpScreen> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
-                    controller: _ageController,
+                    controller: _phoneController,
                     decoration: InputDecoration(
-                      hintText: 'Enter your age',
+                      hintText: 'Enter your phone',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your age';
+                        return 'Please enter your phone';
                       }
                       return null;
                     },
                   ),
                   const SizedBox(height: 20),
                   // Skills
-                  const Text(
-                    "Skills",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                  ),
-                  const SizedBox(height: 10),
-                  TextFormField(
-                    controller: _skillsController,
-                    decoration: InputDecoration(
-                      hintText: 'Enter your skills',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your skills';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 30),
+
                   // Submit Button
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(

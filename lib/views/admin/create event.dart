@@ -19,6 +19,25 @@ class _CreateEventPageState extends State<CreateEventPage> {
   final TextEditingController _attendanceController = TextEditingController();
   final EventController _eventController = EventController();
 
+  DateTime? _selectedDate;
+
+  void _selectDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        _selectedDate = pickedDate;
+        _dateController.text =
+            "${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2, '0')}-${_selectedDate!.day.toString().padLeft(2, '0')}"; // Format date as YYYY-MM-DD
+      });
+    }
+  }
+
   void _saveEventToFirebase(Event event) async {
     try {
       await _eventController.saveEvent(event);
@@ -45,8 +64,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
       _saveEventToFirebase(event);
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -86,13 +103,16 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     ),
                     TextFormField(
                       controller: _dateController,
+                      readOnly: true, // Make the field non-editable
                       decoration: const InputDecoration(
                         labelText: 'Date',
                         icon: Icon(Icons.calendar_today),
                       ),
-                      validator: (value) => value == null || value.isEmpty
-                          ? 'Please enter a date'
-                          : null,
+                      onTap: () => _selectDate(context), // Open the DatePicker
+                      validator: (value) =>
+                          value == null || value.isEmpty
+                              ? 'Please select a date'
+                              : null,
                     ),
                     TextFormField(
                       controller: _attendanceController,
@@ -102,9 +122,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       ),
                       keyboardType: TextInputType.number,
                       validator: (value) =>
-                      value == null || int.tryParse(value) == null
-                          ? 'Please enter a valid number'
-                          : null,
+                          value == null || int.tryParse(value) == null
+                              ? 'Please enter a valid number'
+                              : null,
                     ),
                   ],
                 ),
@@ -115,8 +135,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 icon: const Icon(Icons.save),
                 label: const Text("Create Event"),
                 style: ElevatedButton.styleFrom(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16, vertical: 12),
                   backgroundColor: Colors.blue.shade700,
                 ),
               ),
@@ -126,7 +146,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8.0),
-              buildEventList(_eventController,UserProvider().currentUser!.type),
+              buildEventList(_eventController),
             ],
           ),
         ),
