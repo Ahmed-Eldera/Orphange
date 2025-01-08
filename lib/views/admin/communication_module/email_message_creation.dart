@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hope_home/controllers/volunteer_controller.dart';
+import 'package:hope_home/models/users/volunteer.dart';
 import '../../../controllers/communication_context.dart';
 import '../../../models/communication_strats/email_strategy.dart';
 import '../../../controllers/donor_controller.dart';
@@ -14,23 +16,27 @@ class EmailMessageCreationPage extends StatefulWidget {
 class _EmailMessageCreationPageState extends State<EmailMessageCreationPage> {
   final CommunicationContext _context = CommunicationContext();
   final DonorController _donorController = DonorController();
+  
   final TextEditingController _messageController = TextEditingController();
 
-  String? _selectedDonorId;
+  String? _selectedUserId;
   List<Donor> _donors = [];
+  final VolunteerController _volunteerController = VolunteerController();
+  List<Volunteer> _volunteers = [];
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadDonors();
+    _loadUsers();
   }
 
-  Future<void> _loadDonors() async {
+  Future<void> _loadUsers() async {
     setState(() {
       _isLoading = true;
     });
     _donors = await _donorController.getAllDonors();
+    _volunteers = await _volunteerController.getAllVolunteers();
     setState(() {
       _isLoading = false;
     });
@@ -51,15 +57,24 @@ class _EmailMessageCreationPageState extends State<EmailMessageCreationPage> {
           children: [
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(labelText: 'Select Donor'),
-              items: _donors
-                  .map((donor) => DropdownMenuItem(
-                value: donor.id,
-                child: Text(donor.name),
-              ))
-                  .toList(),
+              items:  [
+    ..._donors.map(
+      (donor) => DropdownMenuItem(
+        value: donor.id, // Use a prefix to distinguish donors
+        child: Text('Donor: ${donor.name}'),
+      ),
+    ),
+    ..._volunteers.map(
+      (volunteer) => DropdownMenuItem(
+        value: volunteer.id, // Use a prefix to distinguish volunteers
+        child: Text('Volunteer: ${volunteer.name}'),
+      ),
+    ),
+  ].toList(),
+
               onChanged: (value) {
                 setState(() {
-                  _selectedDonorId = value;
+                  _selectedUserId = value;
                 });
               },
             ),
@@ -86,20 +101,21 @@ class _EmailMessageCreationPageState extends State<EmailMessageCreationPage> {
     );
   }
 
+
   void _sendMessage() {
-    if (_selectedDonorId == null || _messageController.text.isEmpty) {
+    if (_selectedUserId == null || _messageController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill in all fields')),
       );
       return;
     }
 
-    final selectedDonor = _donors.firstWhere((donor) => donor.id == _selectedDonorId);
-    _context.send(EmailStrategy(),selectedDonor.id, _messageController.text, 'Email');
-    //_context.setStrategy(EmailStrategy());
-   //_context.executeStrategy(selectedDonor.name, _messageController.text, 'Email');
+    // final selectedUser = _donors.firstWhere((donor) => donor.id == _selectedUserId);
+    _context.send(EmailStrategy(),_selectedUserId!, _messageController.text, 'SMS');
+    // _context.setStrategy(SmsStrategy());
+    // _context.executeStrategy(selectedUser.name, _messageController.text, 'SMS');
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Email sent to ${selectedDonor.name}')),
+      SnackBar(content: Text('SMS sent Successfully')),
     );
   }
 }
