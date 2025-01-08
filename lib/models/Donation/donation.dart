@@ -15,19 +15,7 @@ class Donation {
     required this.date,
   });
 
-  // Convert Donation object to Map
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'donorName': donorName,
-      'donorEmail': donorEmail,
-      'amount': amount,
-      'method': method,
-      'date': date,
-    };
-  }
 
-  // Create Donation object from Map
   factory Donation.fromJson(Map<String, dynamic> data, String id) {
     return Donation(
       id: id,

@@ -111,11 +111,11 @@ class _EmailMessageCreationPageState extends State<EmailMessageCreationPage> {
     }
 
     // final selectedUser = _donors.firstWhere((donor) => donor.id == _selectedUserId);
-    _context.send(EmailStrategy(),_selectedUserId!, _messageController.text, 'SMS');
-    // _context.setStrategy(SmsStrategy());
-    // _context.executeStrategy(selectedUser.name, _messageController.text, 'SMS');
+    _context.send(EmailStrategy(),_selectedUserId!, _messageController.text, 'Email');
+    // _context.setStrategy(EmailStrategy());
+    // _context.executeStrategy(selectedUser.name, _messageController.text, 'Email');
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('SMS sent Successfully')),
+      SnackBar(content: Text('Email sent Successfully')),
     );
   }
 }

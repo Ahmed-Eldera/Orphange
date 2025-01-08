@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hope_home/controllers/loginController.dart';
-import 'package:hope_home/views/admin/admin_dashboard.dart';
 import 'package:hope_home/views/volunteer/volunteerDashboard.dart';
 
 class VolunteerLoginScreen extends StatefulWidget {
@@ -9,10 +8,10 @@ class VolunteerLoginScreen extends StatefulWidget {
   const VolunteerLoginScreen({Key? key, required this.controller}) : super(key: key);
 
   @override
-  _AdminLoginScreenState createState() => _AdminLoginScreenState();
+  _VolunteerLoginScreenState createState() => _VolunteerLoginScreenState();
 }
 
-class _AdminLoginScreenState extends State<VolunteerLoginScreen> {
+class _VolunteerLoginScreenState extends State<VolunteerLoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -42,7 +41,7 @@ class _AdminLoginScreenState extends State<VolunteerLoginScreen> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Invalid admin credentials')),
+          const SnackBar(content: Text('Invalid Volunteer credentials')),
         );
       }
     } catch (e) {
@@ -56,7 +55,7 @@ class _AdminLoginScreenState extends State<VolunteerLoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin Login'),
+        title: const Text('Volunteer Login'),
         backgroundColor: Colors.teal,
       ),
       body: Container(
@@ -68,7 +67,7 @@ class _AdminLoginScreenState extends State<VolunteerLoginScreen> {
             // Title
             const Center(
               child: Text(
-                'Admin Login',
+                'Volunteer Login',
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,

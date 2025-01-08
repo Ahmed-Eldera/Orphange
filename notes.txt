@@ -4,9 +4,6 @@ adapter
 state -> event upcoming/started/ended
 
 
-??facade -> facade all db usecases ??
-// iterator ->view events , view donations
-
 
 facade - done in user services (interfacing the auth and db service)
 iterator - done in viewing donors 
@@ -19,7 +16,8 @@ proxy - done (showing specific info to each user based on the type)
 
 
 
-
+event creation -> the object is created in the view
+donation creation -> to much parameters in the controller it should make a donation and continue using it 
 
 
 

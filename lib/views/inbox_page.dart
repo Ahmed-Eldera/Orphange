@@ -30,6 +30,7 @@ class _InboxPageState extends State<InboxPage> {
       UserProvider userProvider = UserProvider();
       String id= userProvider.currentUser!.id;
     _messages = await _dbService.fetchMessagesForRecipient(id);
+    print(_messages);
     setState(() {
       _isLoading = false;
     });

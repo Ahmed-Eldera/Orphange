@@ -113,11 +113,11 @@ class _PushNotificationMessageCreationPageState
     }
 
     // final selectedUser = _donors.firstWhere((donor) => donor.id == _selectedUserId);
-    _context.send(PushNotificationStrategy(),_selectedUserId!, _messageController.text, 'SMS');
-    // _context.setStrategy(SmsStrategy());
-    // _context.executeStrategy(selectedUser.name, _messageController.text, 'SMS');
+    _context.send(PushNotificationStrategy(),_selectedUserId!, _messageController.text, 'Push Notification');
+    // _context.setStrategy(Push NotificationStrategy());
+    // _context.executeStrategy(selectedUser.name, _messageController.text, 'Push Notification');
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('SMS sent Successfully')),
+      SnackBar(content: Text('Push Notification sent Successfully')),
     );
   }
 }

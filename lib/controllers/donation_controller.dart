@@ -1,5 +1,6 @@
 // donation_controller.dart
 
+import 'package:hope_home/models/Donation/donationAdapter.dart';
 import 'package:hope_home/models/db_handlers/FireStore.dart';
 import 'package:hope_home/models/Donation/basic_donation.dart'; // Import the BasicDonation
 import 'package:hope_home/models/Donation/healthcare_share.dart'; // Import HealthcareShare decorator
@@ -70,8 +71,8 @@ class DonationController {
       method: paymentMethod,
       date: DateTime.now().toIso8601String(),
     );
-
+    DonationAdapter adapter = DonationAdapter(donation);
     FirestoreDatabaseService _dbService = FirestoreDatabaseService();
-    await _dbService.addDonation(donation);
+    await _dbService.addDonation(adapter);
   }
 }
