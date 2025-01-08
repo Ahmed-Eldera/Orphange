@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hope_home/views/inbox_page.dart';
 import 'package:hope_home/views/show_events.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -88,7 +89,25 @@ class DashboardScreen extends StatelessWidget {
                   child: Text('Log Start Hours', style: TextStyle(fontSize: 24)),
                 ),
               ),
-
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => InboxPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    padding: EdgeInsets.symmetric(vertical: 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text('view messages', style: TextStyle(fontSize: 24)),
+                ),
+              ),
               // Generate Certificate Button
               Container(
                 margin: EdgeInsets.symmetric(vertical: 8.0),

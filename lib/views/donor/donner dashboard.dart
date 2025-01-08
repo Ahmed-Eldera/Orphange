@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hope_home/views/show_events.dart';
 import 'donation_history_page.dart';
-import 'inbox_page.dart';
+import '../inbox_page.dart';
 import 'make_donation_page.dart';
 
 class DonorDashboard extends StatelessWidget {
@@ -82,7 +82,7 @@ class DonorDashboard extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => InboxPage(donorName: donor['name']),
+                          builder: (context) => InboxPage(),
                         ),
                       );
                     },
