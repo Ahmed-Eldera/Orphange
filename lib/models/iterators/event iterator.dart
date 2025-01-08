@@ -1,4 +1,4 @@
-import '../../models/event.dart';
+import '../Event/event.dart';
 
 abstract class EventIterator {
   bool hasNext();

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hope_home/models/Donation/donationAdapter.dart';
 import 'package:hope_home/models/db_handlers/DBService.dart';
-import 'package:hope_home/models/event.dart';
+import 'package:hope_home/models/Event/event.dart';
 import 'package:hope_home/controllers/eventsProxy.dart';
 import 'package:hope_home/models/users/volunteer.dart';
 

@@ -1,4 +1,4 @@
-import 'event.dart';
+import 'Event/event.dart';
 
 class EventBuilder {
   String? _id;

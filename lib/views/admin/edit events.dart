@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/event.dart';
+import '../../models/Event/event.dart';
 import '../../controllers/event controller.dart'; // Ensure correct import
 
 class EditEventPage extends StatefulWidget {

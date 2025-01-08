@@ -1,4 +1,4 @@
-import '../../models/event.dart';
+import '../Event/event.dart';
 import 'event iterator.dart';
 
 abstract class EventCollection {

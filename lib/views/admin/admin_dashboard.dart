@@ -5,7 +5,7 @@ import 'create event.dart'; // Import the CreateEventPage
 import 'communication_module/communication_page.dart';
 import 'donor_list_page.dart';
 import 'edit events.dart'; // Import the donor list page
-import '../../models/event.dart';
+import '../../models/Event/event.dart';
 
 class AdminDashboard extends StatefulWidget {
   final Map<String, dynamic> admin;

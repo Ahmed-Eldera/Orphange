@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hope_home/userProvider.dart';
 import '../../controllers/event controller.dart';
-import '../../models/event.dart';
+import '../../models/Event/event.dart';
 import '../event_page.dart';
 
 class CreateEventPage extends StatefulWidget {

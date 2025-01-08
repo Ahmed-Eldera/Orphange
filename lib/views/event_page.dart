@@ -1,5 +1,5 @@
   import 'package:flutter/material.dart';
-import 'package:hope_home/models/event.dart';
+import 'package:hope_home/models/Event/event.dart';
 import 'package:hope_home/userProvider.dart';
 import '../../models/iterators/event collection.dart';
 import '../../controllers/event controller.dart';

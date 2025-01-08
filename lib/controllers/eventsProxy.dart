@@ -1,5 +1,5 @@
 import 'package:hope_home/models/db_handlers/FireStore.dart';
-import 'package:hope_home/models/event.dart';
+import 'package:hope_home/models/Event/event.dart';
 
 class EventsProxy {
   final FirestoreDatabaseService _firestoreDatabaseService = FirestoreDatabaseService();

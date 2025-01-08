@@ -25,12 +25,5 @@ class Event {
   }
 
   // Convert Event to a JSON map to save to Firestore
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'description': description,
-      'date': date,
-      'attendance': attendance,
-    };
-  }
+
 }
