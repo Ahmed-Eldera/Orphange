@@ -7,7 +7,7 @@ Software Design Patterns project.
 This is an Orphange system that aims to track and digitalize most of the activities done in an orphanage dealing with other parties like donors and volunteers
 
 ## Goals 
-- implement famous design patterns in different situations to learn how to use them effieciently to make a well structured scalable and maintainable able 
+- implement famous design patterns in different situations to learn how to use them effieciently to make a well structured , scalable and maintainable able 
 - challenge our imagination and decision making skills in designing a system with few formal specifications
 - hone our flutter and oop coding skills
 
