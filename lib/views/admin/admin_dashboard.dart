@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hope_home/views/admin/admin_request_management_page.dart';
 import '../donor/all_donations_page.dart';
+import 'admin_task_management_page.dart';
 import 'create event.dart'; // Import the CreateEventPage
 import 'communication_module/communication_page.dart';
 import 'donor_list_page.dart';
@@ -165,6 +167,31 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     );
                   },
                 ),
+                _buildDashboardButton(
+                  'Manage Tasks',
+                  Icons.task,
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AdminTaskManagementPage(), // Replace with actual event ID
+                      ),
+                    );
+                  },
+                ),
+                _buildDashboardButton(
+                  "Manage Requests",
+                  Icons.request_page,
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AdminRequestManagementPage(), // Replace with actual event ID
+                      ),
+                    );
+                  },
+                ),
+
 
               ],
             ),

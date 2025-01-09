@@ -7,6 +7,7 @@ import 'package:hope_home/models/db_handlers/FireStore.dart';
 import 'package:hope_home/models/users/donor.dart';
 import 'package:hope_home/models/users/volunteer.dart';
 import '../models/Event/event.dart';
+import '../models/Event/task.dart';
 
 class EventController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -51,13 +52,29 @@ Future<void> notifyAllUsers(String message) async {
     }
   }
   // Save event to Firestore
-  Future<void> saveEvent(Event event) async {
+  Future<void> saveEvent(DocumentReference eventDocRef, Event event) async {
     try {
       EventAdapter adapter = EventAdapter(event);
-      await _firestore.collection('events').add(adapter.ToFireStore());
-      notifyAllUsers(event.name +" is created check it out");
+      await eventDocRef.set(adapter.ToFireStore()); // Save the event using the generated ID
+      notifyAllUsers(event.name + " is created, check it out!");
     } catch (e) {
       throw Exception('Failed to save event: $e');
     }
   }
+
+
+  Future<void> saveTask(Task task) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('events')
+          .doc(task.eventId) // Use the event ID as the parent document
+          .collection('tasks') // Save task in the sub-collection
+          .doc(task.id) // Task document ID
+          .set(task.toMap());
+      print("Task ${task.name} saved successfully under event ${task.eventId}.");
+    } catch (e) {
+      throw Exception('Failed to save task: $e');
+    }
+  }
+
 }

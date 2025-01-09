@@ -35,7 +35,7 @@ class _VolunteerLoginScreenState extends State<VolunteerLoginScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => DashboardScreen(
+            builder: (context) => VolunteerDashboard(
             ),
           ),
         );

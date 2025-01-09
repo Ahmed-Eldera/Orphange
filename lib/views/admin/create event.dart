@@ -1,8 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:hope_home/userProvider.dart';
 import '../../controllers/event controller.dart';
 import '../../models/Event/event.dart';
-import '../event_page.dart';
+import '../../models/Event/task.dart';
 
 class CreateEventPage extends StatefulWidget {
   const CreateEventPage({Key? key}) : super(key: key);
@@ -18,6 +18,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _attendanceController = TextEditingController();
   final EventController _eventController = EventController();
+  final List<Task> _tasks = []; // List to store tasks
+  final TextEditingController _taskNameController = TextEditingController();
+  final TextEditingController _taskDescriptionController = TextEditingController();
 
   DateTime? _selectedDate;
 
@@ -33,37 +36,77 @@ class _CreateEventPageState extends State<CreateEventPage> {
       setState(() {
         _selectedDate = pickedDate;
         _dateController.text =
-            "${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2, '0')}-${_selectedDate!.day.toString().padLeft(2, '0')}"; // Format date as YYYY-MM-DD
+        "${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2, '0')}-${_selectedDate!.day.toString().padLeft(2, '0')}";
       });
     }
   }
 
-  void _saveEventToFirebase(Event event) async {
-    try {
-      await _eventController.saveEvent(event);
+  void _addTask() {
+    final String taskName = _taskNameController.text.trim();
+    final String taskDescription = _taskDescriptionController.text.trim();
+
+    if (taskName.isEmpty || taskDescription.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Event created successfully!')),
+        const SnackBar(content: Text('Please fill in all task fields')),
       );
-      Navigator.pop(context);
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to create event: $error')),
-      );
+      return;
     }
+
+    setState(() {
+      _tasks.add(Task(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        eventId: '', // Will be set after the event is created
+        name: taskName,
+        description: taskDescription,
+      ));
+    });
+
+    _taskNameController.clear();
+    _taskDescriptionController.clear();
+    Navigator.pop(context); // Close the dialog
   }
 
   void _createEvent() {
     if (_formKey.currentState!.validate()) {
+      // Get a new document reference with an auto-generated ID
+      final eventDocRef = FirebaseFirestore.instance.collection('events').doc();
+      final eventId = eventDocRef.id; // Get the auto-generated ID
+
+      // Create the Event object
       Event event = Event(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        id: eventId,
         name: _nameController.text,
         description: _descriptionController.text,
         date: _dateController.text,
         attendance: int.parse(_attendanceController.text),
       );
-      _saveEventToFirebase(event);
+
+      // Save the Event
+      _eventController.saveEvent(eventDocRef, event).then((_) {
+        // Save tasks under this event
+        for (var task in _tasks) {
+          task.eventId = eventId; // Assign the event ID to the task
+          _eventController.saveTask(task).then((_) {
+            print("Task ${task.name} saved successfully under event $eventId.");
+          }).catchError((error) {
+            print("Failed to save task ${task.name}: $error");
+          });
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Event and tasks created successfully!')),
+        );
+
+        Navigator.pop(context); // Go back after saving
+      }).catchError((error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to create event: $error')),
+        );
+      });
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -103,16 +146,14 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     ),
                     TextFormField(
                       controller: _dateController,
-                      readOnly: true, // Make the field non-editable
+                      readOnly: true,
                       decoration: const InputDecoration(
                         labelText: 'Date',
                         icon: Icon(Icons.calendar_today),
                       ),
-                      onTap: () => _selectDate(context), // Open the DatePicker
+                      onTap: () => _selectDate(context),
                       validator: (value) =>
-                          value == null || value.isEmpty
-                              ? 'Please select a date'
-                              : null,
+                      value == null || value.isEmpty ? 'Please select a date' : null,
                     ),
                     TextFormField(
                       controller: _attendanceController,
@@ -122,31 +163,64 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       ),
                       keyboardType: TextInputType.number,
                       validator: (value) =>
-                          value == null || int.tryParse(value) == null
-                              ? 'Please enter a valid number'
-                              : null,
+                      value == null || int.tryParse(value) == null
+                          ? 'Please enter a valid number'
+                          : null,
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 16.0),
               ElevatedButton.icon(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text("Add Task"),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextFormField(
+                            controller: _taskNameController,
+                            decoration: const InputDecoration(labelText: "Task Name"),
+                          ),
+                          TextFormField(
+                            controller: _taskDescriptionController,
+                            decoration: const InputDecoration(labelText: "Task Description"),
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text("Cancel"),
+                        ),
+                        ElevatedButton(
+                          onPressed: _addTask,
+                          child: const Text("Add Task"),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.add),
+                label: const Text("Add Task"),
+              ),
+              const SizedBox(height: 16.0),
+              ElevatedButton.icon(
                 onPressed: _createEvent,
                 icon: const Icon(Icons.save),
                 label: const Text("Create Event"),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 12),
-                  backgroundColor: Colors.blue.shade700,
-                ),
               ),
               const SizedBox(height: 16.0),
-              const Text(
-                "Event List",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Text(
+                "Tasks for this Event",
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 8.0),
-              buildEventList(_eventController),
+              ..._tasks.map((task) => ListTile(
+                title: Text(task.name),
+                subtitle: Text(task.description),
+              )),
             ],
           ),
         ),

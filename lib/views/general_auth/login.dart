@@ -46,12 +46,12 @@ class _LoginState extends State<Login> {
         if (userType == 'admin') {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => DashboardScreen()),
+            MaterialPageRoute(builder: (context) => VolunteerDashboard()),
           );
         } else if (userType == 'volunteer') {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => DashboardScreen()),
+            MaterialPageRoute(builder: (context) => VolunteerDashboard()),
           );
         } else if (userType == 'donor') {
           //Navigator.pushReplacement(

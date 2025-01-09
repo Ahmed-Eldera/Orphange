@@ -20,7 +20,7 @@ event view creation -> the object is created in the view
 event controller -> directly inserts into the database
 donation controller creation -> to much parameters in the controller it should make a donation and continue using it 
 
-
+volunteer: hassan@gmail.com & hussien@gmail.com
 
 
 
