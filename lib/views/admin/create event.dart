@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../controllers/event controller.dart';
 import '../../models/Event/event.dart';
 import '../../models/Event/task.dart';
+import '../../controllers/create event command.dart';
 
 class CreateEventPage extends StatefulWidget {
   const CreateEventPage({Key? key}) : super(key: key);
@@ -81,18 +82,15 @@ class _CreateEventPageState extends State<CreateEventPage> {
         attendance: int.parse(_attendanceController.text),
       );
 
-      // Save the Event
-      _eventController.saveEvent(eventDocRef, event).then((_) {
-        // Save tasks under this event
-        for (var task in _tasks) {
-          task.eventId = eventId; // Assign the event ID to the task
-          _eventController.saveTask(task).then((_) {
-            print("Task ${task.name} saved successfully under event $eventId.");
-          }).catchError((error) {
-            print("Failed to save task ${task.name}: $error");
-          });
-        }
+      // Use CreateEventCommand to save the event and tasks
+      CreateEventCommand command = CreateEventCommand(
+        eventController: _eventController,
+        eventDocRef: eventDocRef,
+        event: event,
+        tasks: _tasks,
+      );
 
+      command.execute().then((_) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Event and tasks created successfully!')),
         );
@@ -105,8 +103,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
       });
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {

@@ -1,97 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/Event/event.dart';
 import '../../controllers/event controller.dart'; // Ensure correct import
-
-class EditEventPage extends StatefulWidget {
-  const EditEventPage({Key? key}) : super(key: key);
-
-  @override
-  _EditEventPageState createState() => _EditEventPageState();
-}
-
-class _EditEventPageState extends State<EditEventPage> {
-  final _eventController = EventController(); // Controller to manage events
-  List<Event>? _events = []; // List to store events from Firestore
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchEvents();
-  }
-
-  // Fetch events from Firestore
-  void _fetchEvents() async {
-    try {
-      final eventList = await _eventController.fetchEvents("Admin");
-      setState(() {
-        _events = eventList; // Update the list of events
-      });
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load events: $error')),
-      );
-    }
-  }
-
-  // Navigate to EditEventDetailPage to edit the event
-  void _editEvent(Event event) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EditEventDetailPage(event: event), // Pass event to edit
-      ),
-    );
-  }
-
-  // Build the list of events as clickable boxes (cards)
-  Widget _buildEventList() {
-    return ListView.builder(
-      itemCount: _events!.length,
-      itemBuilder: (context, index) {
-        final event = _events![index];
-        return GestureDetector(
-          onTap: () => _editEvent(event), // Navigate to edit when tapped
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 8.0),
-            decoration: BoxDecoration(
-              color: Colors.blue.shade100,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 2,
-                  blurRadius: 5,
-                  offset: Offset(0, 3),
-                ),
-              ],
-            ),
-            child: ListTile(
-              contentPadding: const EdgeInsets.all(16.0),
-              title: Text(event.name, style: TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Text('Date: ${event.date}\nDescription: ${event.description}'),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Events'),
-        backgroundColor: Colors.blue.shade700,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: _events!.isEmpty
-            ? Center(child: CircularProgressIndicator()) // Show loading indicator if events are empty
-            : _buildEventList(), // Display the list of events as clickable boxes
-      ),
-    );
-  }
-}
+import '../../controllers/delete event command.dart'; // Ensure the command import is correct
 
 class EditEventDetailPage extends StatefulWidget {
   final Event event;
@@ -145,6 +55,40 @@ class _EditEventDetailPageState extends State<EditEventDetailPage> {
     }
   }
 
+  // Delete the event using Command Design Pattern
+  void _deleteEvent() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Delete Event"),
+        content: const Text("Are you sure you want to delete this event?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close the dialog
+            },
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // Execute the delete command
+              DeleteEventCommand(
+                  eventController: _eventController,
+                  eventId: widget.event.id
+              ).execute();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Event deleted successfully!')),
+              );
+              Navigator.pop(context); // Close the dialog and go back
+              Navigator.pop(context); // Go back to the previous screen
+            },
+            child: const Text("Delete"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -183,6 +127,11 @@ class _EditEventDetailPageState extends State<EditEventDetailPage> {
               ElevatedButton(
                 onPressed: _saveEditedEvent, // Save the event when the button is pressed
                 child: const Text('Save Changes'),
+              ),
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: _deleteEvent, // Delete event when pressed
+                child: const Text('Delete Event', style: TextStyle(color: Colors.red)),
               ),
             ],
           ),
