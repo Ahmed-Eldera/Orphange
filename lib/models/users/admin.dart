@@ -9,6 +9,6 @@ class Admin extends myUser {
     : super(type: 'Admin');
 
   void manageUsers() {
-    print('Managing users...');
+    print('Managing userss...');
   }
 }
