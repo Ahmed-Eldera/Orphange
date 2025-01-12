@@ -8,7 +8,7 @@ import 'view_tasks_page.dart';
 
 class VolunteerDashboard extends StatelessWidget {
   final VolunteerController _controller = VolunteerController();
-   VolunteerDashboard({Key? key}) : super(key: key);
+  VolunteerDashboard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

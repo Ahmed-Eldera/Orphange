@@ -3,11 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hope_home/views/admin/admin_request_management_page.dart';
 import '../donor/all_donations_page.dart';
 import 'admin_task_management_page.dart';
-import 'create event.dart'; // Import the CreateEventPage
+import 'beneficiaries_list.dart';
+import '../../../../models/Event/event.dart';
 import 'communication_module/communication_page.dart';
+import 'create event.dart';
 import 'donor_list_page.dart';
-import 'edit events.dart'; // Import the donor list page
-import '../../models/Event/event.dart';
+import 'edit events.dart';
 
 class AdminDashboard extends StatefulWidget {
   final Map<String, dynamic> admin;
@@ -191,6 +192,19 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     );
                   },
                 ),
+                _buildDashboardButton(
+                  'Manage Beneficiaries',
+                  Icons.child_care,
+                      () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const BeneficiariesListPage(),
+                      ),
+                    );
+                  },
+                ),
+
 
 
               ],

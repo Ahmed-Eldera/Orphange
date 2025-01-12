@@ -22,8 +22,12 @@ class _CreateEventPageState extends State<CreateEventPage> {
   final List<Task> _tasks = []; // List to store tasks
   final TextEditingController _taskNameController = TextEditingController();
   final TextEditingController _taskDescriptionController = TextEditingController();
+  final TextEditingController _taskHoursController = TextEditingController(); // Controller for hours
 
   DateTime? _selectedDate;
+
+  // Add a controller for volunteer email
+  final TextEditingController _volunteerEmailController = TextEditingController();
 
   void _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
@@ -45,10 +49,13 @@ class _CreateEventPageState extends State<CreateEventPage> {
   void _addTask() {
     final String taskName = _taskNameController.text.trim();
     final String taskDescription = _taskDescriptionController.text.trim();
+    final String taskHoursText = _taskHoursController.text.trim();
+    final int taskHours = int.tryParse(taskHoursText) ?? 0;
+    final String volunteerEmail = _volunteerEmailController.text.trim(); // Get volunteer email
 
-    if (taskName.isEmpty || taskDescription.isEmpty) {
+    if (taskName.isEmpty || taskDescription.isEmpty || taskHours <= 0 || volunteerEmail.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill in all task fields')),
+        const SnackBar(content: Text('Please fill in all task fields with valid values')),
       );
       return;
     }
@@ -59,11 +66,15 @@ class _CreateEventPageState extends State<CreateEventPage> {
         eventId: '', // Will be set after the event is created
         name: taskName,
         description: taskDescription,
+        hours: taskHours, // Add hours
+        volunteerEmail: volunteerEmail, // Pass the volunteer email
       ));
     });
 
     _taskNameController.clear();
     _taskDescriptionController.clear();
+    _taskHoursController.clear();
+    _volunteerEmailController.clear(); // Clear the email field
     Navigator.pop(context); // Close the dialog
   }
 
@@ -163,6 +174,16 @@ class _CreateEventPageState extends State<CreateEventPage> {
                           ? 'Please enter a valid number'
                           : null,
                     ),
+                    TextFormField(
+                      controller: _volunteerEmailController, // Added volunteer email field
+                      decoration: const InputDecoration(
+                        labelText: 'Volunteer Email',
+                        icon: Icon(Icons.email),
+                      ),
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Please enter an email'
+                          : null,
+                    ),
                   ],
                 ),
               ),
@@ -183,6 +204,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
                           TextFormField(
                             controller: _taskDescriptionController,
                             decoration: const InputDecoration(labelText: "Task Description"),
+                          ),
+                          TextFormField(
+                            controller: _taskHoursController,
+                            decoration: const InputDecoration(labelText: "Hours"),
+                            keyboardType: TextInputType.number,
                           ),
                         ],
                       ),
@@ -215,7 +241,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
               ),
               ..._tasks.map((task) => ListTile(
                 title: Text(task.name),
-                subtitle: Text(task.description),
+                subtitle: Text("${task.description} - ${task.hours} hours"),
               )),
             ],
           ),

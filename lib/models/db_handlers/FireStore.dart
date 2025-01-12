@@ -8,6 +8,7 @@ import 'package:hope_home/models/users/volunteer.dart';
 import '../Donation/donation.dart';
 import '../Event/request.dart';
 import '../Event/task.dart';
+import '../beneficiary.dart';
 import '../state/pending_state.dart';
 import '../state/request_state.dart';
 import '../users/donor.dart';
@@ -359,5 +360,24 @@ class FirestoreDatabaseService implements DatabaseService {
       return Task.fromMap(doc.data() as Map<String, dynamic>, doc.id);
     }).toList();
   }
+  Future<void> addBeneficiary(Beneficiary beneficiary) async {
+    await _firestore.collection('beneficiaries').doc(beneficiary.id).set(beneficiary.toMap());
+  }
+
+  Future<void> updateBeneficiary(Beneficiary beneficiary) async {
+    await _firestore.collection('beneficiaries').doc(beneficiary.id).update(beneficiary.toMap());
+  }
+
+  Future<List<Beneficiary>> fetchBeneficiaries() async {
+    QuerySnapshot snapshot = await _firestore.collection('beneficiaries').get();
+    return snapshot.docs.map((doc) => Beneficiary.fromMap(doc.data() as Map<String, dynamic>)).toList();
+  }
+
+  Future<void> deleteBeneficiary(String id) async {
+    await _firestore.collection('beneficiaries').doc(id).delete();
+  }
+
+
+
 
 }
