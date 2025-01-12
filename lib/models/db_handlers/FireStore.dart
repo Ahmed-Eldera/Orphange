@@ -410,6 +410,27 @@ class FirestoreDatabaseService implements DatabaseService {
     }
     return null;
   }
+  Future<bool> checkConnection() async {
+    try {
+      await _firestore.collection('health_check').get();
+      return true;
+    } catch (e) {
+      print("Database connection failed: $e");
+      return false;
+    }
+  }
 
+  Future<void> notifyAdmin(String requestId, String message) async {
+    try {
+      await _firestore.collection('notifications').add({
+        'requestId': requestId,
+        'message': message,
+        'timestamp': DateTime.now(),
+      });
+      print("Admin notified for request $requestId.");
+    } catch (e) {
+      print("Failed to notify admin: $e");
+    }
+  }
 
 }

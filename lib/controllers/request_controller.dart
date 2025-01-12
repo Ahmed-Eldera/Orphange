@@ -15,19 +15,13 @@ class RequestController {
     }
   }
 
-  Future<void> updateRequestState(Request request, String newState) async {
+  Future<void> updateRequestState(Request request) async {
     try {
-      if (newState == "Approved") {
-        request.setState(ApprovedState());
-      } else if (newState == "Rejected") {
-        request.setState(RejectedState());
-      } else {
-        request.setState(PendingState());
-      }
-      await _dbService.updateRequestState(request);
+      await FirestoreDatabaseService().updateRequestState(request);
+      print("Request state updated successfully in the database.");
     } catch (e) {
-      print('Error updating request state: $e');
-      throw Exception('Failed to update request state');
+      throw Exception("Failed to update request state in database: $e");
     }
   }
+
 }

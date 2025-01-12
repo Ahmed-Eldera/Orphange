@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hope_home/controllers/request_controller.dart';
 import 'package:hope_home/models/Event/request.dart';
 
+import '../../models/state/state_types.dart';
+
 class AdminRequestManagementPage extends StatefulWidget {
   const AdminRequestManagementPage({Key? key}) : super(key: key);
 
@@ -71,28 +73,45 @@ class _AdminRequestManagementPageState
                       child: Text(state),
                     ))
                         .toList(),
-                    onChanged: (newState) {
+                    onChanged: (newState) async {
                       if (newState != null) {
-                        _controller
-                            .updateRequestState(request, newState)
-                            .then((_) {
-                          setState(() {}); // Refresh the page
+                        try {
+                          // Update the state of the request
+                          switch (newState) {
+                            case "Approved":
+                              request.setState(ApprovedState());
+                              break;
+                            case "Rejected":
+                              request.setState(RejectedState());
+                              break;
+                            default:
+                              request.setState(PendingState());
+                          }
+
+                          // Handle state-specific behavior
+                          await request.getState().handle(request);
+
+                          // Update the state in the database via the controller
+                          await _controller.updateRequestState(request);
+
+                          // Notify the user
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  "Request state updated to '$newState'."),
-                            ),
+                            SnackBar(content: Text("Request state updated to '$newState'.")),
                           );
-                        }).catchError((error) {
+
+                          setState(() {}); // Refresh the UI
+                        } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Failed to update state: $error"),
-                            ),
+                            SnackBar(content: Text("Failed to update state: $e")),
                           );
-                        });
+                        }
                       }
                     },
+
+
+
                   ),
+
                   isThreeLine: true,
                 ),
               );

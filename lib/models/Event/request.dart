@@ -61,4 +61,16 @@ class Request {
       initialState: initialState,
     );
   }
+
+  static RequestState _mapState(String stateName) {
+    switch (stateName) {
+      case 'Approved':
+        return ApprovedState();
+      case 'Rejected':
+        return RejectedState();
+      default:
+        return PendingState();
+    }
+  }
+  RequestState getState() => _state;
 }
