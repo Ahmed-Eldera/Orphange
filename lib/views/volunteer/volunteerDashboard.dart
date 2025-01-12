@@ -5,6 +5,7 @@ import 'package:hope_home/views/volunteer/volunteer_request_page.dart';
 import '../../controllers/volunteer_controller.dart';
 import '../../models/db_handlers/FireStore.dart';
 import 'view_tasks_page.dart';
+import 'volunteer_certificate_page.dart';
 
 class VolunteerDashboard extends StatelessWidget {
   final VolunteerController _controller = VolunteerController();
@@ -91,16 +92,6 @@ class VolunteerDashboard extends StatelessWidget {
                   },
                 ),
                 _buildDashboardButton(
-                  'Generate Certificate',
-                  Icons.card_giftcard,
-                      () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => GenerateCertificatePage()),
-                    );
-                  },
-                ),
-                _buildDashboardButton(
                   'View History',
                   Icons.history,
                       () {
@@ -110,6 +101,18 @@ class VolunteerDashboard extends StatelessWidget {
                     );
                   },
                 ),
+                _buildDashboardButton(
+                  'Generate Certificate',
+                  Icons.card_giftcard,
+                      () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => VolunteerCertificatePage()),
+                    );
+                  },
+                ),
+
+
               ],
             ),
           ],
@@ -165,18 +168,7 @@ class LogHoursPage extends StatelessWidget {
   }
 }
 
-class GenerateCertificatePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Generate Certificate'),
-        backgroundColor: Colors.blue,
-      ),
-      body: const Center(child: Text('Certificate generation will be here.')),
-    );
-  }
-}
+
 
 class ViewHistoryPage extends StatelessWidget {
   @override

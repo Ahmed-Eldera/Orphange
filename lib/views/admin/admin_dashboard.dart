@@ -4,11 +4,11 @@ import 'package:hope_home/views/admin/admin_request_management_page.dart';
 import '../donor/all_donations_page.dart';
 import 'admin_task_management_page.dart';
 import 'beneficiaries_list.dart';
-import '../../../../models/Event/event.dart';
+import 'create event.dart'; // Import the CreateEventPage
 import 'communication_module/communication_page.dart';
-import 'create event.dart';
 import 'donor_list_page.dart';
-import 'edit events.dart';
+import 'edit events.dart'; // Import the donor list page
+import '../../models/Event/event.dart';
 
 class AdminDashboard extends StatefulWidget {
   final Map<String, dynamic> admin;

@@ -377,7 +377,38 @@ class FirestoreDatabaseService implements DatabaseService {
     await _firestore.collection('beneficiaries').doc(id).delete();
   }
 
+  Future<Map<String, dynamic>?> getUserByEmail(String email) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get();
 
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot.docs.first.data();
+      }
+    } catch (e) {
+      print('Error fetching user by email: $e');
+    }
+    return null;
+  }
+  Future<Task?> fetchTaskById(String taskId, String eventId) async {
+    try {
+      final taskDoc = await _firestore
+          .collection('events')
+          .doc(eventId)
+          .collection('tasks')
+          .doc(taskId)
+          .get();
+
+      if (taskDoc.exists) {
+        return Task.fromMap(taskDoc.data() as Map<String, dynamic>, taskDoc.id);
+      }
+    } catch (e) {
+      print('Error fetching task by ID: $e');
+    }
+    return null;
+  }
 
 
 }

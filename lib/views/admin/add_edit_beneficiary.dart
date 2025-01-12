@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../models/beneficiary.dart';
-import '../../../../models/db_handlers/FireStore.dart';
+import '../../models/beneficiary.dart';
+import '../../models/db_handlers/FireStore.dart';
 
 class AddEditBeneficiaryPage extends StatefulWidget {
   final Beneficiary? beneficiary;
