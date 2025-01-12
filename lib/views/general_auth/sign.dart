@@ -24,6 +24,13 @@ class SignUpScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(20),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.white, Colors.blueGrey],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
         child: ListView(
           children: [
             const SizedBox(height: 50),
@@ -33,8 +40,9 @@ class SignUpScreen extends StatelessWidget {
               child: Text(
                 'Sign Up',
                 style: TextStyle(
-                  fontSize: 30,
+                  fontSize: 36,
                   fontWeight: FontWeight.bold,
+                  color: Colors.blue,
                 ),
               ),
             ),
@@ -46,22 +54,18 @@ class SignUpScreen extends StatelessWidget {
                 'Choose an option to get started',
                 style: TextStyle(
                   color: Colors.grey,
-                  fontSize: 16,
+                  fontSize: 18,
                 ),
               ),
             ),
 
             const SizedBox(height: 40),
 
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                textStyle: const TextStyle(fontSize: 18),
-              ),
+            // Button List
+            _buildOptionButton(
+              context: context,
+              title: 'Sign Up as Donor',
+              color: Colors.blue,
               onPressed: () {
                 Navigator.push(
                   context,
@@ -78,27 +82,18 @@ class SignUpScreen extends StatelessWidget {
                   ),
                 );
               },
-              child: const Text('Sign Up as Donor'),
             ),
 
-
-            const SizedBox(height: 20),
-
-            // Sign Up as Volunteer Button
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                textStyle: const TextStyle(fontSize: 18),
-              ),
+            _buildOptionButton(
+              context: context,
+              title: 'Sign Up as Volunteer',
+              color: Colors.orange,
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => VolunteerSignUpScreen(controller: UserSignupMailController(
+                    builder: (context) => VolunteerSignUpScreen(
+                      controller: UserSignupMailController(
                         facade: UserServiceHelper(
                           authService: FirebaseAuthService(),
                           databaseService: FirestoreDatabaseService(),
@@ -109,21 +104,12 @@ class SignUpScreen extends StatelessWidget {
                   ),
                 );
               },
-              child: const Text('Sign Up as Volunteer'),
             ),
 
-            const SizedBox(height: 20),
-
-            // Sign Up as Admin Button
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                textStyle: const TextStyle(fontSize: 18),
-              ),
+            _buildOptionButton(
+              context: context,
+              title: 'Sign Up as Admin',
+              color: Colors.red,
               onPressed: () {
                 Navigator.push(
                   context,
@@ -140,21 +126,12 @@ class SignUpScreen extends StatelessWidget {
                   ),
                 );
               },
-              child: const Text('Sign Up as Admin'),
             ),
 
-            const SizedBox(height: 20),
-
-            // Login as Admin Button
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                textStyle: const TextStyle(fontSize: 18),
-              ),
+            _buildOptionButton(
+              context: context,
+              title: 'Login as Admin',
+              color: Colors.teal,
               onPressed: () {
                 Navigator.push(
                   context,
@@ -172,21 +149,12 @@ class SignUpScreen extends StatelessWidget {
                   ),
                 );
               },
-              child: const Text('Login as Admin'),
             ),
 
-            const SizedBox(height: 20),
-
-            // Login as Donor Button
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                textStyle: const TextStyle(fontSize: 18),
-              ),
+            _buildOptionButton(
+              context: context,
+              title: 'Login as Donor',
+              color: Colors.purple,
               onPressed: () {
                 Navigator.push(
                   context,
@@ -204,19 +172,12 @@ class SignUpScreen extends StatelessWidget {
                   ),
                 );
               },
-              child: Text('Login as Donor',style: TextStyle(color: Colors.white),),
-            ),            const SizedBox(height: 20),
+            ),
 
-            // Login as Donor Button
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                textStyle: const TextStyle(fontSize: 18),
-              ),
+            _buildOptionButton(
+              context: context,
+              title: 'Login as Volunteer',
+              color: Colors.deepPurple,
               onPressed: () {
                 Navigator.push(
                   context,
@@ -234,10 +195,43 @@ class SignUpScreen extends StatelessWidget {
                   ),
                 );
               },
-              child: Text('Login as vol',style: TextStyle(color: Colors.white),),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildOptionButton({
+    required BuildContext context,
+    required String title,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 8,
+            offset: Offset(2, 4),
+          ),
+        ],
+      ),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        onPressed: onPressed,
+        child: Text(title, style: const TextStyle(color: Colors.white)),
       ),
     );
   }

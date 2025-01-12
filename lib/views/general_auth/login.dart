@@ -33,7 +33,6 @@ class _LoginState extends State<Login> {
     }
 
     try {
-      // Get the user type after authentication
       String? userType = await widget.loginController.authenticate(
         emailText,
         passwordText,
@@ -42,7 +41,6 @@ class _LoginState extends State<Login> {
       if (userType != null) {
         widget.loginController.postLoginProcess();
 
-        // Navigate based on user type
         if (userType == 'admin') {
           Navigator.pushReplacement(
             context,
@@ -54,24 +52,22 @@ class _LoginState extends State<Login> {
             MaterialPageRoute(builder: (context) => VolunteerDashboard()),
           );
         } else if (userType == 'donor') {
-          //Navigator.pushReplacement(
-            //context,
-            //MaterialPageRoute(builder: (context) => DonorDashboard()),
-          //);
+          // Uncomment below for donor navigation
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => DonorDashboard()),
+          // );
         } else {
-          // Handle case where userType is not recognized
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Unknown user type')),
           );
         }
       } else {
-        // Handle case where userType is null (e.g., invalid email or password)
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Invalid email or password')),
         );
       }
     } catch (e) {
-      // Handle any exceptions that occur during login
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login failed: $e')),
       );
@@ -82,24 +78,39 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blueAccent, Colors.white],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
         padding: const EdgeInsets.all(20),
         child: ListView(
           children: [
             const SizedBox(height: 50),
-            const Text(
-              "Welcome to Hope Home",
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                color: Colors.blueAccent,
+            const Center(
+              child: Text(
+                "Welcome to Hope Home",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
             ),
-            const SizedBox(height: 20),
-            const Text(
-              "Login",
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            const SizedBox(height: 10),
+            const Center(
+              child: Text(
+                "Login",
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             CustomTextForm(
               hinttext: "Enter your email",
               mycontroller: email,
@@ -109,12 +120,12 @@ class _LoginState extends State<Login> {
               hinttext: "Enter your password",
               mycontroller: password,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             CustomButtonAuth(
               title: "Login",
               onPressed: handleLogin,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             InkWell(
               onTap: () {
                 Navigator.push(
@@ -126,7 +137,10 @@ class _LoginState extends State<Login> {
                 child: Text.rich(
                   TextSpan(
                     children: [
-                      TextSpan(text: "Don't have an account? "),
+                      TextSpan(
+                        text: "Don't have an account? ",
+                        style: TextStyle(color: Colors.black),
+                      ),
                       TextSpan(
                         text: "Register",
                         style: TextStyle(
