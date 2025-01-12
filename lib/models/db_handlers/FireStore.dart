@@ -4,12 +4,11 @@ import 'package:hope_home/models/db_handlers/DBService.dart';
 import 'package:hope_home/models/Event/event.dart';
 import 'package:hope_home/controllers/eventsProxy.dart';
 import 'package:hope_home/models/users/volunteer.dart';
-
 import '../Donation/donation.dart';
 import '../Event/request.dart';
 import '../Event/task.dart';
 import '../beneficiary.dart';
-import '../state/pending_state.dart';
+import '../state/state_types.dart';
 import '../state/request_state.dart';
 import '../users/donor.dart';
 
@@ -195,16 +194,18 @@ class FirestoreDatabaseService implements DatabaseService {
     return EventsProxy().fetchEvents(userType);
   }
 
-  Future<List<Event>?> fetchAllEvents() async {
+  Future<List<Event>> fetchAllEvents() async {
     try {
       final snapshot = await _firestore.collection('events').get();
       return snapshot.docs.map((doc) {
         return Event.fromMap(doc.data(), doc.id);
       }).toList();
     } catch (e) {
-      throw Exception('Failed to fetch events: $e');
+      print('Failed to fetch events: $e');
+      return []; // Return an empty list instead of null
     }
   }
+
 
   // Filter events to only include those happening this week
   // Save a new request

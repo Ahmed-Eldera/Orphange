@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hope_home/views/admin/admin_request_management_page.dart';
+import '../../controllers/admin_controller.dart';
 import '../donor/all_donations_page.dart';
 import 'admin_task_management_page.dart';
 import 'beneficiaries_list.dart';
@@ -9,6 +9,7 @@ import 'communication_module/communication_page.dart';
 import 'donor_list_page.dart';
 import 'edit events.dart'; // Import the donor list page
 import '../../models/Event/event.dart';
+import 'event_edit_page.dart';
 
 class AdminDashboard extends StatefulWidget {
   final Map<String, dynamic> admin;
@@ -20,31 +21,15 @@ class AdminDashboard extends StatefulWidget {
 }
 
 class _AdminDashboardState extends State<AdminDashboard> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Event> _events = [];
-
+  late Future<List<Event>> _eventsFuture;
   @override
   void initState() {
     super.initState();
-    _fetchEvents(); // Fetch the events when the page loads
+    _eventsFuture = AdminController().fetchEvents();
   }
 
-  // Fetch events from Firestore
-  void _fetchEvents() async {
-    try {
-      final snapshot = await _firestore.collection('events').get();
-      final eventList = snapshot.docs
-          .map((doc) => Event.fromMap(doc.data(), doc.id))
-          .toList();
-      setState(() {
-        _events = eventList;
-      });
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load events: $error')),
-      );
-    }
-  }
+
 
   // Navigate to EditEventDetailPage with the selected event
   void _editEvent(Event event) {
@@ -104,20 +89,28 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   'Edit Events',
                   Icons.edit,
                       () {
-                    // Check if events are available before navigating
-                    if (_events.isNotEmpty) {
-                      // Navigate to EditEventPage which lists all events
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditEventPage(events: _events),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FutureBuilder<List<Event>>(
+                          future: _eventsFuture,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(child: CircularProgressIndicator());
+                            } else if (snapshot.hasError) {
+                              return const Center(child: Text('Failed to load events'));
+                            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('No events available to edit')),
+                              );
+                              return const EmptyPage(title: 'No Events');
+                            }
+
+                            return EditEventPage(events: snapshot.data!);
+                          },
                         ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('No events available to edit')),
-                      );
-                    }
+                      ),
+                    );
                   },
                 ),
                 _buildDashboardButton(
@@ -258,47 +251,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
   }
 }
 
-class EditEventPage extends StatelessWidget {
-  final List<Event> events;
 
-  const EditEventPage({Key? key, required this.events}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Events'),
-        backgroundColor: Colors.blue.shade700,
-      ),
-      body: ListView.builder(
-        itemCount: events.length,
-        itemBuilder: (context, index) {
-          final event = events[index];
-          return Card(
-            margin: const EdgeInsets.symmetric(vertical: 8.0),
-            elevation: 5,
-            child: ListTile(
-              title: Text(event.name),
-              subtitle: Text(event.date),
-              trailing: IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () {
-                  // Navigate to EditEventDetailPage for the selected event
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditEventDetailPage(event: event),
-                    ),
-                  );
-                },
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
 
 class EmptyPage extends StatelessWidget {
   final String title;

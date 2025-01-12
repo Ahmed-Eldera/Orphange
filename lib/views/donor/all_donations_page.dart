@@ -15,7 +15,7 @@ class AllDonationsPage extends StatelessWidget {
         backgroundColor: Colors.blue.shade700,
       ),
       body: FutureBuilder<List<Donation>>(
-        future: _dbService.fetchAllDonations(), // Fetch all donations from Firestore
+        future: _dbService.fetchAllDonations(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -32,11 +32,13 @@ class AllDonationsPage extends StatelessWidget {
             );
           }
 
+          final donations = snapshot.data!;
+
           return ListView.builder(
-            itemCount: snapshot.data!.length,
+            itemCount: donations.length,
             padding: const EdgeInsets.all(16),
             itemBuilder: (context, index) {
-              final donation = snapshot.data![index];
+              final donation = donations[index];
               return Card(
                 margin: const EdgeInsets.only(bottom: 16),
                 elevation: 4,
@@ -52,12 +54,14 @@ class AllDonationsPage extends StatelessWidget {
                         children: [
                           const Icon(Icons.volunteer_activism, color: Colors.blue),
                           const SizedBox(width: 8),
-                          Text(
-                            donation.donorName,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                          Expanded(
+                            child: Text(
+                              donation.donorName,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                         ],
@@ -85,6 +89,19 @@ class AllDonationsPage extends StatelessWidget {
                                 style: const TextStyle(fontSize: 16, color: Colors.black),
                               ),
                             ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(Icons.email, color: Colors.grey),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              donation.donorEmail,
+                              style: const TextStyle(fontSize: 14, color: Colors.grey),
+                            ),
                           ),
                         ],
                       ),

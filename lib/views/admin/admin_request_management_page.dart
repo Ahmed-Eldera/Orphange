@@ -1,37 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:hope_home/controllers/request_controller.dart';
 import 'package:hope_home/models/Event/request.dart';
-import 'package:hope_home/models/db_handlers/FireStore.dart';
-import 'package:hope_home/models/state/pending_state.dart';
 
 class AdminRequestManagementPage extends StatefulWidget {
   const AdminRequestManagementPage({Key? key}) : super(key: key);
 
   @override
-  State<AdminRequestManagementPage> createState() => _AdminRequestManagementPageState();
+  State<AdminRequestManagementPage> createState() =>
+      _AdminRequestManagementPageState();
 }
 
-class _AdminRequestManagementPageState extends State<AdminRequestManagementPage> {
-  final FirestoreDatabaseService _dbService = FirestoreDatabaseService();
+class _AdminRequestManagementPageState
+    extends State<AdminRequestManagementPage> {
+  final RequestController _controller = RequestController();
   late Future<List<Request>> _requestsFuture;
 
   @override
   void initState() {
     super.initState();
-    _requestsFuture = _dbService.fetchAllRequests(); // Fetch all requests on load
-  }
-
-  Future<void> _updateRequestState(Request request, String newState) async {
-    setState(() {
-      if (newState == "Approved") {
-        request.setState(ApprovedState());
-      } else if (newState == "Rejected") {
-        request.setState(RejectedState());
-      } else {
-        request.setState(PendingState());
-      }
-    });
-
-    await _dbService.updateRequestState(request); // Save the updated state to Firestore
+    _requestsFuture = _controller.fetchAllRequests();
   }
 
   @override
@@ -46,8 +33,7 @@ class _AdminRequestManagementPageState extends State<AdminRequestManagementPage>
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
+          } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
 
@@ -87,7 +73,23 @@ class _AdminRequestManagementPageState extends State<AdminRequestManagementPage>
                         .toList(),
                     onChanged: (newState) {
                       if (newState != null) {
-                        _updateRequestState(request, newState);
+                        _controller
+                            .updateRequestState(request, newState)
+                            .then((_) {
+                          setState(() {}); // Refresh the page
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  "Request state updated to '$newState'."),
+                            ),
+                          );
+                        }).catchError((error) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Failed to update state: $error"),
+                            ),
+                          );
+                        });
                       }
                     },
                   ),

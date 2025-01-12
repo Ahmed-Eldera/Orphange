@@ -1,5 +1,5 @@
 import '../state/request_state.dart';
-import '../state/pending_state.dart';
+import '../state/state_types.dart';
 class Request {
   final String id;
   final String taskId;

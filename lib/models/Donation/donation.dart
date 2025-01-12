@@ -15,15 +15,16 @@ class Donation {
     required this.date,
   });
 
-
   factory Donation.fromJson(Map<String, dynamic> data, String id) {
     return Donation(
       id: id,
-      donorName: data['donorName'],
-      donorEmail: data['donorEmail'],
-      amount: data['amount'],
-      method: data['method'],
-      date: data['date'],
+      donorName: data['donorName'] as String,
+      donorEmail: data['donorEmail'] as String,
+      amount: (data['amount'] is int)
+          ? (data['amount'] as int).toDouble()
+          : data['amount'] as double,
+      method: data['method'] as String,
+      date: data['date'] as String,
     );
   }
 }
