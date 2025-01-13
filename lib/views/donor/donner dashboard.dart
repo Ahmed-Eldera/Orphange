@@ -3,7 +3,7 @@ import 'package:hope_home/views/show_events.dart';
 import 'donation_history_page.dart';
 import '../inbox_page.dart';
 import 'make_donation_page.dart';
-
+import 'registerTicket.dart';
 class DonorDashboard extends StatelessWidget {
   final Map<String, dynamic> donor;
 
@@ -68,7 +68,15 @@ class DonorDashboard extends StatelessWidget {
                   _buildDashboardButton(
                     'Register a Ticket',
                     Icons.confirmation_num,
-                        () {},
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TicketRegistrationPage()),
+                          );
+
+
+                        },
                   ),
                   _buildDashboardButton(
                     'Donate',
