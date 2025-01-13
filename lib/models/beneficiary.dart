@@ -4,7 +4,6 @@ class Beneficiary {
   int age;
   String needs;
   double allocatedBudget;
-  double? manualBudget; // Nullable manual budget field
 
   Beneficiary({
     required this.id,
@@ -12,10 +11,7 @@ class Beneficiary {
     required this.age,
     required this.needs,
     required this.allocatedBudget,
-    this.manualBudget,
   });
-
-  double get effectiveBudget => manualBudget ?? allocatedBudget; // Use manualBudget if available
 
   Map<String, dynamic> toMap() {
     return {
@@ -24,7 +20,6 @@ class Beneficiary {
       'age': age,
       'needs': needs,
       'allocatedBudget': allocatedBudget,
-      'manualBudget': manualBudget,
     };
   }
 
@@ -35,7 +30,6 @@ class Beneficiary {
       age: map['age'],
       needs: map['needs'],
       allocatedBudget: map['allocatedBudget'],
-      manualBudget: map['manualBudget'],
     );
   }
 }
