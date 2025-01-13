@@ -3,7 +3,7 @@ import 'package:hope_home/views/inbox_page.dart';
 import 'package:hope_home/views/show_events.dart';
 import 'package:hope_home/views/volunteer/volunteer_request_page.dart';
 import '../../controllers/volunteer_controller.dart';
-import '../../models/db_handlers/FireStore.dart';
+import 'LogHoursPage.dart';
 import 'view_tasks_page.dart';
 import 'volunteer_certificate_page.dart';
 
@@ -77,7 +77,7 @@ class VolunteerDashboard extends StatelessWidget {
                       () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LogHoursPage()),
+                      MaterialPageRoute(builder: (context) => VolunteerLogHoursPage()),
                     );
                   },
                 ),
