@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../controllers/beneficiary_controller.dart';
 import '../../models/beneficiary.dart';
 import '../../models/beneficiary_manager.dart';
-import '../../models/db_handlers/FireStore.dart';
 import '../../models/distribution_strategy.dart';
 import '../../models/equal_distribution_strategy.dart';
 import '../../models/need_based_strategy.dart';
@@ -17,7 +16,7 @@ class BeneficiariesListPage extends StatefulWidget {
 }
 
 class _BeneficiariesListPageState extends State<BeneficiariesListPage> {
-  final FirestoreDatabaseService _dbservice = FirestoreDatabaseService();
+
   final BeneficiaryManager _manager = BeneficiaryManager(ManualDistributionStrategy());
   double totalBudget = 700; // Example initial budget
 
@@ -38,11 +37,11 @@ class _BeneficiariesListPageState extends State<BeneficiariesListPage> {
     });
   }
   void _fetchBeneficiaries() {
-    // Fetch data from Firebase without recalculating allocations
     setState(() {
-      _beneficiaries = _dbservice.fetchBeneficiaries();
+      _beneficiaries = BeneficiaryController().fetchBeneficiaries();
     });
   }
+
   void _applyStrategy() {
     _beneficiaries.then((beneficiaries) {
       final allocations = _manager.allocate(totalBudget, beneficiaries);
@@ -105,25 +104,20 @@ class _BeneficiariesListPageState extends State<BeneficiariesListPage> {
                 double? additionalFunds = double.tryParse(_fundController.text);
                 if (additionalFunds != null) {
                   try {
-                    ManualDistributionStrategy strategy = _manager.getStrategy() as ManualDistributionStrategy;
-                    double remainingBudget = strategy.getRemainingBudget(totalBudget);
-
-                    if (additionalFunds > remainingBudget) {
-                      throw Exception('Added funds exceed the remaining budget of \$${remainingBudget.toStringAsFixed(2)}.');
-                    }
+                    ManualDistributionStrategy strategy =
+                    _manager.getStrategy() as ManualDistributionStrategy;
 
                     List<Beneficiary> beneficiaries = await _beneficiaries;
-                    setState(() {
-                      final additionalAllocation = strategy.allocateAddedFunds(additionalFunds, totalBudget, beneficiaries);
-                      for (var entry in additionalAllocation.entries) {
-                        _dbservice.updateBeneficiaryAllocation(entry.key, entry.value);
-                      }
-                    });
+                    await BeneficiaryController().addFunds(
+                      additionalFunds,
+                      totalBudget,
+                      beneficiaries,
+                      strategy,
+                    );
 
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Funds allocated successfully.')),
                     );
-
                     Navigator.pop(context);
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(

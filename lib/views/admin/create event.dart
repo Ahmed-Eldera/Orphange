@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../../controllers/event controller.dart';
+import '../../controllers/event_controller.dart';
 import '../../models/Event/event.dart';
 import '../../models/Event/task.dart';
 import '../../controllers/create event command.dart';
@@ -78,14 +78,12 @@ class _CreateEventPageState extends State<CreateEventPage> {
     Navigator.pop(context); // Close the dialog
   }
 
-  void _createEvent() {
+  Future<void> _createEvent() async {
     if (_formKey.currentState!.validate()) {
-      // Get a new document reference with an auto-generated ID
-      final eventDocRef = FirebaseFirestore.instance.collection('events').doc();
-      final eventId = eventDocRef.id; // Get the auto-generated ID
+      final eventDocRef = _eventController.getEventDocRef();
+      final eventId = _eventController.getEventId(eventDocRef);
 
-      // Create the Event object
-      Event event = Event(
+      final event = Event(
         id: eventId,
         name: _nameController.text,
         description: _descriptionController.text,
@@ -93,25 +91,24 @@ class _CreateEventPageState extends State<CreateEventPage> {
         attendance: int.parse(_attendanceController.text),
       );
 
-      // Use CreateEventCommand to save the event and tasks
-      CreateEventCommand command = CreateEventCommand(
+      final command = CreateEventCommand(
         eventController: _eventController,
         eventDocRef: eventDocRef,
         event: event,
         tasks: _tasks,
       );
 
-      command.execute().then((_) {
+      try {
+        await command.execute();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Event and tasks created successfully!')),
+          const SnackBar(content: Text('Event created successfully!')),
         );
-
-        Navigator.pop(context); // Go back after saving
-      }).catchError((error) {
+        Navigator.pop(context);
+      } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to create event: $error')),
+          SnackBar(content: Text('Failed to create event: $e')),
         );
-      });
+      }
     }
   }
 

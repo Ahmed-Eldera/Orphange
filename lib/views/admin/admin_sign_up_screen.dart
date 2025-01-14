@@ -28,30 +28,18 @@ class _AdminSignUpScreenState extends State<AdminSignUpScreen> {
     }
 
     try {
-      String? userId = await widget.controller.authenticate(
-        email,
-        password,
-        name,
-        'Admin',
+      await widget.controller.signUpAdmin(name, email, password);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Admin registered successfully!')),
       );
-
-      if (userId != null) {
-        widget.controller.postLoginProcess();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Admin registered successfully!')),
-        );
-        Navigator.pop(context); // Navigate back to login
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Sign-Up failed')),
-        );
-      }
+      Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

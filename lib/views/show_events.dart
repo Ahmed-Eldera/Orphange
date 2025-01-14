@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hope_home/controllers/event%20controller.dart';
+import 'package:hope_home/controllers/event_controller.dart';
 import 'package:hope_home/views/event_page.dart';
 
 class ShowEvents extends StatelessWidget {

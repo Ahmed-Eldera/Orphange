@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../controllers/donor_controller.dart';
 import '../../models/users/donor.dart';
-import '../../models/db_handlers/FireStore.dart';
 
 class DonorListPage extends StatefulWidget {
   const DonorListPage({Key? key}) : super(key: key);
@@ -10,10 +10,10 @@ class DonorListPage extends StatefulWidget {
 }
 
 class _DonorListPageState extends State<DonorListPage> {
-  final FirestoreDatabaseService _dbService = FirestoreDatabaseService();
   Map<String, double> _donorTotals = {};
   List<Donor> _donors = [];
   bool _isLoading = true;
+  final DonorController _controller = DonorController();
 
   @override
   void initState() {
@@ -26,8 +26,8 @@ class _DonorListPageState extends State<DonorListPage> {
       _isLoading = true;
     });
 
-    final donors = await _dbService.fetchAllDonors();
-    final totals = await _dbService.fetchTotalDonationsByDonor();
+    final donors = await _controller.fetchDonors();
+    final totals = await _controller.fetchDonorTotals();
 
     setState(() {
       _donors = donors;

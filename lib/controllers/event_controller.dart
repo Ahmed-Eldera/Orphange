@@ -105,5 +105,11 @@ class EventController {
       throw Exception('Failed to delete tasks for event $eventId: $e');
     }
   }
+  DocumentReference getEventDocRef() {
+    return _firestore.collection('events').doc();
+  }
 
+  String getEventId(DocumentReference eventDocRef) {
+    return eventDocRef.id;
+  }
 }

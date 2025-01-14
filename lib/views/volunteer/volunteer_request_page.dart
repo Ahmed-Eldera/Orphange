@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../controllers/volunteer_controller.dart';
 import '../../models/Event/request.dart';
-import '../../models/db_handlers/FireStore.dart';
 import 'edit_request_page.dart';
 
 class VolunteerRequestsPage extends StatelessWidget {

@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hope_home/models/Event/request.dart';
-import 'package:hope_home/models/db_handlers/FireStore.dart';
-
 import '../../controllers/volunteer_controller.dart';
 
 class CreateRequestPage extends StatefulWidget {
