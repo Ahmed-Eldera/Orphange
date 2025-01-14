@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../models/iterators/donor_collection.dart';
-import '../../controllers/donor_controller.dart';
-import '../../models/iterators/donor_iterator.dart';
 import '../../models/users/donor.dart';
+import '../../models/db_handlers/FireStore.dart';
 
 class DonorListPage extends StatefulWidget {
   const DonorListPage({Key? key}) : super(key: key);
@@ -12,25 +10,28 @@ class DonorListPage extends StatefulWidget {
 }
 
 class _DonorListPageState extends State<DonorListPage> {
-  final DonorController _controller = DonorController();
-  DonorCollection? _donorCollection;
+  final FirestoreDatabaseService _dbService = FirestoreDatabaseService();
+  Map<String, double> _donorTotals = {};
+  List<Donor> _donors = [];
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadDonors();
+    _loadDonorsWithTotals();
   }
 
-  Future<void> _loadDonors() async {
+  Future<void> _loadDonorsWithTotals() async {
     setState(() {
       _isLoading = true;
     });
 
-    List<Donor> donors = await _controller.getAllDonors();
-    _donorCollection = DonorCollection(donors);
+    final donors = await _dbService.fetchAllDonors();
+    final totals = await _dbService.fetchTotalDonationsByDonor();
 
     setState(() {
+      _donors = donors;
+      _donorTotals = totals;
       _isLoading = false;
     });
   }
@@ -39,87 +40,83 @@ class _DonorListPageState extends State<DonorListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Donor List'),
-        backgroundColor: Colors.red.shade700,
+        title: const Text('View Donors'),
+        backgroundColor: Colors.blue.shade700,
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : (_donorCollection == null || !_donorCollection!.getIterator().hasNext())
-          ? const Center(child: Text('No donors found'))
-          : ListView(
-        padding: const EdgeInsets.all(8.0),
-        children: _buildDonorCards(),
-      ),
-    );
-  }
+          : (_donors.isEmpty)
+          ? const Center(
+        child: Text(
+          'No donors found.',
+          style: TextStyle(fontSize: 18, color: Colors.grey),
+        ),
+      )
+          : ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: _donors.length,
+        itemBuilder: (context, index) {
+          final donor = _donors[index];
+          final totalDonations =
+              _donorTotals[donor.email] ?? 0.0;
 
-  List<Widget> _buildDonorCards() {
-    DonorIterator iterator = _donorCollection!.getIterator();
-    List<Widget> donorWidgets = [];
-
-    while (iterator.hasNext()) {
-      Donor donor = iterator.next();
-      donorWidgets.add(
-        Card(
-          elevation: 5,
-          margin: const EdgeInsets.symmetric(vertical: 8.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    const CircleAvatar(
-                      backgroundColor: Colors.blue,
-                      child: Icon(
-                        Icons.person,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        donor.name,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+          return Card(
+            margin: const EdgeInsets.only(bottom: 16),
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const CircleAvatar(
+                        backgroundColor: Colors.blue,
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.white,
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  "Email: ${donor.email}",
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          donor.name,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 8),
-                if (donor.history.isNotEmpty)
+                  const SizedBox(height: 12),
                   Text(
-                    "Donations: ${donor.history.join(', ')}",
+                    "Email: ${donor.email}",
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 16,
                       color: Colors.grey,
-                      fontStyle: FontStyle.italic,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
-              ],
+                  const SizedBox(height: 8),
+                  Text(
+                    "Total Donations: \$${totalDonations.toStringAsFixed(2)}",
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ),
-      );
-    }
-
-    return donorWidgets;
+          );
+        },
+      ),
+    );
   }
 }

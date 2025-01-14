@@ -477,5 +477,20 @@ class FirestoreDatabaseService implements DatabaseService {
       throw Exception('Failed to update allocation for beneficiary $id: $e');
     }
   }
+  Future<Map<String, double>> fetchTotalDonationsByDonor() async {
+    try {
+      final List<Donation> donations = await fetchAllDonations();
+      Map<String, double> donorTotals = {};
+
+      for (var donation in donations) {
+        donorTotals[donation.donorEmail] =
+            (donorTotals[donation.donorEmail] ?? 0) + donation.amount;
+      }
+      return donorTotals;
+    } catch (e) {
+      print('Error fetching total donations by donor: $e');
+      return {};
+    }
+  }
 
 }
