@@ -1,4 +1,4 @@
-import 'beneficiary.dart';
+import '../beneficiary.dart';
 import 'distribution_strategy.dart';
 
 class ManualDistributionStrategy implements DistributionStrategy {

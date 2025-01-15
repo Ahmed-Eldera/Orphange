@@ -2,7 +2,7 @@ import 'package:hope_home/models/users/userHelper.dart';
 import 'package:hope_home/models/users/userTemplate.dart';
 import 'package:hope_home/userProvider.dart';
 import 'package:hope_home/models/db_handlers/FireStore.dart';
-import 'package:hope_home/models/users/userFactory.dart';// Ensure Firestore service is imported
+import 'package:hope_home/models/users/Factories/userFactory.dart';// Ensure Firestore service is imported
 import 'package:hope_home/models/user.dart';
 
 class UserLoginMailController extends UserLoginTemplate {

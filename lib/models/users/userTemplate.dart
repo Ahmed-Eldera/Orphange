@@ -1,5 +1,5 @@
 import 'package:hope_home/models/user.dart';
-import 'package:hope_home/models/users/userFactory.dart';
+import 'package:hope_home/models/users/Factories/userFactory.dart';
 import 'package:hope_home/models/users/userHelper.dart';
 
 
@@ -7,6 +7,7 @@ abstract class UserLoginTemplate {
     final UserServiceHelper facade;
     UserLoginTemplate({required this.facade});
     myUser? user;
+    UserFactory? userFactory ;
   // The template method that outlines the steps
   Future<void>  login(String email,String password,[String? name,String? type]) async {
     String? id = await authenticate(email,password,name??"",type??'');
@@ -31,8 +32,8 @@ abstract class UserLoginTemplate {
 
 
   myUser? createUserObject(Map<String,dynamic>? data) {
-    // Use the factory to create the appropriate user object
-    user = UserFactory.createUser(data!);
+    userFactory = UserFactoryProducer.getFactory(data!['type']);
+    user = userFactory!.createUser(data!);
     return user;
   }
 

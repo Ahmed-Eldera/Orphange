@@ -1,5 +1,5 @@
 import 'beneficiary.dart';
-import 'distribution_strategy.dart';
+import 'distribution_strats.dart/distribution_strategy.dart';
 
 class BeneficiaryManager {
   late DistributionStrategy _strategy;
