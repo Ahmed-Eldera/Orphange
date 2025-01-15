@@ -1,31 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../../controllers/volunteer_controller.dart';
 import '../../models/Event/task.dart';
 
 class VolunteerLogHoursPage extends StatelessWidget {
   final VolunteerController _controller = VolunteerController();
 
-  Future<List<Task>> _fetchLoggedHoursData(String email) async {
-    return await _controller.fetchTasksParticipated(email);
+  Future<List<Task>> _fetchLoggedHoursData() async {
+    return await _controller.fetchTasksParticipatedForLoggedInUser();
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      return const Center(child: Text('User not logged in'));
-    }
-
-    final email = user.email ?? 'Unknown';
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Log Hours'),
         backgroundColor: Colors.blue.shade700,
       ),
       body: FutureBuilder<List<Task>>(
-        future: _fetchLoggedHoursData(email),
+        future: _fetchLoggedHoursData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -84,9 +76,7 @@ class VolunteerLogHoursPage extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: task.hours > 5
-                                ? Colors.green
-                                : Colors.green, // Green for >5 hours, red otherwise
+                            color: task.hours > 5 ? Colors.green : Colors.red,
                           ),
                         ),
                       ],

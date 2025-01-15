@@ -492,5 +492,35 @@ class FirestoreDatabaseService implements DatabaseService {
       return {};
     }
   }
+  Future<List<Task>> fetchTasksByVolunteerEmail(String email) async {
+    try {
+      final querySnapshot = await _firestore
+          .collectionGroup('tasks')
+          .where('volunteerEmail', isEqualTo: email)
+          .get();
+
+      return querySnapshot.docs.map((doc) {
+        return Task.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+      }).toList();
+    } catch (e) {
+      print('Error fetching tasks by volunteer email: $e');
+      return [];
+    }
+  }
+  Future<List<Task>> fetchTasksParticipated(String email) async {
+    try {
+      final querySnapshot = await _firestore
+          .collectionGroup('tasks')
+          .where('volunteerEmail', isEqualTo: email)
+          .get();
+
+      return querySnapshot.docs.map((doc) {
+        return Task.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+      }).toList();
+    } catch (e) {
+      print('Error fetching participated tasks: $e');
+      return [];
+    }
+  }
 
 }

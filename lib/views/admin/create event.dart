@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hope_home/controllers/volunteer_controller.dart';
 import '../../controllers/event_controller.dart';
 import '../../models/Event/event.dart';
 import '../../models/Event/task.dart';
@@ -23,11 +24,23 @@ class _CreateEventPageState extends State<CreateEventPage> {
   final TextEditingController _taskNameController = TextEditingController();
   final TextEditingController _taskDescriptionController = TextEditingController();
   final TextEditingController _taskHoursController = TextEditingController(); // Controller for hours
-
+  List<String> _volunteerEmails = [];
   DateTime? _selectedDate;
 
   // Add a controller for volunteer email
   final TextEditingController _volunteerEmailController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    _fetchVolunteers(); // Fetch volunteer emails when the screen initializes
+  }
+  Future<void> _fetchVolunteers() async {
+    final volunteers = await VolunteerController().getAllVolunteers();
+    setState(() {
+      _volunteerEmails = volunteers.map((v) => v.email).toList();
+    });
+  }
+
 
   void _selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
@@ -171,16 +184,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
                           ? 'Please enter a valid number'
                           : null,
                     ),
-                    TextFormField(
-                      controller: _volunteerEmailController, // Added volunteer email field
-                      decoration: const InputDecoration(
-                        labelText: 'Volunteer Email',
-                        icon: Icon(Icons.email),
-                      ),
-                      validator: (value) => value == null || value.isEmpty
-                          ? 'Please enter an email'
-                          : null,
-                    ),
                   ],
                 ),
               ),
@@ -207,6 +210,19 @@ class _CreateEventPageState extends State<CreateEventPage> {
                             decoration: const InputDecoration(labelText: "Hours"),
                             keyboardType: TextInputType.number,
                           ),
+                          DropdownButtonFormField<String>(
+                            value: _volunteerEmails.isNotEmpty ? _volunteerEmails.first : null,
+                            items: _volunteerEmails
+                                .map((email) => DropdownMenuItem(value: email, child: Text(email)))
+                                .toList(),
+                            onChanged: (email) {
+                              _volunteerEmailController.text = email ?? '';
+                            },
+                            decoration: const InputDecoration(labelText: "Select Volunteer"),
+                            validator: (value) => value == null || value.isEmpty
+                                ? "Please select a volunteer"
+                                : null,
+                          ),
                         ],
                       ),
                       actions: [
@@ -225,6 +241,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                 icon: const Icon(Icons.add),
                 label: const Text("Add Task"),
               ),
+
               const SizedBox(height: 16.0),
               ElevatedButton.icon(
                 onPressed: _createEvent,

@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Hope Home',
       home:  WelcomingScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

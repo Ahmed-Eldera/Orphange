@@ -1,6 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hope_home/models/Event/request.dart';
 import '../../controllers/volunteer_controller.dart';
 
 class CreateRequestPage extends StatefulWidget {
@@ -18,11 +16,6 @@ class _CreateRequestPageState extends State<CreateRequestPage> {
   final VolunteerController _controller = VolunteerController();
   bool _isSubmitting = false;
 
-  Future<String?> _getLoggedInUserEmail() async {
-    final user = FirebaseAuth.instance.currentUser;
-    return user?.email;
-  }
-
   Future<void> _submitRequest() async {
     if (_detailsController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -36,24 +29,11 @@ class _CreateRequestPageState extends State<CreateRequestPage> {
     });
 
     try {
-      final volunteerEmail = await _getLoggedInUserEmail();
-      if (volunteerEmail == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('User not logged in')),
-        );
-        return;
-      }
-
-      final request = Request(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        taskId: widget.taskId,
-        eventId: widget.eventId,
-        volunteerId: volunteerEmail,
-        details: _detailsController.text.trim(),
+      await _controller.submitRequest(
+        widget.taskId,
+        widget.eventId,
+        _detailsController.text.trim(),
       );
-
-      await _controller.submitRequest(request);
-
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Request submitted successfully')),
       );

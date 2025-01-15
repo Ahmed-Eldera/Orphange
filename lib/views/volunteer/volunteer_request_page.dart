@@ -1,22 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../../controllers/volunteer_controller.dart';
 import '../../models/Event/request.dart';
 import 'edit_request_page.dart';
 
 class VolunteerRequestsPage extends StatelessWidget {
   final VolunteerController _controller = VolunteerController();
-  Future<String?> _getLoggedInUserEmail() async {
-    final user = FirebaseAuth.instance.currentUser;
-    return user?.email;
-  }
 
-  Future<List<Request>> _fetchVolunteerRequests() async {
-    final volunteerEmail = await _getLoggedInUserEmail();
-    if (volunteerEmail == null) {
-      throw Exception("No logged-in user found");
-    }
-    return await _controller.fetchVolunteerRequests(volunteerEmail);
+  Future<List<Request>> _fetchRequests() async {
+    return await _controller.fetchRequestsForLoggedInVolunteer();
   }
 
   Color _getStatusColor(String status) {
@@ -39,7 +30,7 @@ class VolunteerRequestsPage extends StatelessWidget {
         backgroundColor: Colors.blue,
       ),
       body: FutureBuilder<List<Request>>(
-        future: _fetchVolunteerRequests(),
+        future: _fetchRequests(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

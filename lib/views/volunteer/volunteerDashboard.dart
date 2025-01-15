@@ -52,15 +52,22 @@ class VolunteerDashboard extends StatelessWidget {
                   'View Tasks',
                   Icons.task,
                       () async {
-                    final tasks = await  _controller.fetchAllTasks();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ViewTasksPage(tasks: tasks),
-                      ),
-                    );
+                    try {
+                      final tasks = await _controller.fetchTasksForVolunteer();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ViewTasksPage(tasks: tasks),
+                        ),
+                      );
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Error: ${e.toString()}')),
+                      );
+                    }
                   },
                 ),
+
                 _buildDashboardButton(
                   'My Requests',
                   Icons.request_page,
