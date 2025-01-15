@@ -1,6 +1,6 @@
 import '../models/beneficiary.dart';
 import '../models/db_handlers/FireStore.dart';
-import '../models/manual_distribution_strategy.dart';
+import '../models/distribution_strats.dart/manual_distribution_strategy.dart';
 
 class BeneficiaryController {
   final FirestoreDatabaseService _dbService = FirestoreDatabaseService();

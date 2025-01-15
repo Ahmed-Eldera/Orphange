@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/Event/event.dart';
-import '../../controllers/event_controller.dart'; // Ensure correct import
-import '../../controllers/delete event command.dart'; // Ensure the command import is correct
+import '../../controllers/event_controller.dart';
+import '../../controllers/delete event command.dart';
 
 class EditEventDetailPage extends StatefulWidget {
   final Event event;

@@ -10,6 +10,7 @@ import 'donor_list_page.dart';
 import 'edit events.dart'; // Import the donor list page
 import '../../models/Event/event.dart';
 import 'event_edit_page.dart';
+import 'view tickets.dart';
 
 class AdminDashboard extends StatefulWidget {
   final Map<String, dynamic> admin;
@@ -69,10 +70,13 @@ class _AdminDashboardState extends State<AdminDashboard> {
               physics: const NeverScrollableScrollPhysics(),
               children: [
                 _buildDashboardButton(
-                  'Assign Tasks',
+                  'Submitted tickets',
                   Icons.assignment,
                       () {
-                    _navigateToEmptyPage(context, 'Assign Tasks Page');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AdminTicketsPage()),
+                        );
                   },
                 ),
                 _buildDashboardButton(
