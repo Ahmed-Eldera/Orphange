@@ -432,5 +432,65 @@ class FirestoreDatabaseService implements DatabaseService {
       print("Failed to notify admin: $e");
     }
   }
+  Future<double> getTotalDonations() async {
+    try {
+      // Fetch all donations
+      final List<Donation> donations = await fetchAllDonations();
+
+      // Fold over the list to calculate the total
+      return donations.fold<double>(0.0, (double sum, Donation donation) => sum + donation.amount);
+    } catch (e) {
+      print('Error calculating total donations: $e');
+      return 0.0;
+    }
+  }
+
+  Future<void> updateBeneficiaryBudget(String id, double allocatedBudget) async {
+    try {
+      await _firestore.collection('beneficiaries').doc(id).update({
+        'allocatedBudget': allocatedBudget,
+      });
+    } catch (e) {
+      print('Error updating beneficiary budget: $e');
+    }
+  }
+  Future<void> updateTotalBudget(double totalBudget) async {
+    try {
+      await _firestore.collection('settings').doc('budget').set({
+        'totalBudget': totalBudget,
+      });
+      print('Total budget updated successfully in Firebase.');
+    } catch (e) {
+      print('Failed to update total budget: $e');
+    }
+  }
+  Future<void> updateBeneficiaryAllocation(String id, double addedAmount) async {
+    try {
+      final doc = await _firestore.collection('beneficiaries').doc(id).get();
+      if (doc.exists) {
+        double currentAllocation = doc.data()?['allocatedBudget'] ?? 0.0;
+        await _firestore.collection('beneficiaries').doc(id).update({
+          'allocatedBudget': currentAllocation + addedAmount,
+        });
+      }
+    } catch (e) {
+      throw Exception('Failed to update allocation for beneficiary $id: $e');
+    }
+  }
+  Future<Map<String, double>> fetchTotalDonationsByDonor() async {
+    try {
+      final List<Donation> donations = await fetchAllDonations();
+      Map<String, double> donorTotals = {};
+
+      for (var donation in donations) {
+        donorTotals[donation.donorEmail] =
+            (donorTotals[donation.donorEmail] ?? 0) + donation.amount;
+      }
+      return donorTotals;
+    } catch (e) {
+      print('Error fetching total donations by donor: $e');
+      return {};
+    }
+  }
 
 }

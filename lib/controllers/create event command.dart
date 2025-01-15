@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../models/Event/event.dart';
 import '../../models/Event/task.dart';
-import 'event controller.dart';
+import 'event_controller.dart';
 import 'command.dart';
 
 class CreateEventCommand implements Command {

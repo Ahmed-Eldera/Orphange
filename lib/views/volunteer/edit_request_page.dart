@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../controllers/volunteer_controller.dart';
 import '../../models/Event/request.dart';
-import '../../models/db_handlers/FireStore.dart';
 
 class EditRequestPage extends StatefulWidget {
   final Request request;

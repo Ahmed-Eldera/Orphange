@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/beneficiary.dart';
-import '../../models/db_handlers/FireStore.dart';
+import '../../controllers/beneficiary_controller.dart';
 
 class AddEditBeneficiaryPage extends StatefulWidget {
   final Beneficiary? beneficiary;
@@ -13,7 +13,7 @@ class AddEditBeneficiaryPage extends StatefulWidget {
 
 class _AddEditBeneficiaryPageState extends State<AddEditBeneficiaryPage> {
   final _formKey = GlobalKey<FormState>();
-  final FirestoreDatabaseService _dbservice = FirestoreDatabaseService();
+  final BeneficiaryController _controller = BeneficiaryController();
 
   late TextEditingController _nameController;
   late TextEditingController _ageController;
@@ -70,9 +70,9 @@ class _AddEditBeneficiaryPageState extends State<AddEditBeneficiaryPage> {
                     );
 
                     if (widget.beneficiary == null) {
-                      await _dbservice.addBeneficiary(beneficiary);
+                      await _controller.addBeneficiary(beneficiary);
                     } else {
-                      await _dbservice.updateBeneficiary(beneficiary);
+                      await _controller.updateBeneficiary(beneficiary);
                     }
                     Navigator.pop(context);
                   }

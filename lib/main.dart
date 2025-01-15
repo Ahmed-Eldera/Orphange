@@ -7,6 +7,8 @@ import 'package:hope_home/userProvider.dart';
 import 'package:hope_home/views/general_auth/login.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
+
+import 'views/welcoming_screen.dart';
 //hey youuuuu welcome to new world
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +41,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Hope Home',
-      home: Login(loginController: loginController),
+      home:  WelcomingScreen(),
     );
   }
 }

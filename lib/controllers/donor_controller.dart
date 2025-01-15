@@ -9,4 +9,11 @@ class DonorController {
   Future<List<Donor>> getAllDonors() async {
     return await _dbService.fetchAllDonors();
   }
+  Future<List<Donor>> fetchDonors() async {
+    return await _dbService.fetchAllDonors();
+  }
+
+  Future<Map<String, double>> fetchDonorTotals() async {
+    return await _dbService.fetchTotalDonationsByDonor();
+  }
 }

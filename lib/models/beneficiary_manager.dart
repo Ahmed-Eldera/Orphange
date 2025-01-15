@@ -13,4 +13,7 @@ class BeneficiaryManager {
   Map<String, double> allocate(double budget, List<Beneficiary> beneficiaries) {
     return _strategy.allocateBudget(budget, beneficiaries);
   }
+  DistributionStrategy getStrategy() {
+    return _strategy;
+  }
 }

@@ -2,7 +2,7 @@
 import 'package:hope_home/models/Event/event.dart';
 import 'package:hope_home/userProvider.dart';
 import '../../models/iterators/event collection.dart';
-import '../../controllers/event controller.dart';
+import '../../controllers/event_controller.dart';
 Widget buildEventList(EventController EventController) {
   UserProvider userProvider = UserProvider();
   String type = userProvider.currentUser!.type;

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hope_home/models/Event/task.dart';
-import 'package:hope_home/models/db_handlers/FireStore.dart';
-
 import '../../controllers/task_controller.dart';
 
 class AdminTaskManagementPage extends StatefulWidget {

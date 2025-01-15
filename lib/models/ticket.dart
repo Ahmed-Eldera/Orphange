@@ -3,12 +3,14 @@ class Ticket {
   String date;
   String userName;
   String eventName;
+  List<String> donationTypes; // Added donationTypes attribute
 
   Ticket({
     required this.id,
     required this.date,
     required this.userName,
     required this.eventName,
+    required this.donationTypes,
   });
 
   Map<String, dynamic> toMap() {
@@ -17,20 +19,19 @@ class Ticket {
       'date': date,
       'userName': userName,
       'eventName': eventName,
+      'donationTypes': donationTypes,
     };
   }
 
-  // Added toJson method to match the naming convention
-  Map<String, dynamic> toJson() {
-    return toMap(); // Reuse toMap here for simplicity
-  }
+  Map<String, dynamic> toJson() => toMap();
 
   factory Ticket.fromMap(Map<String, dynamic> map) {
     return Ticket(
-      id: map['id'],
-      date: map['date'],
-      userName: map['userName'],
-      eventName: map['eventName'],
+      id: map['id'] ?? '',
+      date: map['date'] ?? '',
+      userName: map['userName'] ?? '',
+      eventName: map['eventName'] ?? '',
+      donationTypes: List<String>.from(map['donationTypes'] ?? []), // Handle donationTypes
     );
   }
 }

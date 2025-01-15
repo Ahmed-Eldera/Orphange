@@ -2,10 +2,14 @@ import '../beneficiary.dart';
 import 'distribution_strategy.dart';
 
 class ManualDistributionStrategy implements DistributionStrategy {
+  double totalAllocated = 0.0; // Track total allocated funds
+  double _remainingBudget = 0.0; // Track remaining budget for manual allocation
+
+  double get remainingBudget => _remainingBudget;
   @override
   Map<String, double> allocateBudget(double totalBudget, List<Beneficiary> beneficiaries) {
-    double initialBudget = totalBudget * 0.5; // 50% of the total budget
-    double remainingBudget = totalBudget * 0.5; // Remaining 50% for admin-controlled allocation
+    double initialBudget = totalBudget * 0.5; // 50% for equal distribution
+    totalAllocated = initialBudget; // Track allocated funds
 
     Map<String, double> allocation = {};
 
@@ -15,19 +19,35 @@ class ManualDistributionStrategy implements DistributionStrategy {
       allocation[beneficiary.id] = equalShare;
     }
 
-    // Step 2: Add manually controlled budgets
-    for (var beneficiary in beneficiaries) {
-      if (beneficiary.manualBudget != null) {
-        allocation[beneficiary.id] = allocation[beneficiary.id]??0 + beneficiary.manualBudget!;
-        remainingBudget -= beneficiary.manualBudget!;
-      }
-    }
-
-    // Ensure remainingBudget is not negative
-    if (remainingBudget < 0) {
-      throw Exception('Admin allocated more than the remaining 50% of the budget!');
-    }
-
     return allocation;
+  }
+
+  double getRemainingBudget(double totalBudget) {
+    return totalBudget - totalAllocated; // Calculate remaining budget dynamically
+  }
+
+  Map<String, double> allocateAddedFunds(double additionalFunds, double totalBudget, List<Beneficiary> beneficiaries) {
+    double remainingBudget = getRemainingBudget(totalBudget);
+
+    if (additionalFunds > remainingBudget) {
+      throw Exception('Added funds exceed the remaining budget.');
+    }
+
+    Map<String, double> additionalAllocation = {};
+    double sharePerChild = additionalFunds / beneficiaries.length;
+
+    for (var beneficiary in beneficiaries) {
+      additionalAllocation[beneficiary.id] = sharePerChild;
+    }
+
+    totalAllocated += additionalFunds; // Update allocated funds
+    return additionalAllocation;
+  }
+
+  set remainingBudget(double value) {
+    if (value < 0) {
+      throw Exception('Remaining budget cannot be negative.');
+    }
+    _remainingBudget = value;
   }
 }
