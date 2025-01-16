@@ -1,18 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/db_handlers/FireStore.dart';
 import '../models/ticket.dart';
 
 class TicketController {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirestoreDatabaseService _dbService = FirestoreDatabaseService();
 
-  Future<List<String>> fetchEventNames() async {
-    try {
-      final snapshot = await _firestore.collection('events').get();
-      return snapshot.docs.map((doc) => doc.data()['name']?.toString() ?? 'Unnamed Event').toList();
-    } catch (error) {
-      print('Error fetching event names: $error');
-      return [];
-    }
-  }
+
 
   Future<void> registerTicket(Ticket ticket) async {
     try {
@@ -22,10 +14,8 @@ class TicketController {
     }
   }
   Stream<List<Ticket>> getTicketsStream() {
-    return _firestore.collection('tickets').snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return Ticket.fromMap(doc.data() as Map<String, dynamic>);
-      }).toList();
+    return _dbService.fetchTicketsStream().map((ticketDataList) {
+      return ticketDataList.map((data) => Ticket.fromMap(data)).toList();
     });
   }
 

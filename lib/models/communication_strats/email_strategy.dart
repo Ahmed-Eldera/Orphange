@@ -11,6 +11,5 @@ class EmailStrategy implements CommunicationStrategy {
       'type': type,
       'timestamp': FieldValue.serverTimestamp(),
     });
-    print('Message stored as Email for $recipient');
   }
 }

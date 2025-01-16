@@ -33,24 +33,18 @@ class UserLoginMailController extends UserLoginTemplate {
   Future<String?> authenticate(String email, String password, [String? name, String? type]) async {
     try {
       String? userId = await facade.loginWithEmailPassword(email, password);
-      print('User ID: $userId');
 
       if (userId != null) {
         var userData = await firestoreService.getUserById(userId);
-        print('Fetched User Data: $userData');
-
         if (userData != null) {
           String? userType = userData['type']?.toString(); // Force conversion to String
-          print('User Type Retrieved: $userType');
 
           if (userType == null || userType.isEmpty) {
-            print('Error: User type is missing or invalid.');
             throw Exception('User type is missing or invalid.');
           }
 
           // Store user data in provider
           userProvider.setUser(myUser.fromFirestore(userData));
-          print('Authentication Successful for User Type: $userType');
           return userType;
         } else {
           throw Exception('User data not found.');

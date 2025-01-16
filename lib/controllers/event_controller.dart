@@ -19,6 +19,16 @@ class EventController {
     List<Event>? events = await _dbservice.fetchEvents(type);
     return events;
   }
+  Future<List<String>> fetchEventNames() async {
+    try {
+      final snapshot = await _firestore.collection('events').get();
+      return snapshot.docs.map((doc) => doc.data()['name']?.toString() ?? 'Unnamed Event').toList();
+    } catch (error) {
+      print('Error fetching event names: $error');
+      return [];
+    }
+  }
+
 
   Future<void> notifyAllUsers(String message) async {
     DonorController donorController = DonorController();
@@ -63,19 +73,7 @@ class EventController {
     }
   }
 
-  Future<void> saveTask(Task task) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection('events')
-          .doc(task.eventId)
-          .collection('tasks')
-          .doc(task.id)
-          .set(task.toMap());
-      print("Task ${task.name} saved successfully under event ${task.eventId}.");
-    } catch (e) {
-      throw Exception('Failed to save task: $e');
-    }
-  }
+
 
   // NEW: Execute Command
   Future<void> executeCommand(Command command) async {

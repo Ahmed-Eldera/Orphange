@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../controllers/volunteer_controller.dart';
+import 'package:hope_home/controllers/request_controller.dart';
 
 class CreateRequestPage extends StatefulWidget {
   final String taskId;
@@ -13,7 +13,7 @@ class CreateRequestPage extends StatefulWidget {
 
 class _CreateRequestPageState extends State<CreateRequestPage> {
   final _detailsController = TextEditingController();
-  final VolunteerController _controller = VolunteerController();
+  final RequestController _requestController = RequestController();
   bool _isSubmitting = false;
 
   Future<void> _submitRequest() async {
@@ -29,7 +29,7 @@ class _CreateRequestPageState extends State<CreateRequestPage> {
     });
 
     try {
-      await _controller.submitRequest(
+      await _requestController.submitRequest(
         widget.taskId,
         widget.eventId,
         _detailsController.text.trim(),

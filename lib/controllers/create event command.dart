@@ -3,12 +3,14 @@ import '../../models/Event/event.dart';
 import '../../models/Event/task.dart';
 import 'event_controller.dart';
 import 'command.dart';
+import 'task_controller.dart';
 
 class CreateEventCommand implements Command {
   final EventController eventController;
   final DocumentReference eventDocRef;
   final Event event;
   final List<Task> tasks;
+  final TaskController taskController = TaskController();
 
   CreateEventCommand({
     required this.eventController,
@@ -25,7 +27,7 @@ class CreateEventCommand implements Command {
     // Save all tasks associated with the event
     for (var task in tasks) {
       task.eventId = event.id; // Assign event ID to each task
-      await eventController.saveTask(task);
+      await taskController.saveTask(task); // Use TaskController to save the task
     }
   }
 }

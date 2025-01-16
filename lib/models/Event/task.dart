@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Task {
   final String id;
   String eventId;
@@ -39,5 +41,37 @@ class Task {
       status: map['status'] ?? 'pending',
       volunteerEmail: map['volunteerEmail'] ?? '', // Ensure volunteerEmail is fetched
     );
+  }
+  Future<void> saveTask(Task task) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('events')
+          .doc(task.eventId)
+          .collection('tasks')
+          .doc(task.id)
+          .set(task.toMap());
+      print("Task ${task.name} saved successfully under event ${task.eventId}.");
+    } catch (e) {
+      throw Exception('Failed to save task: $e');
+    }
+  }
+  Future<void> deleteTasksByEventId(String eventId) async {
+    try {
+      // Fetch all tasks under the event's sub-collection
+      final tasksSnapshot = await FirebaseFirestore.instance
+          .collection('events')
+          .doc(eventId)
+          .collection('tasks')
+          .get();
+
+      // Iterate over the tasks and delete them
+      for (var taskDoc in tasksSnapshot.docs) {
+        await taskDoc.reference.delete();
+      }
+
+      print('All tasks under event $eventId have been deleted.');
+    } catch (e) {
+      throw Exception('Failed to delete tasks for event $eventId: $e');
+    }
   }
 }

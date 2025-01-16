@@ -8,8 +8,7 @@ class AdminController {
     try {
       return await _dbService.fetchAllEvents();
     } catch (e) {
-      print('Error fetching events: $e');
-      throw Exception('Failed to fetch events');
+      throw Exception('Failed to fetch events, $e');
     }
   }
 }

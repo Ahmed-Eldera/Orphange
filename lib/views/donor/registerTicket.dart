@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hope_home/controllers/event_controller.dart';
 import 'package:uuid/uuid.dart';
 import '../../controllers/ticket_controller.dart';
 import '../../models/ticket.dart';
@@ -23,6 +24,7 @@ class _TicketRegistrationPageState extends State<TicketRegistrationPage> {
   };
 
   final TicketController _ticketController = TicketController();
+  final EventController _eventController = EventController();
 
   @override
   void initState() {
@@ -31,7 +33,7 @@ class _TicketRegistrationPageState extends State<TicketRegistrationPage> {
   }
 
   Future<void> _loadEventNames() async {
-    final eventNames = await _ticketController.fetchEventNames();
+    final eventNames = await _eventController.fetchEventNames();
     setState(() {
       _eventNames = eventNames;
     });

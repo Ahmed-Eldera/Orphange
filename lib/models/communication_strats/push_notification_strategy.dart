@@ -11,6 +11,5 @@ class PushNotificationStrategy implements CommunicationStrategy {
       'type': type,
       'timestamp': FieldValue.serverTimestamp(),
     });
-    print('Message stored as Push Notification for $recipient');
   }
 }

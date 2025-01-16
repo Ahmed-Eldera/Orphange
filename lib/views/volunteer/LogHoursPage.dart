@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../controllers/volunteer_controller.dart';
+import 'package:hope_home/controllers/task_controller.dart';
 import '../../models/Event/task.dart';
 
 class VolunteerLogHoursPage extends StatelessWidget {
-  final VolunteerController _controller = VolunteerController();
+  final TaskController _taskController = TaskController();
 
   Future<List<Task>> _fetchLoggedHoursData() async {
-    return await _controller.fetchTasksParticipatedForLoggedInUser();
+    return await _taskController.fetchTasksParticipatedForLoggedInUser();
   }
 
   @override

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../controllers/volunteer_controller.dart';
+import 'package:hope_home/controllers/request_controller.dart';
 import '../../models/Event/request.dart';
 
 class EditRequestPage extends StatefulWidget {
@@ -13,7 +13,7 @@ class EditRequestPage extends StatefulWidget {
 
 class _EditRequestPageState extends State<EditRequestPage> {
   late TextEditingController _detailsController;
-  final VolunteerController _controller = VolunteerController();
+  final RequestController _requestController = RequestController();
   bool _isSaving = false;
 
   @override
@@ -36,7 +36,7 @@ class _EditRequestPageState extends State<EditRequestPage> {
 
     try {
       widget.request.details = _detailsController.text.trim();
-      await _controller.updateRequestDetails(widget.request);
+      await _requestController.updateRequestDetails(widget.request);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Request updated successfully')),

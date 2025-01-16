@@ -11,6 +11,5 @@ class SmsStrategy implements CommunicationStrategy {
       'type': type,
       'timestamp': FieldValue.serverTimestamp(),
     });
-    print('Message stored as SMS for $recipient');
   }
 }

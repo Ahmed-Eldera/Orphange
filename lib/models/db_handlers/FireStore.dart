@@ -73,7 +73,6 @@ class FirestoreDatabaseService implements DatabaseService {
       DocumentSnapshot userDoc = await _firestore.collection('users').doc(
           userId).get();
       if (userDoc.exists) {
-        print('User Data Fetched: ${userDoc.data()}');
         return userDoc.data() as Map<String, dynamic>;
       }
     } catch (e) {
@@ -261,7 +260,6 @@ class FirestoreDatabaseService implements DatabaseService {
           .update({
         'details': request.details,
       });
-      print("Request details updated successfully for ${request.id}");
     } catch (e) {
       print("Failed to update request details: $e");
       throw Exception("Failed to update request details");
@@ -272,7 +270,6 @@ class FirestoreDatabaseService implements DatabaseService {
   Future<void> updateRequestState(Request request) async {
     try {
       final docPath = 'events/${request.eventId}/tasks/${request.taskId}/requests/${request.id}';
-      print("Updating request state at path: $docPath");
 
       await _firestore
           .collection('events')
@@ -283,7 +280,6 @@ class FirestoreDatabaseService implements DatabaseService {
           .doc(request.id)
           .update({'state': request.getStateName()}); // Update the state
 
-      print("Request state updated successfully for ${request.id}");
     } catch (e) {
       print("Failed to update request state: $e");
       throw Exception("Failed to update request state");
@@ -310,7 +306,6 @@ class FirestoreDatabaseService implements DatabaseService {
           .collection('tasks')
           .doc(task.id)
           .set(task.toMap());
-      print("Task ${task.name} saved successfully under event ${task.eventId}.");
     } catch (e) {
       throw Exception('Failed to save task: $e');
     }
@@ -522,5 +517,9 @@ class FirestoreDatabaseService implements DatabaseService {
       return [];
     }
   }
-
+  Stream<List<Map<String, dynamic>>> fetchTicketsStream() {
+    return _firestore.collection('tickets').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    });
+  }
 }

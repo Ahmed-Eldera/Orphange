@@ -13,33 +13,11 @@ class VolunteerController {
   Future<List<Volunteer>> getAllVolunteers() async {
     return await _dbService.fetchAllVolunteers();
   }
-  Future<List<Task>> fetchAllTasks() async {
-    return await _dbService.fetchAllTasks();
-  }
 
   Future<List<Request>> fetchVolunteerRequests(String email) async {
     return await _dbService.fetchRequestsByVolunteer(email);
   }
 
-  Future<void> submitRequest(String taskId, String eventId, String details) async {
-    final email = await getLoggedInUserEmail();
-    if (email == null) {
-      throw Exception("User not logged in");
-    }
-
-    final request = Request(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      taskId: taskId,
-      eventId: eventId,
-      volunteerId: email,
-      details: details,
-    );
-
-    await _dbService.saveRequest(request, eventId);
-  }
-  Future<void> updateRequestDetails(Request request) async {
-    await _dbService.updateRequestDetails(request);
-  }
   Future<List<Task>> fetchTasksParticipated(String email) async {
     final requests = await _dbService.fetchRequestsByVolunteer(email);
     List<Task> tasks = [];
@@ -84,13 +62,7 @@ class VolunteerController {
     return await _dbService.fetchRequestsByVolunteer(email);
   }
 
-  Future<List<Task>> fetchTasksParticipatedForLoggedInUser() async {
-    final email = await _authService.getLoggedInUserEmail();
-    if (email == null) {
-      throw Exception("User not logged in");
-    }
-    return await _dbService.fetchTasksParticipated(email);
-  }
+
   Future<Map<String, dynamic>> fetchCertificateData() async {
     final email = await getLoggedInUserEmail();
     if (email == null) {
