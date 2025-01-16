@@ -1,3 +1,5 @@
+import 'package:hope_home/models/db_handlers/FireStore.dart';
+
 class myUser {
   final String id;
   final String name;
@@ -14,5 +16,9 @@ class myUser {
       email: data['email'],
       type: data['type'],
     );
+  }
+  Future<void> updateInfo() async {
+    FirestoreDatabaseService dbService = FirestoreDatabaseService();
+    dbService.insertUser(id, name, email, type);
   }
 }

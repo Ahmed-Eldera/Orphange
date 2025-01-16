@@ -30,7 +30,7 @@ class FirestoreDatabaseService implements DatabaseService {
 
   // Insert a new user
   @override
-  Future<void> insertUser(String id, String name, String email,
+   Future<void> insertUser(String id, String name, String email,
       String type) async {
     try {
       var userCollection = _firestore.collection('users');
@@ -39,7 +39,7 @@ class FirestoreDatabaseService implements DatabaseService {
         'name': name,
         'email': email,
         'type': type,
-        'history': [], // Common field for both donor and volunteer
+        // Common field for both donor and volunteer
       };
 
       if (type == 'Volunteer') {
@@ -152,21 +152,7 @@ class FirestoreDatabaseService implements DatabaseService {
 
 
 // Fetch donations by donor email
-  Future<List<Donation>> fetchDonationsByEmail(String email) async {
-    try {
-      final snapshot = await _firestore
-          .collection('donations')
-          .where('donorEmail', isEqualTo: email)
-          .get();
 
-      return snapshot.docs.map((doc) {
-        return Donation.fromJson(doc.data() as Map<String, dynamic>, doc.id);
-      }).toList();
-    } catch (e) {
-      print('Error fetching donations: $e');
-      return [];
-    }
-  }
 
   Future<List<Donation>> fetchAllDonations() async {
     try {

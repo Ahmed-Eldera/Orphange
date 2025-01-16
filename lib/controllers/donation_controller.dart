@@ -7,6 +7,9 @@ import 'package:hope_home/models/Donation/healthcare_share.dart'; // Import Heal
 import 'package:hope_home/models/Donation/school_supplies_share.dart'; // Import SchoolSuppliesShare decorator
 import 'package:hope_home/models/Donation/entertainment_share.dart'; // Import EntertainmentShare decorator
 import 'package:hope_home/models/Donation/donation.dart';
+import 'package:hope_home/models/user.dart';
+import 'package:hope_home/models/users/donor.dart';
+import 'package:hope_home/userProvider.dart';
 
 import '../models/Donation/donation_calculator.dart'; // Import the Donation model
 
@@ -17,7 +20,7 @@ class DonationController {
   int schoolSuppliesShares = 0;
   int entertainmentShares = 0;
   String paymentMethod = '';
-
+  Donor user = UserProvider().currentUser! as Donor;
   // Get total amount
   double getTotalAmount() {
     // Start with the basic donation amount
@@ -72,10 +75,10 @@ class DonationController {
       date: DateTime.now().toIso8601String(),
     );
     await donation.addDonation();
-  }
+  } 
 
   Future<List<Donation>> getDonationHistory(String donorEmail) async {
-    return await FirestoreDatabaseService().fetchDonationsByEmail(donorEmail);
+    return await user.fetchDonationsByEmail();
   }
   Future<List<Donation>> fetchAllDonations() async {
     try {
@@ -87,7 +90,7 @@ class DonationController {
     }
   }
   Future<List<Donation>> getDonationsForReceipt(String donorEmail) async {
-    return await FirestoreDatabaseService().fetchDonationsByEmail(donorEmail);
+    return await user.fetchDonationsByEmail();
   }
 
   Future<double> getTotalDonationsForReceipt(String donorEmail) async {

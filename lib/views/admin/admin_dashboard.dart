@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hope_home/models/user.dart';
 import 'package:hope_home/userProvider.dart';
 import 'package:hope_home/views/admin/admin_request_management_page.dart';
+import 'package:provider/provider.dart';
 import '../../controllers/admin_controller.dart';
 import 'all_donations_page.dart';
 import 'admin_task_management_page.dart';
@@ -47,7 +48,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    final myUser admin = UserProvider().currentUser!;
+    final myUser admin = Provider.of<UserProvider>(context).currentUser!;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
