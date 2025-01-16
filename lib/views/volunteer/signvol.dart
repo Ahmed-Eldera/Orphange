@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hope_home/controllers/signupController.dart';
+import 'package:hope_home/views/volunteer/volunteerDashboard.dart';
 
 class VolunteerSignUpScreen extends StatefulWidget {
   final UserSignupMailController controller;
@@ -30,7 +31,7 @@ class _VolunteerSignUpScreenState extends State<VolunteerSignUpScreen> {
     }
 
     try {
-      String? userId = await widget.controller.authenticate(
+      String? userId = await widget.controller.login(
         email,
         password,
         name,
@@ -38,11 +39,15 @@ class _VolunteerSignUpScreenState extends State<VolunteerSignUpScreen> {
       );
 
       if (userId != null) {
-        widget.controller.postLoginProcess();
+        // widget.controller.postLoginProcess();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Volunteer registration successful!')),
         );
-        Navigator.pop(context); // Navigate back or to a dashboard
+                Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(
+    builder: (context) => VolunteerDashboard(), // Replace with your target screen
+  ),);// Navigate back or to a dashboard
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Sign-Up failed')),

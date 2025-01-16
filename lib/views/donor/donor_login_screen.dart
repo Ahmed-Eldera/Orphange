@@ -27,19 +27,15 @@ class _DonorLoginScreenState extends State<DonorLoginScreen> {
     }
 
     try {
-      String? userType = await widget.controller.authenticate(email, password);
+      String? userType = await widget.controller.login(email, password);
 
-      if (userType == 'donor') {
-        widget.controller.postLoginProcess();
-        var donor = widget.controller.userProvider.currentUser;
+      if (userType == 'Donor') {
+        // widget.controller.postLoginProcess();
+        // var donor = widget.controller.userProvider.currentUser;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => DonorDashboard(
-              donor: {
-                'name': donor!.name,
-                'email': donor.email,
-              },
             ),
           ),
         );

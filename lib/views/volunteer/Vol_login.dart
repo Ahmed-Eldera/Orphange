@@ -27,10 +27,10 @@ class _VolunteerLoginScreenState extends State<VolunteerLoginScreen> {
     }
 
     try {
-      String? userType = await widget.controller.authenticate(email, password);
+      String? userType = await widget.controller.login(email, password);
 
-      if (userType == 'volunteer') {
-        widget.controller.postLoginProcess();
+      if (userType == 'Volunteer') {
+        // widget.controller.postLoginProcess();
         // var admin = widget.controller.userProvider.currentUser;
         Navigator.pushReplacement(
           context,

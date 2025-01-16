@@ -1,3 +1,4 @@
+import 'package:hope_home/models/user.dart';
 import 'package:hope_home/models/users/userHelper.dart';
 import 'package:hope_home/models/users/userTemplate.dart';
 import 'package:hope_home/userProvider.dart';
@@ -6,7 +7,6 @@ import '../models/auth/FireAuth.dart';
 
 class UserSignupMailController extends UserLoginTemplate {
   final UserProvider userProvider;
-  final FirestoreDatabaseService _dbService = FirestoreDatabaseService();
 
   UserSignupMailController({
     required this.userProvider,
@@ -29,22 +29,10 @@ class UserSignupMailController extends UserLoginTemplate {
   }
 
   @override
-  void postLoginProcess() {
-    // Any additional steps after login, like navigating to a specific page
-    userProvider.setUser(user);
+  void postLoginProcess(myUser? user) {
+    // Perform additional actions after login, like displaying user data
+userProvider.setUser(user);
   }
 
-  Future<void> signUpAdmin(String name, String email, String password) async {
-    try {
-      await _dbService.insertUser(
-        DateTime.now().millisecondsSinceEpoch.toString(),
-        name,
-        email,
-        'Admin',
-      );
-      // Add additional logic if needed, e.g., sending a welcome email.
-    } catch (e) {
-      throw Exception('Error signing up admin: $e');
-    }
-  }
+
 }

@@ -37,7 +37,7 @@ class _LoginState extends State<Login> {
       );
 
       if (userType != null) {
-        widget.loginController.postLoginProcess();
+        // widget.loginController.postLoginProcess();
 
         if (userType == 'admin') {
           Navigator.pushReplacement(

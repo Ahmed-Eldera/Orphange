@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:hope_home/models/user.dart';
+import 'package:hope_home/userProvider.dart';
 import 'package:hope_home/views/show_events.dart';
 import 'donation_history_page.dart';
 import '../inbox_page.dart';
 import 'make_donation_page.dart';
 import 'registerTicket.dart';
 class DonorDashboard extends StatelessWidget {
-  final Map<String, dynamic> donor;
 
-  const DonorDashboard({Key? key, required this.donor}) : super(key: key);
+
+  const DonorDashboard({Key? key, }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider = UserProvider();
+    myUser donor = userProvider.currentUser!;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'Donor Dashboard - ${donor['name']}',
+          'Donor Dashboard - ${donor.name}',
           style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -111,7 +115,7 @@ class DonorDashboard extends StatelessWidget {
                         () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => DonationHistoryPage(donorEmail: donor['email'])),
+                        MaterialPageRoute(builder: (context) => DonationHistoryPage(donorEmail: donor.email)),
                       );
                     },
                   ),
@@ -161,7 +165,7 @@ class DonorDashboard extends StatelessWidget {
 }
 
 class ProfilePlaceholderPage extends StatelessWidget {
-  final Map<String, dynamic> donor;
+  final myUser donor;
 
   const ProfilePlaceholderPage({Key? key, required this.donor}) : super(key: key);
 
@@ -174,7 +178,7 @@ class ProfilePlaceholderPage extends StatelessWidget {
       ),
       body: Center(
         child: Text(
-          'Donor Name: ${donor['name']}\nEmail: ${donor['email']}',
+          'Donor Name: ${donor.name}\nEmail: ${donor.email}',
           style: const TextStyle(fontSize: 18, fontFamily: 'Roboto', fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hope_home/controllers/signupController.dart';
+import 'package:hope_home/views/admin/admin_dashboard.dart';
 
 class AdminSignUpScreen extends StatefulWidget {
   final UserSignupMailController controller;
@@ -26,13 +27,30 @@ class _AdminSignUpScreenState extends State<AdminSignUpScreen> {
       );
       return;
     }
-
     try {
-      await widget.controller.signUpAdmin(name, email, password);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Admin registered successfully!')),
+      String? userId = await widget.controller.login(
+        email,
+        password,
+        name,
+        'Admin',
       );
-      Navigator.pop(context);
+
+      if (userId != null) {
+        // widget.controller.postLoginProcess();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Donor registration successful!')),
+        );
+        Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(
+    builder: (context) => AdminDashboard(), // Replace with your target screen
+  ),
+); // Navigate to login or dashboard
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Sign-Up failed')),
+        );
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),

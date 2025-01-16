@@ -9,14 +9,15 @@ abstract class UserLoginTemplate {
     myUser? user;
     UserFactory? userFactory ;
   // The template method that outlines the steps
-  Future<void>  login(String email,String password,[String? name,String? type]) async {
+  Future<String?>  login(String email,String password,[String? name,String? type]) async {
     String? id = await authenticate(email,password,name??"",type??'');
     print(id);
     Map<String,dynamic> data = await fetchUserData(id) as Map<String,dynamic>;
     print(data);
     user = createUserObject(data);
     print(user);
-    postLoginProcess();
+    postLoginProcess(user);
+    return data['type'];
   }
 
   // Step 1: Authentication (could be handled in Firebase)
@@ -38,6 +39,6 @@ abstract class UserLoginTemplate {
   }
 
 
-  void postLoginProcess() {
+  void postLoginProcess(myUser? user) {
   }
 }

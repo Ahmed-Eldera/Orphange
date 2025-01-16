@@ -26,7 +26,7 @@ void main() async {
   UserLoginMailController loginController = UserLoginMailController(
     userProvider: userProvider,
     facade: facade,
-    firestoreService: firestore,
+
   );
 
   runApp(MyApp(loginController: loginController));

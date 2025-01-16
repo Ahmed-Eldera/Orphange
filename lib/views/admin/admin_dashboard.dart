@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hope_home/models/user.dart';
+import 'package:hope_home/userProvider.dart';
 import 'package:hope_home/views/admin/admin_request_management_page.dart';
 import '../../controllers/admin_controller.dart';
 import 'all_donations_page.dart';
@@ -14,16 +16,16 @@ import 'view_tickets.dart';
 import 'view_volunteers_page.dart';
 
 class AdminDashboard extends StatefulWidget {
-  final Map<String, dynamic> admin;
 
-  const AdminDashboard({Key? key, required this.admin}) : super(key: key);
+
+   AdminDashboard({super.key});
 
   @override
   _AdminDashboardState createState() => _AdminDashboardState();
 }
 
 class _AdminDashboardState extends State<AdminDashboard> {
-  List<Event> _events = [];
+  // List<Event> _events = [];
   late Future<List<Event>> _eventsFuture;
   @override
   void initState() {
@@ -45,10 +47,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final myUser admin = UserProvider().currentUser!;
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Admin Dashboard - ${widget.admin['name']}',
+          'Admin Dashboard - ${admin.name}',
           style: const TextStyle(
             color: Colors.white,
             fontSize: 20,

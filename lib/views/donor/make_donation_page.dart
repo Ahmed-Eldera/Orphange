@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hope_home/controllers/donation_controller.dart'; // The controller
+import 'package:hope_home/controllers/donation_controller.dart';
+import 'package:hope_home/models/user.dart'; // The controller
 
 class MakeDonationPage extends StatefulWidget {
-  final Map<String, dynamic> donor;
+  final myUser donor;
 
   const MakeDonationPage({Key? key, required this.donor}) : super(key: key);
 
@@ -89,7 +90,7 @@ class _MakeDonationPageState extends State<MakeDonationPage> {
             ElevatedButton(
               onPressed: () async {
                 if (_controller.getTotalAmount() > 0 && _selectedMethod != null) {
-                  await _controller.submitDonation(widget.donor['name'], widget.donor['email']);
+                  await _controller.submitDonation(widget.donor.name, widget.donor.email);
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Donation submitted successfully!')));
                   Navigator.pop(context);
                 } else {

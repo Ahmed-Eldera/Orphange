@@ -27,19 +27,15 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     }
 
     try {
-      String? userType = await widget.controller.authenticate(email, password);
+      String? userType = await widget.controller.login(email, password);
 
       if (userType == 'Admin') {
-        widget.controller.postLoginProcess();
-        var admin = widget.controller.userProvider.currentUser;
+        // widget.controller.postLoginProcess();
+        // myUser admin = widget.controller.userProvider.currentUser;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => AdminDashboard(
-              admin: {
-                'name': admin!.name,
-                'email': admin.email,
-              },
             ),
           ),
         );
