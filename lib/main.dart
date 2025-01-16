@@ -7,9 +7,9 @@ import 'package:hope_home/userProvider.dart';
 import 'package:hope_home/views/general_auth/login.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:provider/provider.dart'; // Import Provider
 import 'views/welcoming_screen.dart';
-//hey youuuuu welcome to new world
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -26,10 +26,16 @@ void main() async {
   UserLoginMailController loginController = UserLoginMailController(
     userProvider: userProvider,
     facade: facade,
-
   );
 
-  runApp(MyApp(loginController: loginController));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => userProvider), // Provide UserProvider
+      ],
+      child: MyApp(loginController: loginController),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -41,7 +47,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Hope Home',
-      home:  WelcomingScreen(),
+      home: WelcomingScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

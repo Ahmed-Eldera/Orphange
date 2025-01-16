@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hope_home/controllers/profileController.dart';
 import 'package:hope_home/models/user.dart';
 import 'package:hope_home/userProvider.dart';
 import 'package:hope_home/views/show_events.dart';
@@ -15,7 +16,7 @@ class DonorDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserProvider userProvider = UserProvider();
+    final userProvider = Provider.of<UserProvider>(context);
     myUser donor = userProvider.currentUser!;
     return Scaffold(
       appBar: AppBar(
@@ -174,18 +175,35 @@ class DonorDashboard extends StatelessWidget {
   }
 }
 
+
 class ProfilePlaceholderPage extends StatelessWidget {
   final UserProvider userProvider = UserProvider();
-
+  final Profilecontroller profilecontroller = Profilecontroller();
   final TextEditingController usernameController = TextEditingController();
 
-  ProfilePlaceholderPage({Key? key}) : super(key: key) {
-    // Initialize the controller with the donor's name
-  }
+  ProfilePlaceholderPage({Key? key}) : super(key: key);
 
-  void _saveProfileChanges() {
+  Future<void> _saveProfileChanges(BuildContext context) async {
+    try {
+      // Await the update operation
+      await profilecontroller.updateuser(usernameController.text, userProvider.currentUser!);
 
-    userProvider.editName(usernameController.text);
+      // Show success snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Profile updated successfully!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (error) {
+      // Show error snackbar if the operation fails
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to update profile: $error'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -210,7 +228,7 @@ class ProfilePlaceholderPage extends StatelessWidget {
             const SizedBox(height: 8),
             TextField(
               controller: usernameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Enter your name',
               ),
@@ -218,7 +236,7 @@ class ProfilePlaceholderPage extends StatelessWidget {
             const SizedBox(height: 16),
             Center(
               child: ElevatedButton(
-                onPressed: _saveProfileChanges, // Empty function
+                onPressed: () => _saveProfileChanges(context),
                 child: const Text('Save'),
               ),
             ),
@@ -228,6 +246,7 @@ class ProfilePlaceholderPage extends StatelessWidget {
     );
   }
 }
+
 
 
 

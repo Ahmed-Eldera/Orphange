@@ -34,15 +34,4 @@ class UserProvider extends ChangeNotifier {
     _currentUser = null;
     notifyListeners();
   }
-  void editName(String name) {
-    UserFactory userFactory = UserFactoryProducer.getFactory('Donor');
-    Map<String,dynamic> data = {
-      "name": name,
-      "id": currentUser!.id,
-      "email": currentUser!.email,
-      "type": currentUser!.type};
-       myUser user = userFactory!.createUser(data!);
-       setUser(user);
-       display();
-  }
 }
