@@ -4,6 +4,7 @@ import 'package:hope_home/userProvider.dart';
 import 'package:hope_home/views/show_events.dart';
 import 'donation_history_page.dart';
 import '../inbox_page.dart';
+import '../../models/Donation/donor_receipt.dart';
 import 'make_donation_page.dart';
 import 'registerTicket.dart';
 class DonorDashboard extends StatelessWidget {
@@ -83,11 +84,6 @@ class DonorDashboard extends StatelessWidget {
                         },
                   ),
                   _buildDashboardButton(
-                    'Donate',
-                    Icons.volunteer_activism,
-                        () {},
-                  ),
-                  _buildDashboardButton(
                     'Inbox',
                     Icons.inbox,
                         () {
@@ -119,6 +115,19 @@ class DonorDashboard extends StatelessWidget {
                       );
                     },
                   ),
+                  _buildDashboardButton(
+                    'Generate Receipt',
+                    Icons.receipt_long,
+                        () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ReceiptPage(donorEmail: donor.email),
+                        ),
+                      );
+                    },
+                  ),
+
 
 
                 ],

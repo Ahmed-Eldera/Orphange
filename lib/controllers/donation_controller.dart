@@ -86,4 +86,15 @@ class DonationController {
       throw Exception('Failed to fetch donations');
     }
   }
+  Future<List<Donation>> getDonationsForReceipt(String donorEmail) async {
+    return await FirestoreDatabaseService().fetchDonationsByEmail(donorEmail);
+  }
+
+  Future<double> getTotalDonationsForReceipt(String donorEmail) async {
+    List<Donation> donations = await getDonationsForReceipt(donorEmail);
+    return donations.fold<double>(
+      0.0, // Starting value for the sum
+          (sum, donation) => sum + donation.amount, // Accumulator function
+    );
+  }
 }
