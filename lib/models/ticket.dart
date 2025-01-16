@@ -1,10 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+
 class Ticket {
   String id;
   String date;
   String userName;
   String eventName;
   List<String> donationTypes; // Added donationTypes attribute
-
   Ticket({
     required this.id,
     required this.date,
@@ -34,4 +36,9 @@ class Ticket {
       donationTypes: List<String>.from(map['donationTypes'] ?? []), // Handle donationTypes
     );
   }
+  Future<void> saveToFirestore() async {
+    await FirebaseFirestore.instance.collection('tickets').doc(id).set(toMap());
+  }
+
+
 }

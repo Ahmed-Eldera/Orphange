@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../controllers/beneficiary_controller.dart';
 import '../../models/beneficiary.dart';
 import '../../models/beneficiary_manager.dart';
-import '../../models/db_handlers/FireStore.dart';
 import '../../models/distribution_strats.dart/distribution_strategy.dart';
 import '../../models/distribution_strats.dart/equal_distribution_strategy.dart';
 import '../../models/distribution_strats.dart/need_based_strategy.dart';

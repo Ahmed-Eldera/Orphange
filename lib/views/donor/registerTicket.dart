@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
+import '../../controllers/ticket_controller.dart';
+import '../../models/ticket.dart';
+
 
 class TicketRegistrationPage extends StatefulWidget {
   const TicketRegistrationPage({Key? key}) : super(key: key);
@@ -20,27 +22,22 @@ class _TicketRegistrationPageState extends State<TicketRegistrationPage> {
     'Entertainment': false,
   };
 
+  final TicketController _ticketController = TicketController();
+
   @override
   void initState() {
     super.initState();
-    _fetchEventNames();
+    _loadEventNames();
   }
 
-  Future<void> _fetchEventNames() async {
-    try {
-      final snapshot = await FirebaseFirestore.instance.collection('events').get();
-      setState(() {
-        // Use null-aware access with type check
-        _eventNames = snapshot.docs
-            .map((doc) => doc.data()['name']?.toString() ?? 'Unnamed Event')
-            .toList();
-      });
-    } catch (error) {
-      print('Error fetching event names: $error');
-    }
+  Future<void> _loadEventNames() async {
+    final eventNames = await _ticketController.fetchEventNames();
+    setState(() {
+      _eventNames = eventNames;
+    });
   }
 
-  Future<void> _registerTicket() async {
+  Future<void> _onSubmit() async {
     if (!_formKey.currentState!.validate() || _selectedEventName == null) {
       return;
     }
@@ -57,29 +54,33 @@ class _TicketRegistrationPageState extends State<TicketRegistrationPage> {
       return;
     }
 
-    final ticket = {
-      'id': const Uuid().v4(),
-      'date': DateTime.now().toIso8601String(),
-      'userName': _userNameController.text.trim(),
-      'eventName': _selectedEventName!,
-      'donationTypes': selectedDonationTypes,
-    };
+    final ticket = Ticket(
+      id: const Uuid().v4(),
+      date: DateTime.now().toIso8601String(),
+      userName: _userNameController.text.trim(),
+      eventName: _selectedEventName!,
+      donationTypes: selectedDonationTypes,
+    );
 
     try {
-      await FirebaseFirestore.instance.collection('tickets').doc(ticket['id'] as String?).set(ticket);
+      await _ticketController.registerTicket(ticket);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Ticket registered successfully!')),
       );
-      _userNameController.clear();
-      setState(() {
-        _selectedEventName = null;
-        _donationTypes.updateAll((key, value) => false);
-      });
+      _resetForm();
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to register ticket.')),
+        SnackBar(content: Text('Failed to register ticket: $error')),
       );
     }
+  }
+
+  void _resetForm() {
+    _userNameController.clear();
+    setState(() {
+      _selectedEventName = null;
+      _donationTypes.updateAll((key, value) => false);
+    });
   }
 
   @override
@@ -156,7 +157,7 @@ class _TicketRegistrationPageState extends State<TicketRegistrationPage> {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: _registerTicket,
+                onPressed: _onSubmit,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue.shade700,
                 ),

@@ -1,11 +1,7 @@
+import 'package:hope_home/models/iterators/Iterator.dart';
 import '../Event/event.dart';
 
-abstract class EventIterator {
-  bool hasNext();
-  Event next();
-}
-
-class EventListIterator implements EventIterator {
+class EventListIterator implements AppIterator {
   final List<Event> _events;
   int _currentIndex = 0;
 

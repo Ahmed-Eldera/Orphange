@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hope_home/views/admin/admin_request_management_page.dart';
 import '../../controllers/admin_controller.dart';
-import '../donor/all_donations_page.dart';
+import 'all_donations_page.dart';
 import 'admin_task_management_page.dart';
 import 'beneficiaries_list.dart';
 import 'create event.dart'; // Import the CreateEventPage

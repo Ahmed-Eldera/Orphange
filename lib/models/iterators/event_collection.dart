@@ -1,8 +1,10 @@
+import 'package:hope_home/models/iterators/Iterator.dart';
+
 import '../Event/event.dart';
 import 'event iterator.dart';
 
 abstract class EventCollection {
-  EventIterator createIterator();
+  AppIterator createIterator();
 }
 
 class EventList implements EventCollection {
@@ -15,7 +17,7 @@ class EventList implements EventCollection {
   List<Event> get events => _events;
 
   @override
-  EventIterator createIterator() {
+  AppIterator createIterator() {
     return EventListIterator(_events);
   }
 }

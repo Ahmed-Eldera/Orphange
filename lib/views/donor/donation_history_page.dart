@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
+import '../../controllers/donation_controller.dart';
 import '../../models/Donation/donation.dart';
-import '../../models/db_handlers/FireStore.dart';
 
 class DonationHistoryPage extends StatelessWidget {
   final String donorEmail;
+  final DonationController _controller = DonationController();
 
-  const DonationHistoryPage({Key? key, required this.donorEmail}) : super(key: key);
+  DonationHistoryPage({Key? key, required this.donorEmail}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final FirestoreDatabaseService _dbService = FirestoreDatabaseService();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Donation History'),
         backgroundColor: Colors.blue.shade700,
       ),
       body: FutureBuilder<List<Donation>>(
-        future: _dbService.fetchDonationsByEmail(donorEmail),
+        future: _controller.getDonationHistory(donorEmail), // Use controller
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

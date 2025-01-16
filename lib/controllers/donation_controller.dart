@@ -75,4 +75,8 @@ class DonationController {
     FirestoreDatabaseService _dbService = FirestoreDatabaseService();
     await _dbService.addDonation(adapter);
   }
+  Future<List<Donation>> getDonationHistory(String donorEmail) async {
+    return await FirestoreDatabaseService().fetchDonationsByEmail(donorEmail);
+  }
+
 }

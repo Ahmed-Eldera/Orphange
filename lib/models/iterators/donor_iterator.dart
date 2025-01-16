@@ -1,6 +1,7 @@
 import '../users/donor.dart';
+import 'Iterator.dart';
 
-class DonorIterator implements Iterator {
+class DonorIterator implements AppIterator {
   final List<Donor> _donors;
   int _currentIndex = 0;
 
