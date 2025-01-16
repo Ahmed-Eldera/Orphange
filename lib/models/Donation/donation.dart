@@ -1,3 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'donationAdapter.dart';
+
 class Donation {
   final String id;
   final String donorName;
@@ -27,4 +31,25 @@ class Donation {
       date: data['date'] as String,
     );
   }
+  Map<String, dynamic> toMap() {
+    return {
+      'donorName': donorName,
+      'donorEmail': donorEmail,
+      'amount': amount,
+      'method': method,
+      'date': date,
+    };
+  }
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> addDonation() async {
+    try {
+      DonationAdapter adapter = DonationAdapter(this);
+      await _firestore.collection('donations').add(adapter.ToFireStore());
+    } catch (e) {
+      print('Error adding donation: $e');
+      throw Exception('Failed to add donation');
+    }
+  }
+
 }

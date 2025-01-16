@@ -12,7 +12,7 @@ class BeneficiaryController {
   Future<void> saveAllocatedBudget(Map<String, double> allocations) async {
     try {
       for (var entry in allocations.entries) {
-        await _dbService.updateBeneficiaryBudget(entry.key, entry.value);
+        await Beneficiary.updateBeneficiaryBudget(entry.key, entry.value);
       }
     } catch (e) {
       print('Error saving allocated budgets: $e');
@@ -20,22 +20,32 @@ class BeneficiaryController {
   }
   Future<void> addBeneficiary(Beneficiary beneficiary) async {
     try {
-      await _dbService.addBeneficiary(beneficiary);
+      await Beneficiary.addBeneficiary(beneficiary);
     } catch (e) {
       print('Error adding beneficiary: $e');
     }
   }
-
-  Future<void> updateBeneficiary(Beneficiary beneficiary) async {
+  Future<void> deleteBeneficiary(String id) async {
     try {
-      await _dbService.updateBeneficiary(beneficiary);
+      await Beneficiary.deleteBeneficiary(id);
     } catch (e) {
-      print('Error updating beneficiary: $e');
+      print('Error deleting beneficiary: $e');
     }
   }
+  Future<void> updateBeneficiary(Beneficiary beneficiary) async {
+    try {
+      await Beneficiary.updateBeneficiary(beneficiary);
+    } catch (e) {
+      print('Error updating beneficiary: $e');
+      throw Exception('Failed to update beneficiary');
+    }
+  }
+
+
+
   Future<void> updateAllocation(String beneficiaryId, double allocation) async {
     try {
-      await _dbService.updateBeneficiaryBudget(beneficiaryId, allocation);
+      await Beneficiary.updateBeneficiaryBudget(beneficiaryId, allocation);
     } catch (e) {
       print('Error updating allocation: $e');
     }
@@ -54,7 +64,7 @@ class BeneficiaryController {
       strategy.allocateAddedFunds(additionalFunds, totalBudget, beneficiaries);
 
       for (var entry in additionalAllocation.entries) {
-        await _dbService.updateBeneficiaryAllocation(entry.key, entry.value);
+        await Beneficiary.updateBeneficiaryAllocation(entry.key, entry.value);
       }
     } catch (e) {
       throw Exception('Error adding funds: $e');

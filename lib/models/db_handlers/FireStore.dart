@@ -149,14 +149,7 @@ class FirestoreDatabaseService implements DatabaseService {
     }
   }
 
-// Add a new donation to Firestore
-  Future<void> addDonation(DonationAdapter donation) async {
-    try {
-      await _firestore.collection('donations').add(donation.ToFireStore());
-    } catch (e) {
-      print('Error adding donation: $e');
-    }
-  }
+
 
 // Fetch donations by donor email
   Future<List<Donation>> fetchDonationsByEmail(String email) async {
@@ -206,26 +199,6 @@ class FirestoreDatabaseService implements DatabaseService {
   }
 
 
-  // Filter events to only include those happening this week
-  // Save a new request
-  Future<void> saveRequest(Request request, String eventId) async {
-    try {
-      await _firestore
-          .collection('events') // Navigate to events
-          .doc(eventId) // Select the event
-          .collection('tasks') // Access tasks
-          .doc(request.taskId) // Select the task
-          .collection('requests') // Access requests under the task
-          .doc(request.id) // Use the request ID
-          .set(request.toMap()); // Save the request details
-      print("Request saved successfully under event $eventId and task ${request.taskId}");
-    } catch (e) {
-      print('Failed to save request: $e');
-      throw Exception('Failed to save request');
-    }
-  }
-
-
 // Fetch all requests
   Future<List<Request>> fetchAllRequests() async {
     final snapshot = await _firestore.collectionGroup('requests').get();
@@ -248,68 +221,6 @@ class FirestoreDatabaseService implements DatabaseService {
     }
   }
 
-  Future<void> updateRequestDetails(Request request) async {
-    try {
-      await _firestore
-          .collection('events')
-          .doc(request.eventId)
-          .collection('tasks')
-          .doc(request.taskId)
-          .collection('requests')
-          .doc(request.id)
-          .update({
-        'details': request.details,
-      });
-    } catch (e) {
-      print("Failed to update request details: $e");
-      throw Exception("Failed to update request details");
-    }
-  }
-
-// Update request state
-  Future<void> updateRequestState(Request request) async {
-    try {
-      final docPath = 'events/${request.eventId}/tasks/${request.taskId}/requests/${request.id}';
-
-      await _firestore
-          .collection('events')
-          .doc(request.eventId) // Ensure eventId is used
-          .collection('tasks')
-          .doc(request.taskId)
-          .collection('requests')
-          .doc(request.id)
-          .update({'state': request.getStateName()}); // Update the state
-
-    } catch (e) {
-      print("Failed to update request state: $e");
-      throw Exception("Failed to update request state");
-    }
-  }
-
-
-// Helper to map state name to state object
-  RequestState _mapState(String state) {
-    switch (state) {
-      case 'Approved':
-        return ApprovedState();
-      case 'Rejected':
-        return RejectedState();
-      default:
-        return PendingState();
-    }
-  }
-  Future<void> saveTask(Task task) async {
-    try {
-      await _firestore
-          .collection('events')
-          .doc(task.eventId) // Ensure eventId is set correctly
-          .collection('tasks')
-          .doc(task.id)
-          .set(task.toMap());
-    } catch (e) {
-      throw Exception('Failed to save task: $e');
-    }
-  }
 
 
   Future<List<Task>> fetchTasksByEvent(String eventId) async {
@@ -356,22 +267,12 @@ class FirestoreDatabaseService implements DatabaseService {
       return Task.fromMap(doc.data() as Map<String, dynamic>, doc.id);
     }).toList();
   }
-  Future<void> addBeneficiary(Beneficiary beneficiary) async {
-    await _firestore.collection('beneficiaries').doc(beneficiary.id).set(beneficiary.toMap());
-  }
-
-  Future<void> updateBeneficiary(Beneficiary beneficiary) async {
-    await _firestore.collection('beneficiaries').doc(beneficiary.id).update(beneficiary.toMap());
-  }
 
   Future<List<Beneficiary>> fetchBeneficiaries() async {
     QuerySnapshot snapshot = await _firestore.collection('beneficiaries').get();
     return snapshot.docs.map((doc) => Beneficiary.fromMap(doc.data() as Map<String, dynamic>)).toList();
   }
 
-  Future<void> deleteBeneficiary(String id) async {
-    await _firestore.collection('beneficiaries').doc(id).delete();
-  }
 
   Future<Map<String, dynamic>?> getUserByEmail(String email) async {
     try {
@@ -440,38 +341,6 @@ class FirestoreDatabaseService implements DatabaseService {
     }
   }
 
-  Future<void> updateBeneficiaryBudget(String id, double allocatedBudget) async {
-    try {
-      await _firestore.collection('beneficiaries').doc(id).update({
-        'allocatedBudget': allocatedBudget,
-      });
-    } catch (e) {
-      print('Error updating beneficiary budget: $e');
-    }
-  }
-  Future<void> updateTotalBudget(double totalBudget) async {
-    try {
-      await _firestore.collection('settings').doc('budget').set({
-        'totalBudget': totalBudget,
-      });
-      print('Total budget updated successfully in Firebase.');
-    } catch (e) {
-      print('Failed to update total budget: $e');
-    }
-  }
-  Future<void> updateBeneficiaryAllocation(String id, double addedAmount) async {
-    try {
-      final doc = await _firestore.collection('beneficiaries').doc(id).get();
-      if (doc.exists) {
-        double currentAllocation = doc.data()?['allocatedBudget'] ?? 0.0;
-        await _firestore.collection('beneficiaries').doc(id).update({
-          'allocatedBudget': currentAllocation + addedAmount,
-        });
-      }
-    } catch (e) {
-      throw Exception('Failed to update allocation for beneficiary $id: $e');
-    }
-  }
   Future<Map<String, double>> fetchTotalDonationsByDonor() async {
     try {
       final List<Donation> donations = await fetchAllDonations();

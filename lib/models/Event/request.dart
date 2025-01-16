@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../state/request_state.dart';
 import '../state/state_types.dart';
 class Request {
@@ -73,4 +75,59 @@ class Request {
     }
   }
   RequestState getState() => _state;
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Future<void> saveRequest(String eventId) async {
+    try {
+      await _firestore
+          .collection('events') // Navigate to events
+          .doc(eventId) // Select the event
+          .collection('tasks') // Access tasks
+          .doc(taskId) // Select the task
+          .collection('requests') // Access requests under the task
+          .doc(id) // Use the request ID
+          .set(toMap()); // Save the request details
+      print("Request saved successfully under event $eventId and task $taskId");
+    } catch (e) {
+      print('Failed to save request: $e');
+      throw Exception('Failed to save request');
+    }
+  }
+
+  Future<void> updateRequestDetails() async {
+    try {
+      await _firestore
+          .collection('events')
+          .doc(eventId)
+          .collection('tasks')
+          .doc(taskId)
+          .collection('requests')
+          .doc(id)
+          .update({
+        'details': details,
+      });
+      print("Request details updated successfully for $id");
+    } catch (e) {
+      print("Failed to update request details: $e");
+      throw Exception("Failed to update request details");
+    }
+  }
+
+  Future<void> updateRequestState() async {
+    try {
+      final docPath = 'events/$eventId/tasks/$taskId/requests/$id';
+
+      await _firestore
+          .collection('events')
+          .doc(eventId) // Ensure eventId is used
+          .collection('tasks')
+          .doc(taskId)
+          .collection('requests')
+          .doc(id)
+          .update({'state': getStateName()}); // Update the state
+      print("Request state updated successfully for $id");
+    } catch (e) {
+      print("Failed to update request state: $e");
+      throw Exception("Failed to update request state");
+    }
+  }
 }

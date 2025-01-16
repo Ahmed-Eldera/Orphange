@@ -71,10 +71,9 @@ class DonationController {
       method: paymentMethod,
       date: DateTime.now().toIso8601String(),
     );
-    DonationAdapter adapter = DonationAdapter(donation);
-    FirestoreDatabaseService _dbService = FirestoreDatabaseService();
-    await _dbService.addDonation(adapter);
+    await donation.addDonation();
   }
+
   Future<List<Donation>> getDonationHistory(String donorEmail) async {
     return await FirestoreDatabaseService().fetchDonationsByEmail(donorEmail);
   }

@@ -18,7 +18,7 @@ class RequestController {
 
   Future<void> updateRequestState(Request request) async {
     try {
-      await FirestoreDatabaseService().updateRequestState(request);
+      await request.updateRequestState();
       print("Request state updated successfully in the database.");
     } catch (e) {
       throw Exception("Failed to update request state in database: $e");
@@ -28,7 +28,7 @@ class RequestController {
     return await _authService.getLoggedInUserEmail();
   }
   Future<void> updateRequestDetails(Request request) async {
-    await _dbService.updateRequestDetails(request);
+    await request.updateRequestDetails();
   }
   Future<void> submitRequest(String taskId, String eventId, String details) async {
     final email = await getLoggedInUserEmail();
@@ -44,6 +44,6 @@ class RequestController {
       details: details,
     );
 
-    await _dbService.saveRequest(request, eventId);
+    await request.saveRequest(eventId);
   }
 }
