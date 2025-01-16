@@ -1,5 +1,5 @@
 // lib/controllers/commands/delete_event_command.dart
-import 'event_controller.dart';
+import '../../controllers/event_controller.dart';
 import 'command.dart';
 
 class DeleteEventCommand implements Command {

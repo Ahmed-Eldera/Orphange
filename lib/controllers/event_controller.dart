@@ -8,7 +8,7 @@ import 'package:hope_home/models/users/donor.dart';
 import 'package:hope_home/models/users/volunteer.dart';
 import '../models/Event/event.dart';
 import '../models/Event/task.dart';
-import 'command.dart';
+import '../models/command_pattern/command.dart';
 
 class EventController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

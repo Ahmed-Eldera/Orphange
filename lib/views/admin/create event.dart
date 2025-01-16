@@ -3,7 +3,7 @@ import 'package:hope_home/controllers/volunteer_controller.dart';
 import '../../controllers/event_controller.dart';
 import '../../models/Event/event.dart';
 import '../../models/Event/task.dart';
-import '../../controllers/create event command.dart';
+import '../../models/command_pattern/create event command.dart';
 
 class CreateEventPage extends StatefulWidget {
   const CreateEventPage({Key? key}) : super(key: key);

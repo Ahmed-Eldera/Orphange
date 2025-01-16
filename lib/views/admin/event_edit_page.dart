@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/Event/event.dart';
 import 'edit events.dart';
 import '../../controllers/event_controller.dart';
-import '../../controllers/delete event command.dart';
+import '../../models/command_pattern/delete event command.dart';
 
 class EditEventPage extends StatelessWidget {
   final List<Event> events;
