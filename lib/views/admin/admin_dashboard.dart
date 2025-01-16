@@ -10,7 +10,8 @@ import 'donor_list_page.dart';
 import 'edit events.dart'; // Import the donor list page
 import '../../models/Event/event.dart';
 import 'event_edit_page.dart';
-import 'view tickets.dart';
+import 'view_tickets.dart';
+import 'view_volunteers_page.dart';
 
 class AdminDashboard extends StatefulWidget {
   final Map<String, dynamic> admin;
@@ -118,17 +119,13 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   },
                 ),
                 _buildDashboardButton(
-                  'Track Volunteers',
+                  'View Volunteers',
                   Icons.people,
                       () {
-                    _navigateToEmptyPage(context, 'Track Volunteers Page');
-                  },
-                ),
-                _buildDashboardButton(
-                  'Manage Donations',
-                  Icons.attach_money,
-                      () {
-                    _navigateToEmptyPage(context, 'Manage Donations Page');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ViewVolunteersPage()),
+                    );
                   },
                 ),
                 _buildDashboardButton(
@@ -161,7 +158,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const AllDonationsPage()),
+                      MaterialPageRoute(builder: (context) =>  AllDonationsPage()),
                     );
                   },
                 ),

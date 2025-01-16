@@ -112,4 +112,12 @@ class EventController {
   String getEventId(DocumentReference eventDocRef) {
     return eventDocRef.id;
   }
+  Future<List<Event>> fetchAllEvents() async {
+    try {
+      return await _dbservice.fetchAllEvents();
+    } catch (e) {
+      print('Error fetching events: $e');
+      throw Exception('Failed to fetch events');
+    }
+  }
 }

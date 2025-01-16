@@ -3,8 +3,6 @@ import 'package:hope_home/controllers/loginController.dart';
 import 'package:hope_home/views/admin/admin_dashboard.dart';
 import 'package:hope_home/views/volunteer/volunteerDashboard.dart';
 import 'package:hope_home/views/general_auth/sign.dart';
-import 'package:hope_home/views/donor/donner_dashboard.dart';
-import 'package:hope_home/userProvider.dart';
 import 'custbutom.dart';
 import 'textform.dart';
 

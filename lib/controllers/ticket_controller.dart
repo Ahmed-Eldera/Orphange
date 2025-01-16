@@ -21,4 +21,12 @@ class TicketController {
       throw Exception('Failed to register ticket: $error');
     }
   }
+  Stream<List<Ticket>> getTicketsStream() {
+    return _firestore.collection('tickets').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return Ticket.fromMap(doc.data() as Map<String, dynamic>);
+      }).toList();
+    });
+  }
+
 }

@@ -18,13 +18,5 @@ class DonorIterator implements AppIterator {
     return _donors[_currentIndex++];
   }
 
-  @override
-  // TODO: implement current
-  get current => throw UnimplementedError();
 
-  @override
-  bool moveNext() {
-    // TODO: implement moveNext
-    throw UnimplementedError();
-  }
 }

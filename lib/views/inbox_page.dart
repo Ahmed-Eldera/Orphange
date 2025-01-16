@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hope_home/userProvider.dart';
-import '../models/db_handlers/FireStore.dart';
+import '../../controllers/message_controller.dart';
+import '../../userProvider.dart';
 
 class InboxPage extends StatefulWidget {
-
-
-
   const InboxPage({Key? key}) : super(key: key);
 
   @override
@@ -13,7 +10,7 @@ class InboxPage extends StatefulWidget {
 }
 
 class _InboxPageState extends State<InboxPage> {
-  final FirestoreDatabaseService _dbService = FirestoreDatabaseService();
+  final MessageController _messageController = MessageController();
   List<Map<String, dynamic>> _messages = [];
   bool _isLoading = true;
 
@@ -27,10 +24,14 @@ class _InboxPageState extends State<InboxPage> {
     setState(() {
       _isLoading = true;
     });
-      UserProvider userProvider = UserProvider();
-      String id= userProvider.currentUser!.id;
-    _messages = await _dbService.fetchMessagesForRecipient(id);
-    print(_messages);
+
+    // Fetch the current user ID
+    UserProvider userProvider = UserProvider();
+    String userId = userProvider.currentUser!.id;
+
+    // Use the controller to fetch messages
+    _messages = await _messageController.fetchMessages(userId);
+
     setState(() {
       _isLoading = false;
     });
@@ -50,24 +51,42 @@ class _InboxPageState extends State<InboxPage> {
           : ListView.builder(
         itemCount: _messages.length,
         itemBuilder: (context, index) {
-          final message = _messages[index];
-          return Card(
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            child: ListTile(
-              title: Text(message['message']),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Type: ${message['type']}'),
-                  Text(
-                    'Date: ${message['timestamp'].toDate().toString()}',
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                ],
+          return _buildMessageCard(_messages[index]);
+        },
+      ),
+    );
+  }
+
+  Widget _buildMessageCard(Map<String, dynamic> message) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              message['message'],
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
-          );
-        },
+            const SizedBox(height: 8),
+            Text(
+              'Type: ${message['type']}',
+              style: const TextStyle(fontSize: 14, color: Colors.blueAccent),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Date: ${message['timestamp'].toDate()}',
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+          ],
+        ),
       ),
     );
   }

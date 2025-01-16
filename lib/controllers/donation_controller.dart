@@ -78,5 +78,13 @@ class DonationController {
   Future<List<Donation>> getDonationHistory(String donorEmail) async {
     return await FirestoreDatabaseService().fetchDonationsByEmail(donorEmail);
   }
-
+  Future<List<Donation>> fetchAllDonations() async {
+    try {
+      FirestoreDatabaseService _dbService = FirestoreDatabaseService();
+      return await _dbService.fetchAllDonations();
+    } catch (e) {
+      print('Error fetching donations: $e');
+      throw Exception('Failed to fetch donations');
+    }
+  }
 }

@@ -91,4 +91,30 @@ class VolunteerController {
     }
     return await _dbService.fetchTasksParticipated(email);
   }
+  Future<Map<String, dynamic>> fetchCertificateData() async {
+    final email = await getLoggedInUserEmail();
+    if (email == null) {
+      throw Exception('User not logged in');
+    }
+
+    final name = await fetchVolunteerName(email);
+    final tasks = await fetchTasksParticipated(email);
+    final approvedRequests = await fetchApprovedRequests(email);
+    final hours = await calculateVolunteerHours(email);
+
+    return {
+      'email': email,
+      'name': name,
+      'tasks': tasks
+          .map((task) => {'name': task.name, 'description': task.description})
+          .toList(),
+      'approvedRequests': approvedRequests
+          .map((request) => {
+        'taskId': request.taskId,
+        'details': request.details,
+      })
+          .toList(),
+      'hours': hours,
+    };
+  }
 }

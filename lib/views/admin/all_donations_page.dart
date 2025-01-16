@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
+import '../../controllers/donation_controller.dart';
 import '../../models/Donation/donation.dart';
-import '../../models/db_handlers/FireStore.dart';
 
 class AllDonationsPage extends StatelessWidget {
-  const AllDonationsPage({Key? key}) : super(key: key);
+  final DonationController _donationController = DonationController();
+
+  AllDonationsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final FirestoreDatabaseService _dbService = FirestoreDatabaseService();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('All Donations'),
         backgroundColor: Colors.blue.shade700,
       ),
-      body: FutureBuilder<List<Donation>>(
-        future: _dbService.fetchAllDonations(),
+      body: FutureBuilder<List<Donation>?>(
+        future: _donationController.fetchAllDonations(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(
-              child: Text('Error: ${snapshot.error}', style: const TextStyle(color: Colors.red)),
+              child: Text(
+                'Error: ${snapshot.error}',
+                style: const TextStyle(color: Colors.red),
+              ),
             );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          } else if (snapshot.data == null || snapshot.data!.isEmpty) {
             return const Center(
               child: Text(
                 'No donations found.',
@@ -33,7 +36,6 @@ class AllDonationsPage extends StatelessWidget {
           }
 
           final donations = snapshot.data!;
-
           return ListView.builder(
             itemCount: donations.length,
             padding: const EdgeInsets.all(16),
