@@ -5,6 +5,8 @@ import 'package:hope_home/models/db_handlers/FireStore.dart';
 import 'package:hope_home/models/users/Factories/userFactory.dart';// Ensure Firestore service is imported
 import 'package:hope_home/models/user.dart';
 
+import '../models/auth/FireAuth.dart';
+
 class UserLoginMailController extends UserLoginTemplate {
   final UserProvider userProvider;
   final UserServiceHelper facade;
@@ -15,6 +17,16 @@ class UserLoginMailController extends UserLoginTemplate {
     required this.facade,
     required this.firestoreService,
   }) : super(facade: facade); // Call the parent class constructor and pass required parameters
+  static UserLoginMailController createInstance() {
+    return UserLoginMailController(
+      facade: UserServiceHelper(
+        authService: FirebaseAuthService(),
+        databaseService: FirestoreDatabaseService(),
+      ),
+      userProvider: UserProvider(),
+      firestoreService: FirestoreDatabaseService(),
+    );
+  }
 
   @override
   @override
