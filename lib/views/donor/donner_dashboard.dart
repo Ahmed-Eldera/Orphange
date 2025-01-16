@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hope_home/models/user.dart';
 import 'package:hope_home/userProvider.dart';
 import 'package:hope_home/views/show_events.dart';
+import 'package:provider/provider.dart';
 import 'donation_history_page.dart';
 import '../inbox_page.dart';
 import '../../models/Donation/donor_receipt.dart';
@@ -39,7 +40,7 @@ class DonorDashboard extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProfilePlaceholderPage(donor: donor),
+                  builder: (context) => ProfilePlaceholderPage(),
                 ),
               );
             },
@@ -174,24 +175,59 @@ class DonorDashboard extends StatelessWidget {
 }
 
 class ProfilePlaceholderPage extends StatelessWidget {
-  final myUser donor;
+  final UserProvider userProvider = UserProvider();
 
-  const ProfilePlaceholderPage({Key? key, required this.donor}) : super(key: key);
+  final TextEditingController usernameController = TextEditingController();
+
+  ProfilePlaceholderPage({Key? key}) : super(key: key) {
+    // Initialize the controller with the donor's name
+  }
+
+  void _saveProfileChanges() {
+
+    userProvider.editName(usernameController.text);
+  }
 
   @override
   Widget build(BuildContext context) {
+    myUser donor = userProvider.currentUser!;
+    usernameController.text = donor.name;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile Page'),
         backgroundColor: Colors.blue.shade700,
       ),
-      body: Center(
-        child: Text(
-          'Donor Name: ${donor.name}\nEmail: ${donor.email}',
-          style: const TextStyle(fontSize: 18, fontFamily: 'Roboto', fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Name',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: usernameController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Enter your name',
+              ),
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: ElevatedButton(
+                onPressed: _saveProfileChanges, // Empty function
+                child: const Text('Save'),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
+
+
+

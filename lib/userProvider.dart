@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:hope_home/models/user.dart';
+import 'package:hope_home/models/users/Factories/userFactory.dart';
 
 class UserProvider extends ChangeNotifier {
   // Singleton instance
@@ -32,5 +33,16 @@ class UserProvider extends ChangeNotifier {
   void clearUser() {
     _currentUser = null;
     notifyListeners();
+  }
+  void editName(String name) {
+    UserFactory userFactory = UserFactoryProducer.getFactory('Donor');
+    Map<String,dynamic> data = {
+      "name": name,
+      "id": currentUser!.id,
+      "email": currentUser!.email,
+      "type": currentUser!.type};
+       myUser user = userFactory!.createUser(data!);
+       setUser(user);
+       display();
   }
 }
