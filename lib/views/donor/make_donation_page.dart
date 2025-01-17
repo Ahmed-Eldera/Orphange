@@ -90,7 +90,7 @@ class _MakeDonationPageState extends State<MakeDonationPage> {
             ElevatedButton(
               onPressed: () async {
                 if (_controller.getTotalAmount() > 0 && _selectedMethod != null) {
-                  await _controller.submitDonation(widget.donor.name, widget.donor.email);
+                  await _controller.submitDonation();
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Donation submitted successfully!')));
                   Navigator.pop(context);
                 } else {

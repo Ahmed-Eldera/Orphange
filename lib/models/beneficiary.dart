@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hope_home/models/users/admin.dart';
+import 'package:hope_home/userProvider.dart';
 import '../models/db_handlers/FireStore.dart';
 
 class Beneficiary {
@@ -58,7 +60,7 @@ class Beneficiary {
   }
   static Future<double> getTotalDonations() async {
     try {
-      final donations = await _firestoreDatabase.fetchAllDonations();
+      final donations = await (UserProvider().currentUser! as Admin).fetchAllDonations();
       return donations.fold<double>(
         0.0,
             (sum, donation) => sum + donation.amount,

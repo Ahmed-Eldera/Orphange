@@ -1,3 +1,7 @@
+import 'package:hope_home/models/Donation/donation.dart';
+import 'package:hope_home/models/users/admin.dart';
+import 'package:hope_home/userProvider.dart';
+
 import '../models/beneficiary.dart';
 import '../models/db_handlers/FireStore.dart';
 import '../models/distribution_states/distribution_strategy.dart';
@@ -7,7 +11,16 @@ class BeneficiaryController {
   final FirestoreDatabaseService _dbService = FirestoreDatabaseService();
 
   Future<double> getTotalBudget() async {
-    return await _dbService.getTotalDonations();
+    try {
+      // Fetch all donations
+      final List<Donation> donations = await (UserProvider().currentUser! as Admin).fetchAllDonations();
+
+      // Fold over the list to calculate the total
+      return donations.fold<double>(0.0, (double sum, Donation donation) => sum + donation.amount);
+    } catch (e) {
+      print('Error calculating total donations: $e');
+      return 0.0;
+    }
   }
 
   Future<void> saveAllocatedBudget(Map<String, double> allocations) async {

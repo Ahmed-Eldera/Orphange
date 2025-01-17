@@ -29,4 +29,16 @@ class Donor extends myUser {
       return [];
     }
   }
+  
+  Future<void> submitDonation(double totalAmount,String paymentMethod,String date) async {
+    final donation = Donation(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      donorName: name,
+      donorEmail: email,
+      amount: totalAmount,
+      method: paymentMethod,
+      date: DateTime.now().toIso8601String(),
+    );
+    await donation.addDonation();
+  } 
 }

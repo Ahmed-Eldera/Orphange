@@ -1,5 +1,7 @@
 import 'package:hope_home/controllers/communication_context.dart';
 import 'package:hope_home/models/db_handlers/FireStore.dart';
+import 'package:hope_home/models/users/admin.dart';
+import 'package:hope_home/userProvider.dart';
 import '../models/Event/request.dart';
 import '../models/Event/task.dart';
 import '../models/auth/FireAuth.dart';
@@ -11,7 +13,11 @@ class VolunteerController {
   final FirebaseAuthService _authService = FirebaseAuthService();
   // Future<void>? notifyUsers(){print("");}
   Future<List<Volunteer>> getAllVolunteers() async {
-    return await _dbService.fetchAllVolunteers();
+    final user = UserProvider().currentUser!;
+    if (user is! Admin) {
+      throw Exception('Only admin can fetch all volunteers');
+    }else{
+    return await user.fetchAllVolunteers();}
   }
 
   Future<List<Request>> fetchVolunteerRequests(String email) async {

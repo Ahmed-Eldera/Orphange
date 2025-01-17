@@ -67,17 +67,12 @@ class DonationController {
   }
 
   // Submit donation to Firestore
-  Future<void> submitDonation(String donorName, String donorEmail) async {
+  Future<void> submitDonation() async {
     final totalAmount = getTotalAmount();
-    final donation = Donation(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      donorName: donorName,
-      donorEmail: donorEmail,
-      amount: totalAmount,
-      method: paymentMethod,
-      date: DateTime.now().toIso8601String(),
-    );
-    await donation.addDonation();
+    if (UserProvider().currentUser is Donor) {
+      Donor donor = UserProvider().currentUser as Donor;
+      await donor.submitDonation(totalAmount, paymentMethod, DateTime.now().toIso8601String());
+    }
   } 
 
   Future<List<Donation>> getDonationHistory(String donorEmail) async {
@@ -85,7 +80,7 @@ class DonationController {
   }
   Future<List<Donation>> fetchDonations() async {
     try {
-      FirestoreDatabaseService _dbService = FirestoreDatabaseService();
+      // FirestoreDatabaseService _dbService = FirestoreDatabaseService();
 
       if (UserProvider().currentUser is Donor) {
         // If the user is a Donor, fetch donations specific to their email
@@ -93,7 +88,7 @@ class DonationController {
         return await donor.fetchDonationsByEmail();
       } else if (UserProvider().currentUser is Admin) {
         // If the user is an Admin, fetch all donations
-        return await _dbService.fetchAllDonations();
+        return await (UserProvider().currentUser! as Admin).fetchAllDonations();
       } else {
         throw Exception('Unsupported user type');
       }

@@ -81,53 +81,9 @@ class FirestoreDatabaseService implements DatabaseService {
     return null;
   }
 
-  Future<List<Donor>> fetchAllDonors() async {
-    try {
-      QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('type', isEqualTo: 'Donor')
-          .get();
 
-      return snapshot.docs.map((doc) {
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id; // Ensure 'id' field is included
-        return Donor(
-          id: data['id'],
-          name: data['name'],
-          email: data['email'],
-          history: List<String>.from(data['history'] ?? []),
-        );
-      }).toList();
-    } catch (e) {
-      print('Error fetching donors: $e');
-      return [];
-    }
-  }
 
-  Future<List<Volunteer>> fetchAllVolunteers() async {
-    try {
-      QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('type', isEqualTo: 'Volunteer')
-          .get();
 
-      return snapshot.docs.map((doc) {
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id; // Ensure 'id' field is included
-        return Volunteer(
-          id: data['id'],
-          name: data['name'],
-          email: data['email'],
-          skills: [],
-          availability: [],
-          // history: List<String>.from(data['history'] ?? []),
-        );
-      }).toList();
-    } catch (e) {
-      print('Error fetching donors: $e');
-      return [];
-    }
-  }
 
   Future<List<Map<String, dynamic>>> fetchMessagesForRecipient(
       String recipientID) async {
@@ -154,19 +110,7 @@ class FirestoreDatabaseService implements DatabaseService {
 // Fetch donations by donor email
 
 
-  Future<List<Donation>> fetchAllDonations() async {
-    try {
-      final snapshot = await _firestore.collection('donations').get();
-
-      return snapshot.docs.map((doc) {
-        return Donation.fromJson(doc.data() as Map<String, dynamic>, doc.id);
-      }).toList();
-    } catch (e) {
-      print('Error fetching all donations: $e');
-      return [];
-    }
-  }
-
+ 
 
   Future<List<Event>?> fetchEvents(String userType) async {
     return EventsProxy().fetchEvents(userType);
@@ -325,34 +269,10 @@ class FirestoreDatabaseService implements DatabaseService {
       print("Failed to notify admin: $e");
     }
   }
-  Future<double> getTotalDonations() async {
-    try {
-      // Fetch all donations
-      final List<Donation> donations = await fetchAllDonations();
 
-      // Fold over the list to calculate the total
-      return donations.fold<double>(0.0, (double sum, Donation donation) => sum + donation.amount);
-    } catch (e) {
-      print('Error calculating total donations: $e');
-      return 0.0;
-    }
-  }
 
-  Future<Map<String, double>> fetchTotalDonationsByDonor() async {
-    try {
-      final List<Donation> donations = await fetchAllDonations();
-      Map<String, double> donorTotals = {};
 
-      for (var donation in donations) {
-        donorTotals[donation.donorEmail] =
-            (donorTotals[donation.donorEmail] ?? 0) + donation.amount;
-      }
-      return donorTotals;
-    } catch (e) {
-      print('Error fetching total donations by donor: $e');
-      return {};
-    }
-  }
+
   Future<List<Task>> fetchTasksByVolunteerEmail(String email) async {
     try {
       final querySnapshot = await _firestore
