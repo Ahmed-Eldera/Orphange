@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../controllers/donation_controller.dart';
+import '../../controllers/admin_controller.dart';
 import '../../models/Donation/donation.dart';
 
 class AllDonationsPage extends StatelessWidget {
-  final DonationController _donationController = DonationController();
+  final AdminController _adminController = AdminController();
 
   AllDonationsPage({Key? key}) : super(key: key);
 
@@ -15,7 +15,7 @@ class AllDonationsPage extends StatelessWidget {
         backgroundColor: Colors.blue.shade700,
       ),
       body: FutureBuilder<List<Donation>?>(
-        future: _donationController.fetchAllDonations(),
+        future: _adminController.fetchAllDonations(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

@@ -6,7 +6,7 @@ import 'package:hope_home/views/show_events.dart';
 import 'package:provider/provider.dart';
 import 'donation_history_page.dart';
 import '../inbox_page.dart';
-import '../../models/Donation/donor_receipt.dart';
+import 'donor_receipt.dart';
 import 'make_donation_page.dart';
 import 'registerTicket.dart';
 class DonorDashboard extends StatelessWidget {
@@ -64,26 +64,26 @@ class DonorDashboard extends StatelessWidget {
                   _buildDashboardButton(
                     'View Events',
                     Icons.event,
-                        () {                
-                        Navigator.push(
+                        () {
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ShowEvents()),
-                        );
-                      },
+                            builder: (context) => ShowEvents()),
+                      );
+                    },
                   ),
                   _buildDashboardButton(
                     'Register a Ticket',
                     Icons.confirmation_num,
                         () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TicketRegistrationPage()),
-                          );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TicketRegistrationPage()),
+                      );
 
 
-                        },
+                    },
                   ),
                   _buildDashboardButton(
                     'Inbox',

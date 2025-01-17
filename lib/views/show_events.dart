@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:hope_home/controllers/event_controller.dart';
-import 'package:hope_home/models/iterators/event_collection.dart';
 import 'package:hope_home/models/Event/event.dart';
+import 'package:hope_home/models/iterators/event_collection.dart';
+import 'package:hope_home/controllers/eventsProxy.dart';
 
 class ShowEvents extends StatelessWidget {
   const ShowEvents({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    EventController _eventController = EventController();
+    final EventsProxy eventsProxy = EventsProxy();
 
     return Scaffold(
       appBar: AppBar(
@@ -18,7 +18,7 @@ class ShowEvents extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: FutureBuilder<List<Event>?>(
-          future: _eventController.fetchAllEvents(),
+          future: eventsProxy.fetchEvents('Volunteer'), // Use the proxy to fetch filtered events
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());

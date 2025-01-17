@@ -32,7 +32,9 @@ class Beneficiary {
       name: map['name'],
       age: map['age'],
       needs: map['needs'],
-      allocatedBudget: map['allocatedBudget'],
+      allocatedBudget: (map['allocatedBudget'] is int)
+          ? (map['allocatedBudget'] as int).toDouble()
+          : map['allocatedBudget'] as double,
     );
   }
 

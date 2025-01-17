@@ -85,7 +85,7 @@ class FirestoreDatabaseService implements DatabaseService {
     try {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection('users')
-          .where('type', isEqualTo: 'donor')
+          .where('type', isEqualTo: 'Donor')
           .get();
 
       return snapshot.docs.map((doc) {
@@ -108,7 +108,7 @@ class FirestoreDatabaseService implements DatabaseService {
     try {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection('users')
-          .where('type', isEqualTo: 'volunteer')
+          .where('type', isEqualTo: 'Volunteer')
           .get();
 
       return snapshot.docs.map((doc) {
@@ -254,10 +254,26 @@ class FirestoreDatabaseService implements DatabaseService {
     }).toList();
   }
 
-  Future<List<Beneficiary>> fetchBeneficiaries() async {
-    QuerySnapshot snapshot = await _firestore.collection('beneficiaries').get();
-    return snapshot.docs.map((doc) => Beneficiary.fromMap(doc.data() as Map<String, dynamic>)).toList();
+   Future<List<Beneficiary>> fetchBeneficiaries() async {
+    try {
+      final snapshot = await FirebaseFirestore.instance.collection('beneficiaries').get();
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return Beneficiary(
+          id: doc.id,
+          name: data['name'],
+          age: data['age'],
+          needs: data['needs'],
+          allocatedBudget: (data['allocatedBudget'] is int)
+              ? (data['allocatedBudget'] as int).toDouble()
+              : data['allocatedBudget'] as double,
+        );
+      }).toList();
+    } catch (e) {
+      throw Exception('Error fetching beneficiaries: $e');
+    }
   }
+
 
 
   Future<Map<String, dynamic>?> getUserByEmail(String email) async {

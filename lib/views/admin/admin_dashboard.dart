@@ -116,7 +116,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                               return const EmptyPage(title: 'No Events');
                             }
 
-                            return EditEventPage(events: snapshot.data!);
+                            return EditEventPage();
                           },
                         ),
                       ),

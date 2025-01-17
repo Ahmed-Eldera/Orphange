@@ -12,8 +12,8 @@ class NeedBasedDistributionStrategy implements DistributionStrategy {
 
     for (var child in beneficiaries) {
       // Allocate budget proportional to age
-      double allocationPerChild = (child.age / totalWeight) * remainingBudget;
-      allocationPerChild = allocationPerChild > 500 ? 500 : allocationPerChild; // Cap at $500
+      double allocationPerChild = ((child.age / totalWeight) * remainingBudget).toDouble();
+      allocationPerChild = allocationPerChild > 500 ? 500.0 : allocationPerChild;
       allocation[child.id] = allocationPerChild;
     }
 

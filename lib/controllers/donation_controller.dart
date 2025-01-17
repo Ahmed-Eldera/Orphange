@@ -11,7 +11,9 @@ import 'package:hope_home/models/user.dart';
 import 'package:hope_home/models/users/donor.dart';
 import 'package:hope_home/userProvider.dart';
 
-import '../models/Donation/donation_calculator.dart'; // Import the Donation model
+import '../models/Donation/donation_calculator.dart';
+import '../models/Donation/receipts_decorator.dart';
+import '../models/users/admin.dart'; // Import the Donation model
 
 
 class DonationController {
@@ -21,6 +23,7 @@ class DonationController {
   int entertainmentShares = 0;
   String paymentMethod = '';
   Donor user = UserProvider().currentUser! as Donor;
+
   // Get total amount
   double getTotalAmount() {
     // Start with the basic donation amount
@@ -80,15 +83,26 @@ class DonationController {
   Future<List<Donation>> getDonationHistory(String donorEmail) async {
     return await user.fetchDonationsByEmail();
   }
-  Future<List<Donation>> fetchAllDonations() async {
+  Future<List<Donation>> fetchDonations() async {
     try {
       FirestoreDatabaseService _dbService = FirestoreDatabaseService();
-      return await _dbService.fetchAllDonations();
+
+      if (UserProvider().currentUser is Donor) {
+        // If the user is a Donor, fetch donations specific to their email
+        Donor donor = UserProvider().currentUser as Donor;
+        return await donor.fetchDonationsByEmail();
+      } else if (UserProvider().currentUser is Admin) {
+        // If the user is an Admin, fetch all donations
+        return await _dbService.fetchAllDonations();
+      } else {
+        throw Exception('Unsupported user type');
+      }
     } catch (e) {
       print('Error fetching donations: $e');
       throw Exception('Failed to fetch donations');
     }
   }
+
   Future<List<Donation>> getDonationsForReceipt(String donorEmail) async {
     return await user.fetchDonationsByEmail();
   }
@@ -99,5 +113,29 @@ class DonationController {
       0.0, // Starting value for the sum
           (sum, donation) => sum + donation.amount, // Accumulator function
     );
+  }
+  Future<ReceiptComponent> generateReceipt({
+    required String donorEmail,
+    bool includeDonationList = false,
+    bool includeTotal = false,
+    bool includeNoTaxNote = false,
+  }) async {
+    ReceiptComponent receipt = BaseReceipt();
+
+    if (includeDonationList) {
+      List<Donation> donations = await getDonationsForReceipt(donorEmail);
+      receipt = DonationListDecorator(receipt, donations);
+    }
+
+    if (includeTotal) {
+      double total = await getTotalDonationsForReceipt(donorEmail);
+      receipt = TotalDonationsDecorator(receipt, total);
+    }
+
+    if (includeNoTaxNote) {
+      receipt = NoTaxNoteDecorator(receipt);
+    }
+
+    return receipt;
   }
 }

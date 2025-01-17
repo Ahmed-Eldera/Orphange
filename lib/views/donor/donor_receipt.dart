@@ -21,23 +21,23 @@ class _ReceiptPageState extends State<ReceiptPage> {
   String receipt = "";
 
   Future<void> generateReceipt() async {
-    ReceiptComponent receiptComponent = BaseReceipt();
+    try {
+      ReceiptComponent receiptComponent = await _controller.generateReceipt(
+        donorEmail: widget.donorEmail,
+        includeDonationList: includeDonationList,
+        includeTotal: includeTotal,
+        includeNoTaxNote: includeNoTaxNote,
+      );
 
-    if (includeDonationList) {
-      List<Donation> donations = await _controller.getDonationsForReceipt(widget.donorEmail);
-      receiptComponent = DonationListDecorator(receiptComponent, donations);
+      setState(() {
+        receipt = receiptComponent.generateReceipt();
+      });
+    } catch (e) {
+      print('Error generating receipt: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to generate receipt.')),
+      );
     }
-    if (includeTotal) {
-      double total = await _controller.getTotalDonationsForReceipt(widget.donorEmail);
-      receiptComponent = TotalDonationsDecorator(receiptComponent, total);
-    }
-    if (includeNoTaxNote) {
-      receiptComponent = NoTaxNoteDecorator(receiptComponent);
-    }
-
-    setState(() {
-      receipt = receiptComponent.generateReceipt();
-    });
   }
 
   Widget _buildReceiptSection(String title, String content) {

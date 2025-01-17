@@ -9,6 +9,8 @@ import 'package:hope_home/models/users/volunteer.dart';
 import '../models/Event/event.dart';
 import '../models/Event/task.dart';
 import '../models/command_pattern/command.dart';
+import '../models/command_pattern/create event command.dart';
+import '../models/command_pattern/delete event command.dart';
 
 class EventController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -118,4 +120,42 @@ class EventController {
       throw Exception('Failed to fetch events');
     }
   }
+
+  Future<void> createEvent({
+    required String name,
+    required String description,
+    required String date,
+    required int attendance,
+    required List<Task> tasks,
+  }) async {
+    final eventDocRef = getEventDocRef();
+    final eventId = getEventId(eventDocRef);
+
+    final event = Event(
+      id: eventId,
+      name: name,
+      description: description,
+      date: date,
+      attendance: attendance,
+    );
+
+    final createCommand = CreateEventCommand(
+      eventController: this,
+      eventDocRef: eventDocRef,
+      event: event,
+      tasks: tasks,
+    );
+
+    await executeCommand(createCommand);
+  }
+
+  Future<void> deleteEventWithTasks(String eventId) async {
+    final deleteCommand = DeleteEventCommand(
+      eventController: this,
+      eventId: eventId,
+    );
+
+    await executeCommand(deleteCommand);
+  }
+
 }

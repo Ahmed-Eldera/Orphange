@@ -90,37 +90,23 @@ class _CreateEventPageState extends State<CreateEventPage> {
     Navigator.pop(context); // Close the dialog
   }
 
-  Future<void> _createEvent() async {
-    if (_formKey.currentState!.validate()) {
-      final eventDocRef = _eventController.getEventDocRef();
-      final eventId = _eventController.getEventId(eventDocRef);
-
-      final event = Event(
-        id: eventId,
+  void _createEvent() async {
+    try {
+      await _eventController.createEvent(
         name: _nameController.text,
         description: _descriptionController.text,
         date: _dateController.text,
         attendance: int.parse(_attendanceController.text),
-      );
-
-      final command = CreateEventCommand(
-        eventController: _eventController,
-        eventDocRef: eventDocRef,
-        event: event,
         tasks: _tasks,
       );
-
-      try {
-        await command.execute();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Event created successfully!')),
-        );
-        Navigator.pop(context);
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to create event: $e')),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Event created successfully!')),
+      );
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to create event: $e')),
+      );
     }
   }
 

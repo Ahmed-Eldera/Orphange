@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import '../../controllers/beneficiary_controller.dart';
 import '../../models/beneficiary.dart';
 import '../../models/beneficiary_manager.dart';
-import '../../models/distribution_strats.dart/distribution_strategy.dart';
-import '../../models/distribution_strats.dart/equal_distribution_strategy.dart';
-import '../../models/distribution_strats.dart/need_based_strategy.dart';
-import '../../models/distribution_strats.dart/manual_distribution_strategy.dart';
+import '../../models/distribution_states/distribution_strategy.dart';
+import '../../models/distribution_states/equal_distribution_strategy.dart';
+import '../../models/distribution_states/manual_distribution_strategy.dart';
+import '../../models/distribution_states/need_based_strategy.dart';
 import 'add_edit_beneficiary.dart';
 
 class BeneficiariesListPage extends StatefulWidget {
@@ -23,56 +23,44 @@ class _BeneficiariesListPageState extends State<BeneficiariesListPage> {
   late Future<List<Beneficiary>> _beneficiaries;
 
   String _currentStrategy = "Manual Distribution"; // Current strategy
-
+  final BeneficiaryController _controller = BeneficiaryController();
   @override
   void initState() {
     super.initState();
     _fetchTotalBudget();
-    _fetchBeneficiaries();
+    _loadInitialData();
   }
   void _fetchTotalBudget() async {
-    double totalDonations = await BeneficiaryController().getTotalBudget();
+    double totalDonations = await _controller.getTotalBudget();
     setState(() {
       totalBudget = totalDonations;
     });
   }
-  void _fetchBeneficiaries() {
+  void _loadInitialData() async {
+    totalBudget = await _controller.getTotalBudget();
     setState(() {
-      _beneficiaries = BeneficiaryController().fetchBeneficiaries();
-    });
-  }
-
-  void _applyStrategy() {
-    _beneficiaries.then((beneficiaries) {
-      final allocations = _manager.allocate(totalBudget, beneficiaries);
-      BeneficiaryController().saveAllocatedBudget(allocations);
+      _beneficiaries = _controller.fetchBeneficiaries();
     });
   }
 
 
-  void _changeStrategy(DistributionStrategy strategy, String strategyName) {
-    if (_currentStrategy == strategyName) return; // Avoid redundant updates
+
+  void _changeStrategy(DistributionStrategy strategy, String strategyName) async {
+    if (_currentStrategy == strategyName) return;
 
     setState(() {
-      _manager.setStrategy(strategy); // Update the strategy in the manager
-      _currentStrategy = strategyName; // Update the current strategy name
-
-      // Reset remainingBudget if ManualDistributionStrategy
-      if (strategy is ManualDistributionStrategy) {
-        (strategy as ManualDistributionStrategy).remainingBudget = totalBudget * 0.5;
-      }
+      _currentStrategy = strategyName;
     });
 
-    // Recalculate and save allocations based on the new strategy
-    _applyStrategy();
-
-    // Refresh the screen by fetching beneficiaries
-    _fetchBeneficiaries();
+    await _controller.changeStrategy(strategy, totalBudget);
+    setState(() {
+      _beneficiaries = _controller.fetchBeneficiaries();
+    });
   }
 
 
 
-  void _addFunds() {
+  void _addFunds() async {
     if (_currentStrategy != "Manual Distribution") {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Add Funds is only available in Manual Distribution strategy.')),
@@ -80,61 +68,59 @@ class _BeneficiariesListPageState extends State<BeneficiariesListPage> {
       return;
     }
 
+    final TextEditingController _fundController = TextEditingController();
+
     showDialog(
       context: context,
-      builder: (context) {
-        final TextEditingController _fundController = TextEditingController();
-        return AlertDialog(
-          title: const Text('Add Funds'),
-          content: TextField(
-            controller: _fundController,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: 'Enter Budget to Add (\$)',
-              hintText: 'e.g., 1000',
-            ),
+      builder: (context) => AlertDialog(
+        title: const Text('Add Funds'),
+        content: TextField(
+          controller: _fundController,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(
+            labelText: 'Enter Budget to Add (\$)',
+            hintText: 'e.g., 1000',
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                double? additionalFunds = double.tryParse(_fundController.text);
-                if (additionalFunds != null) {
-                  try {
-                    ManualDistributionStrategy strategy =
-                    _manager.getStrategy() as ManualDistributionStrategy;
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              double? additionalFunds = double.tryParse(_fundController.text);
+              if (additionalFunds == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Invalid amount')),
+                );
+                return;
+              }
 
-                    List<Beneficiary> beneficiaries = await _beneficiaries;
-                    await BeneficiaryController().addFunds(
-                      additionalFunds,
-                      totalBudget,
-                      beneficiaries,
-                      strategy,
-                    );
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Funds allocated successfully.')),
-                    );
-                    Navigator.pop(context);
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(e.toString())),
-                    );
-                  }
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Invalid amount')),
-                  );
-                }
-              },
-              child: const Text('Add Funds'),
-            ),
-          ],
-        );
-      },
+              try {
+                await _controller.addFunds(
+                  additionalFunds,
+                  totalBudget,
+                  await _beneficiaries,
+                  _manager.getStrategy() as ManualDistributionStrategy,
+                );
+                setState(() {
+                  _beneficiaries = _controller.fetchBeneficiaries();
+                });
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Funds allocated successfully.')),
+                );
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(e.toString())),
+                );
+              }
+            },
+            child: const Text('Add Funds'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -237,7 +223,7 @@ class _BeneficiariesListPageState extends State<BeneficiariesListPage> {
               builder: (context) => const AddEditBeneficiaryPage(),
             ),
           );
-          _fetchBeneficiaries();
+          _loadInitialData();;
         },
         child: const Icon(Icons.add),
       ),

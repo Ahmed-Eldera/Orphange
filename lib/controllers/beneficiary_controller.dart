@@ -1,6 +1,7 @@
 import '../models/beneficiary.dart';
 import '../models/db_handlers/FireStore.dart';
-import '../models/distribution_strats.dart/manual_distribution_strategy.dart';
+import '../models/distribution_states/distribution_strategy.dart';
+import '../models/distribution_states/manual_distribution_strategy.dart';
 
 class BeneficiaryController {
   final FirestoreDatabaseService _dbService = FirestoreDatabaseService();
@@ -18,6 +19,22 @@ class BeneficiaryController {
       print('Error saving allocated budgets: $e');
     }
   }
+  Future<void> changeStrategy(DistributionStrategy strategy, double totalBudget) async {
+    try {
+      // Fetch beneficiaries
+      List<Beneficiary> beneficiaries = await fetchBeneficiaries();
+
+      // Allocate budget using the strategy
+      final allocations = strategy.allocateBudget(totalBudget, beneficiaries);
+
+      // Save the allocated budget
+      await saveAllocatedBudget(allocations);
+    } catch (e) {
+      print('Error changing strategy: $e');
+      throw Exception('Failed to change strategy');
+    }
+  }
+
   Future<void> addBeneficiary(Beneficiary beneficiary) async {
     try {
       await Beneficiary.addBeneficiary(beneficiary);

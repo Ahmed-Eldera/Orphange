@@ -14,29 +14,6 @@ class EventsProxy {
       return await _firestoreDatabaseService.fetchAllEvents();
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   // Method for non-admin users, applying the week filter
   Future<List<Event>?> _fetchEventsForUser() async {
     try {
