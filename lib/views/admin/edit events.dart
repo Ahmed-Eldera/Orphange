@@ -39,7 +39,7 @@ class _EditEventDetailPageState extends State<EditEventDetailPage> {
         name: _nameController.text.trim(),
         description: _descriptionController.text.trim(),
         date: _dateController.text.trim(),
-        attendance: int.parse(_attendanceController.text.trim()),
+        attendance: int.parse(_attendanceController.text.trim()), tasks: [],
       );
 
       try {

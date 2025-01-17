@@ -17,7 +17,6 @@ class AdminController {
     try {
       return await _dbService.fetchAllDonations();
     } catch (e) {
-      print('Error fetching donations: $e');
       throw Exception('Failed to fetch donations');
     }
   }

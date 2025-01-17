@@ -4,14 +4,14 @@ import 'package:hope_home/models/user.dart';
 
 
 class Donor extends myUser {
-  List<String> history; // An array to store donation history
+  List<String> history;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Donor({
     required super.id,
     required super.name,
     required super.email,
-    this.history = const [], // Initialize with an empty list
+    this.history = const [],
   }) : super(type: 'Donor');
 
   Future<List<Donation>> fetchDonationsByEmail() async {

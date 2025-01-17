@@ -5,7 +5,7 @@ import 'package:hope_home/models/user.dart';
 class Volunteer extends myUser {
   List<String> skills;
   List<String> availability;
-  List<String> history; // An array to store task history
+  List<String> history;
 
   Volunteer({
     required super.id,
@@ -13,7 +13,7 @@ class Volunteer extends myUser {
     required super.email,
     required this.skills,
     required this.availability,
-    this.history = const [], // Initialize with an empty list
+    this.history = const [],
   }) : super(type: 'Volunteer');
 
 }

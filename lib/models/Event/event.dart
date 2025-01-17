@@ -1,9 +1,12 @@
+import 'package:hope_home/models/Event/task.dart';
+
 class Event {
   final String id;
   final String name;
   final String description;
   final String date;
   final int attendance;
+  List<Task> tasks;
 
   Event({
     required this.id,
@@ -11,6 +14,7 @@ class Event {
     required this.description,
     required this.date,
     required this.attendance,
+    required this.tasks
   });
 
   // Constructor to create an Event from Firestore document data
@@ -20,7 +24,7 @@ class Event {
       name: data['name'] ?? '',
       description: data['description'] ?? '',
       date: data['date'] ?? '',
-      attendance: data['attendance'] ?? 0,
+      attendance: data['attendance'] ?? 0, tasks: [],
     );
   }
 

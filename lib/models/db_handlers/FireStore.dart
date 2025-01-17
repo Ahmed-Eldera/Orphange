@@ -67,7 +67,7 @@ class FirestoreDatabaseService implements DatabaseService {
     }
   }
 
-  // Optional: Fetch user data by user ID (without interface)
+
   Future<Map<String, dynamic>?> getUserById(String userId) async {
     try {
       DocumentSnapshot userDoc = await _firestore.collection('users').doc(
@@ -207,8 +207,6 @@ class FirestoreDatabaseService implements DatabaseService {
     }
   }
 
-
-
   Future<List<Task>> fetchTasksByEvent(String eventId) async {
     final snapshot = await _firestore
         .collection('events')
@@ -274,8 +272,6 @@ class FirestoreDatabaseService implements DatabaseService {
     }
   }
 
-
-
   Future<Map<String, dynamic>?> getUserByEmail(String email) async {
     try {
       final querySnapshot = await _firestore
@@ -325,7 +321,6 @@ class FirestoreDatabaseService implements DatabaseService {
         'message': message,
         'timestamp': DateTime.now(),
       });
-      print("Admin notified for request $requestId.");
     } catch (e) {
       print("Failed to notify admin: $e");
     }

@@ -21,13 +21,12 @@ class CreateEventCommand implements Command {
 
   @override
   Future<void> execute() async {
-    // Save the event
     await eventController.saveEvent(eventDocRef, event);
 
     // Save all tasks associated with the event
     for (var task in tasks) {
       task.eventId = event.id; // Assign event ID to each task
-      await taskController.saveTask(task); // Use TaskController to save the task
+      await taskController.saveTask(task);
     }
   }
 }

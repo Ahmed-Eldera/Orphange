@@ -79,7 +79,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
         name: taskName,
         description: taskDescription,
         hours: taskHours, // Add hours
-        volunteerEmail: volunteerEmail, // Pass the volunteer email
+        volunteerEmail: volunteerEmail, requests: [], // Pass the volunteer email
       ));
     });
 

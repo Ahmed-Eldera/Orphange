@@ -12,7 +12,7 @@ class PendingState implements RequestState {
     }
 
     // Perform operations for pending state
-    // Example: Send notification to admin
+    // Send notification to admin
     await FirestoreDatabaseService().notifyAdmin(request.id, "New request pending approval.");
   }
 

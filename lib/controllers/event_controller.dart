@@ -136,7 +136,7 @@ class EventController {
       name: name,
       description: description,
       date: date,
-      attendance: attendance,
+      attendance: attendance, tasks: [],
     );
 
     final createCommand = CreateEventCommand(

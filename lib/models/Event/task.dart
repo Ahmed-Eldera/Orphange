@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hope_home/models/Event/request.dart';
 
 class Task {
   final String id;
@@ -8,6 +9,7 @@ class Task {
   final int hours;
   String status; // New property
   final String volunteerEmail; // New field for volunteer email
+  List<Request> requests;
 
   Task({
     required this.id,
@@ -17,6 +19,7 @@ class Task {
     required this.hours,
     this.status = "pending", // Default status
     required this.volunteerEmail, // Initialize volunteerEmail
+    required this.requests
   });
 
   Map<String, dynamic> toMap() {
@@ -39,7 +42,7 @@ class Task {
       description: map['description'] ?? '',
       hours: map['hours'] ?? 0,
       status: map['status'] ?? 'pending',
-      volunteerEmail: map['volunteerEmail'] ?? '', // Ensure volunteerEmail is fetched
+      volunteerEmail: map['volunteerEmail'] ?? '', requests: [], // Ensure volunteerEmail is fetched
     );
   }
   Future<void> saveTask(Task task) async {

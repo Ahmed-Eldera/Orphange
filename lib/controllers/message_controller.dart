@@ -7,7 +7,6 @@ class MessageController {
     try {
       return await _dbService.fetchMessagesForRecipient(userId);
     } catch (error) {
-      print('Error fetching messages: $error');
       return [];
     }
   }

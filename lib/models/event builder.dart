@@ -38,7 +38,7 @@ class EventBuilder {
       name: _name!,
       attendance: _attendance!,
       description: _description!,
-      date: _date!,
+      date: _date!, tasks: [],
     );
   }
 }

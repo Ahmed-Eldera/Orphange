@@ -11,15 +11,13 @@ class RequestController {
     try {
       return await _dbService.fetchAllRequests();
     } catch (e) {
-      print('Error fetching requests: $e');
-      throw Exception('Failed to fetch requests');
+      throw Exception('Failed to fetch requests: $e');
     }
   }
 
   Future<void> updateRequestState(Request request) async {
     try {
       await request.updateRequestState();
-      print("Request state updated successfully in the database.");
     } catch (e) {
       throw Exception("Failed to update request state in database: $e");
     }
